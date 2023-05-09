@@ -1,41 +1,31 @@
-import { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import useAudio from './useAudio';
 
 export default function Spectrogram({ file, width=600, height=300 }) {
-  const SAMPLE_RATE = 500;
   const canvas = useRef();
-  const data = useRef([]);
-  const [ isLoaded, setIsLoaded ] = useState(false);
-  const { audioAnalyzer, audioContext, audioSource, duration } = useAudio(file, { playSound: false });
-
-  const renderSpectrogram = useCallback((audioFrames) => {
-    const context = canvas.current.getContext('2d');
-    const barHeight = height / audioFrames[0].length;
-    const barWidth = width / audioFrames.length;
-
-    for (let i = 0; i < audioFrames.length; i++) {
-      const frameData = audioFrames[i];
-      for (let j = 0; j < frameData.length; j++) {
-          const intensity = 255 - frameData[j];
-          context.fillStyle = `rgb(${intensity},${intensity},${intensity})`;
-          context.fillRect(i * barWidth, j * barHeight, barWidth, barHeight);
-      }
-    }
-  }, [height, width]);
+  const playbackRate = 2;
+  const { audioAnalyzer, audioContext, audioSource, duration } = useAudio(file, { playSound: false, playbackRate });
 
   const getNextSample = useCallback(async () => {
-    const freqData = new Uint8Array(audioAnalyzer.frequencyBinCount);
-    audioAnalyzer.getByteFrequencyData(freqData);
-    data.current.push(freqData);
+    const context = canvas.current.getContext('2d');
 
-    if (audioContext.currentTime < duration) {
-      setTimeout(getNextSample, 1000 / SAMPLE_RATE);
-    } else {
-      setIsLoaded(true);
-      renderSpectrogram(data.current);
+    const frameData = new Uint8Array(audioAnalyzer.frequencyBinCount);
+    audioAnalyzer.getByteFrequencyData(frameData);
+
+    const barHeight = height / frameData.length;
+    const barWidth = 15;
+    const x = width / duration * audioContext.currentTime * playbackRate;
+
+    for (let i = 0; i < frameData.length; i++) {
+      const intensity = 255 - frameData[i];
+      context.fillStyle = `rgb(${intensity},${intensity},${intensity})`;
+      context.fillRect(x, i * barHeight, barWidth, barHeight);
     }
 
-  }, [audioAnalyzer, audioContext, duration, renderSpectrogram]);
+    if (audioContext.currentTime < duration / playbackRate) {
+      setTimeout(getNextSample, 1);
+    }
+  }, [audioAnalyzer, audioContext, duration, height, width]);
 
   useEffect(() => {
     if (!audioAnalyzer) return;
@@ -44,9 +34,6 @@ export default function Spectrogram({ file, width=600, height=300 }) {
   }, [audioAnalyzer, audioSource, getNextSample]);
 
   return (
-    <div>
-      {!isLoaded && <p>Loading...</p>}
-      <canvas ref={canvas} width={width} height={height} />
-    </div>
+    <canvas ref={canvas} width={width} height={height} />
   );
 }

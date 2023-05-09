@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 
 const defaultOptions = {
   playSound: true,
+  playbackRate: 1,
 };
 
 export default function useAudio(file, options) {
-  const { playSound } = { ...defaultOptions, ...options };
+  const { playSound, playbackRate } = { ...defaultOptions, ...options };
   const [ audioContext, setAudioContext ] = useState();
   const [ audioAnalyzer, setAudioAnalyzer ] = useState();
   const [ audioSource, setAudioSource ] = useState();
@@ -19,6 +20,7 @@ export default function useAudio(file, options) {
       analyzer.fftSize = 2048;
       const buffer = await context.decodeAudioData(reader.result);
       const source = context.createBufferSource();
+      source.playbackRate.value = playbackRate;
   
       source.buffer = buffer;
       source.connect(analyzer);
@@ -32,7 +34,7 @@ export default function useAudio(file, options) {
       setDuration(buffer.duration);
     };
     reader.readAsArrayBuffer(file);
-  }, [file, playSound]);
+  }, [file, playSound, playbackRate]);
 
   return {
     audioAnalyzer,
