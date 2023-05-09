@@ -1,5 +1,4 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
-import { pause } from '@/utils';
 import useAudio from './useAudio';
 
 export default function Spectrogram({ file, width=600, height=300 }) {
@@ -30,8 +29,7 @@ export default function Spectrogram({ file, width=600, height=300 }) {
     data.current.push(freqData);
 
     if (audioContext.currentTime < duration) {
-      await pause(1 / SAMPLE_RATE);
-      getNextSample();
+      setTimeout(getNextSample, 1000 / SAMPLE_RATE);
     } else {
       setIsLoaded(true);
       renderSpectrogram(data.current);
