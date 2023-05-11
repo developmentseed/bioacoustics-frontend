@@ -5,8 +5,16 @@
     "plugin:react/recommended",
     "next/core-web-vitals"
   ],
-  "plugins": ["react", "react-hooks"],
-  "env": { "browser": true, "es6": true  },
+  "plugins": [
+    "react",
+    "react-hooks",
+    "jest"
+  ],
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jest/globals": true
+  },
   "rules": {
     "quotes": ["error", "single"],
     "jsx-quotes": ["error", "prefer-double"],
