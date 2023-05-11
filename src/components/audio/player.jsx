@@ -1,4 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
+import T from 'prop-types';
+import { TFile } from '@/types';
 import useTimeUpdate from './useTimeUpdate';
 
 export default function Player({ file, setCurrentTime = () => {} }) {
@@ -28,3 +30,8 @@ export default function Player({ file, setCurrentTime = () => {} }) {
     </div>
   );
 }
+
+Player.propTypes = {
+  file: TFile.isRequired,
+  setCurrentTime: T.func
+};

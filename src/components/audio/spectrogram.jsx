@@ -1,5 +1,7 @@
 import { useEffect, useRef, useCallback, useState} from 'react';
+import T from 'prop-types';
 import useAudio from './useAudio';
+import { TFile } from '@/types';
 
 export default function Spectrogram({ file, currentTime, width=600, height=300 }) {
   const canvas = useRef();
@@ -49,3 +51,10 @@ export default function Spectrogram({ file, currentTime, width=600, height=300 }
     </div>
   );
 }
+
+Spectrogram.propTypes = {
+  file: TFile.isRequired,
+  currentTime: T.number,
+  width: T.number,
+  height: T.number
+};

@@ -27,6 +27,7 @@
     "no-setter-return": 0,
     "prefer-promise-reject-errors": 0,
     "react/button-has-type": 2,
+    "react/prop-types": 2,
     "react/default-props-match-prop-types": 2,
     "react/jsx-closing-bracket-location": 2,
     "react/jsx-closing-tag-location": 2,
