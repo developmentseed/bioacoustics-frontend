@@ -22,6 +22,32 @@ export default function SpectrogramPlayer({ file, clippable }) {
     setIsClipping(false);
   };
 
+  const uploadClip = async () => {
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const audioContext = new AudioContext();
+      const audioBuffer = await audioContext.decodeAudioData(reader.result);
+      const [startTime, endTime] = clipWindow;
+      const cutBuffer = audioContext.createBuffer(
+        audioBuffer.numberOfChannels,
+        Math.floor((endTime - startTime) * audioBuffer.sampleRate),
+        audioBuffer.sampleRate
+      );
+      const startAt = Math.floor((startTime * audioBuffer.sampleRate));
+      for (let i = 0; i < audioBuffer.numberOfChannels; i++) {
+        const channelData = audioBuffer.getChannelData(i);
+        const cutChannelData = cutBuffer.getChannelData(i);
+
+        for (let j = 0; j < cutBuffer.length; j++) {
+          cutChannelData[j] = channelData[startAt + j];
+        }
+      }
+
+      // TODO: Upload buffer
+    };
+    reader.readAsArrayBuffer(file);
+  };
+
   return (
     <div style={{display: 'grid'}}>
       <Spectrogram
@@ -35,7 +61,14 @@ export default function SpectrogramPlayer({ file, clippable }) {
       {clippable && (
         <div>
           {!isClipping ? (
-            <button type="button" onClick={handleClipActivate}>Clip</button>
+            <>
+              <button type="button" onClick={handleClipActivate}>Clip</button>
+              {clipWindow.length > 0 && (
+                <>
+                  <button type="button" onClick={uploadClip}>Upload</button>
+                </>
+              )}
+            </>
           ) : (
             <>
               <p>Click on the spectrogram to select clip</p>
