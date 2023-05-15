@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { Main } from '@/components/layout';
 import Spectrogram from '@/components/audio/spectrogram';
 
 export default function Upload() {
@@ -8,7 +9,7 @@ export default function Upload() {
   const handleFileSelect = (e) => setFile(e.target.files[0]);
 
   return (
-    <main>
+    <Main>
       <h1>Upload</h1>
       {!file ? (
         <form>
@@ -17,6 +18,6 @@ export default function Upload() {
       ) : (
         <Spectrogram file={file} />
       )}
-    </main>
+    </Main>
   );
 }

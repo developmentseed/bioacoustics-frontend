@@ -1,7 +1,9 @@
+import { Main } from '@/components/layout';
+
 export default function Home() {
   return (
-    <main>
-      <h1>Bioaccustics Home</h1>
-    </main>
+    <Main>
+      <h1>Bioacoustics Home</h1>
+    </Main>
   );
 }

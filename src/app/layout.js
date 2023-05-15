@@ -2,6 +2,7 @@
 import CssBaseline from '@mui/material/CssBaseline';
 
 import { metadata } from './settings';
+import { Header } from '@/components/layout';
 
 export default function RootLayout({ children }) {
   return (
@@ -13,6 +14,7 @@ export default function RootLayout({ children }) {
         </head>
         <CssBaseline />
         <body>
+          <Header />
           {children}
         </body>
       </html>

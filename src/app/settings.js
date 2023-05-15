@@ -1,4 +1,4 @@
 export const metadata = {
-  title: 'Bioaccustics',
+  title: 'Bioacoustics',
   description: 'Like Shazam but for birds',
 };
