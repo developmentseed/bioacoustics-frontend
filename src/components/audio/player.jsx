@@ -12,12 +12,17 @@ const formatTime = (time) => {
 
 export default function Player({ file, setCurrentTime = () => {} }) {
   const audioRef = useRef();
-  const playAnimationRef = useRef();
   const [ isPlaying, setIsPlaying ] = useState(false);
   const [ displayTime, setDisplayTime ] = useState('0:00');
 
   const buttonLabel = isPlaying ? 'Pause' : 'Play';
   const audioUrl = useMemo(() => URL.createObjectURL(file), [file]);
+
+  const updateDisplayTime = useCallback(e => {
+    const time = e.target.currentTime;
+    setCurrentTime(time);
+    setDisplayTime(formatTime(time));
+  }, [setCurrentTime]);
 
   const togglePlay = () => setIsPlaying((prev) => !prev);
 
@@ -26,22 +31,22 @@ export default function Player({ file, setCurrentTime = () => {} }) {
     setCurrentTime();
   }, [setCurrentTime]);
 
-  const updateDisplayTime = useCallback(() => {
-    const time = audioRef.current.currentTime;
-    setCurrentTime(time);
-    setDisplayTime(formatTime(time));
-    playAnimationRef.current = requestAnimationFrame(updateDisplayTime);
-  }, [setCurrentTime]);
-
   useEffect(() => {
     if (isPlaying) {
       audioRef.current.play();
-      playAnimationRef.current = requestAnimationFrame(updateDisplayTime);
     } else {
       audioRef.current.pause();
-      cancelAnimationFrame(playAnimationRef.current);
     }
   }, [audioRef, isPlaying, updateDisplayTime]);
+
+  useEffect(() => {
+    const audioElement = audioRef.current;
+    if (audioElement) {
+      audioElement.ontimeupdate = updateDisplayTime;
+
+      return () => audioElement.ontimeupdate = null;
+    }
+  }, [audioRef, updateDisplayTime]);
 
   return (
     <div>
