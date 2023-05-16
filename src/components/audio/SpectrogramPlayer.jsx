@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import Spectrogram from './spectrogram';
 import Player from './player';
-import { useState } from 'react';
+import { TFile } from '@/types';
 
 export default function SpectrogramPlayer({ file }) {
   const [ currentTime, setCurrentTime ] = useState();
@@ -12,3 +13,7 @@ export default function SpectrogramPlayer({ file }) {
     </div>
   );
 }
+
+SpectrogramPlayer.propTypes = {
+  file: TFile.isRequired
+};
