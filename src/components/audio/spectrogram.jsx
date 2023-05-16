@@ -20,8 +20,9 @@ export default function Spectrogram({ file, currentTime, width=600, height=300 }
 
     for (let i = 0; i < frameData.length; i++) {
       const intensity = 255 - frameData[i];
+      const y = (frameData.length - i) * barHeight;
       context.fillStyle = `rgb(${intensity},${intensity},${intensity})`;
-      context.fillRect(x, i * barHeight, barWidth, barHeight);
+      context.fillRect(x, y, barWidth, barHeight);
     }
 
     if (audioContext.currentTime < duration / playbackRate) {
