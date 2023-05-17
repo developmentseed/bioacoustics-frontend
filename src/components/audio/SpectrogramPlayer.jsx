@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import T from 'prop-types';
 import Spectrogram from './spectrogram';
 import Player from './player';
 import { TFile } from '@/types';
@@ -83,5 +84,6 @@ export default function SpectrogramPlayer({ file, clippable }) {
 }
 
 SpectrogramPlayer.propTypes = {
-  file: TFile.isRequired
+  file: TFile.isRequired,
+  clippable: T.bool
 };
