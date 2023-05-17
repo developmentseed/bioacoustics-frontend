@@ -1,4 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
+import T from 'prop-types';
+import { TFile } from '@/types';
 import useAudio from './useAudio';
 import useClip from './useClip';
 import { timeToX } from './utils';
@@ -31,8 +33,9 @@ export default function Spectrogram({
 
     for (let i = 0; i < frameData.length; i++) {
       const intensity = 255 - frameData[i];
+      const y = (frameData.length - i) * barHeight;
       context.fillStyle = `rgb(${intensity},${intensity},${intensity})`;
-      context.fillRect(x, i * barHeight, barWidth, barHeight);
+      context.fillRect(x, y, barWidth, barHeight);
     }
 
     if (audioContext.currentTime < duration / playbackRate) {
@@ -79,3 +82,13 @@ export default function Spectrogram({
     </div>
   );
 }
+
+Spectrogram.propTypes = {
+  currentTime: T.number,
+  file: TFile.isRequired,
+  handleClipSelect: T.func,
+  height: T.number,
+  isClipping: T.bool,
+  selectedClip: T.arrayOf(T.number),
+  width: T.number,
+};
