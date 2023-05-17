@@ -15,7 +15,7 @@ export default function Upload() {
           <input type="file" name="file" onChange={handleFileSelect} />
         </form>
       ) : (
-        <SpectrogramPlayer file={file} />
+        <SpectrogramPlayer file={file} clippable />
       )}
     </main>
   );

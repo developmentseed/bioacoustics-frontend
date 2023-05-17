@@ -1,10 +1,21 @@
-import { useEffect, useRef, useCallback, useState} from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import T from 'prop-types';
-import useAudio from './useAudio';
 import { TFile } from '@/types';
+import useAudio from './useAudio';
+import useClip from './useClip';
+import { timeToX } from './utils';
 
-export default function Spectrogram({ file, currentTime, width=600, height=300 }) {
+export default function Spectrogram({
+  file,
+  currentTime,
+  isClipping,
+  selectedClip,
+  handleClipSelect,
+  width=600,
+  height=300
+}) {
   const canvas = useRef();
+  const clipperEl = useRef();
   const playbackRate = 2;
   const { audioAnalyzer, audioContext, audioSource, duration } = useAudio(file, { playSound: false, playbackRate });
 
@@ -18,7 +29,7 @@ export default function Spectrogram({ file, currentTime, width=600, height=300 }
 
     const barHeight = height / frameData.length;
     const barWidth = 15;
-    const x = width / duration * audioContext.currentTime * playbackRate;
+    const x = timeToX(audioContext.currentTime * playbackRate, width, duration);
 
     for (let i = 0; i < frameData.length; i++) {
       const intensity = 255 - frameData[i];
@@ -45,17 +56,39 @@ export default function Spectrogram({ file, currentTime, width=600, height=300 }
     setTimebarPosition(x > width ? width : x);
   }, [currentTime, duration, height, width]);
 
+  const { pixelClipWindow, handleClipClick } = useClip(clipperEl, selectedClip, handleClipSelect, width, duration);
+  const showClipping = isClipping || pixelClipWindow.length > 0;
+
   return (
     <div style={{ position: 'relative', height }}>
       <canvas ref={canvas} width={width} height={height} style={{ position: 'absolute', top: 0, left: 0 }} />
       {currentTime && <div style={{ width: '1px', height: height, backgroundColor: 'red', position: 'absolute', top: 0, left: timebarPosition }} />}
+      {showClipping && (
+        <div onClick={handleClipClick} id="clipper" ref={clipperEl} style={{ width: width, height: height, position: 'absolute', top: 0, left: 0 }}>
+          {pixelClipWindow.length > 0 && (
+            <div
+              style={{
+                backgroundColor: 'blue',
+                height: height,
+                position: 'absolute',
+                top: 0,
+                left: pixelClipWindow[0],
+                width: pixelClipWindow.length === 1 ? '1px' : pixelClipWindow[1] - pixelClipWindow[0],
+              }}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 }
 
 Spectrogram.propTypes = {
-  file: TFile.isRequired,
   currentTime: T.number,
+  file: TFile.isRequired,
+  handleClipSelect: T.func,
+  height: T.number,
+  isClipping: T.bool,
+  selectedClip: T.arrayOf(T.number),
   width: T.number,
-  height: T.number
 };
