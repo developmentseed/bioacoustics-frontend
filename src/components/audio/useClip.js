@@ -9,6 +9,15 @@ export default function useClip(clipperEl, selectedClip, handleClipSelect, width
   const tempClipCoordinates = useRef([]);
   useEffect(() => {tempClipCoordinates.current = pixelClipWindow;}, [pixelClipWindow]);
 
+  /**
+   * Returns the mouse position relative to the #clipper element
+   */
+  const getMousePosition = (e) => {
+    const target = e.target.closest('#clipper');
+    const { left } = target.getBoundingClientRect();
+    return e.clientX - left;
+  };
+
   /*
    * Handles mousemove events over the clipperElement. Calculates the new pixelClipWindow
    * coordinates relative to the previous position.
@@ -16,17 +25,15 @@ export default function useClip(clipperEl, selectedClip, handleClipSelect, width
   const handleClipMove = useCallback((e) => {
     if (!tempClipCoordinates.current.length) return;
 
-    const lastPosition = tempClipCoordinates.current[1] || tempClipCoordinates.current[0];
-    setPixelClipWindow([tempClipCoordinates.current[0], lastPosition + e.movementX]);
+    const x = getMousePosition(e);
+    setPixelClipWindow([tempClipCoordinates.current[0], x]);
   }, []);
 
   /*
    * Handles click events on the clipperElement.
    */
   const handleClipClick = (e) => {
-    const target = e.target.closest('#clipper');
-    var { left } = target.getBoundingClientRect();
-    var x = e.clientX - left;
+    const x = getMousePosition(e);
 
     if (isSelecting) {
       const clipWindow = [pixelClipWindow[0], x];
