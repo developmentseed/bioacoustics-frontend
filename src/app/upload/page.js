@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { Container } from '@chakra-ui/react';
 import SpectrogramPlayer from '@/components/audio/SpectrogramPlayer';
 
 export default function Upload() {
@@ -9,14 +10,16 @@ export default function Upload() {
 
   return (
     <main>
-      <h1>Upload</h1>
-      {!file ? (
-        <form>
-          <input type="file" name="file" onChange={handleFileSelect} />
-        </form>
-      ) : (
-        <SpectrogramPlayer file={file} clippable />
-      )}
+      <Container>
+        <h1>Upload</h1>
+        {!file ? (
+          <form>
+            <input type="file" name="file" onChange={handleFileSelect} />
+          </form>
+        ) : (
+          <SpectrogramPlayer file={file} clippable />
+        )}
+      </Container>
     </main>
   );
 }
