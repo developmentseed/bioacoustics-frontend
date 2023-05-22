@@ -7,7 +7,7 @@ import { InpageHeader } from '@/components/page';
 
 export default function Upload() {
   const [ file, setFile ] = useState();
-  const [ results, setResults ] = useState([]);
+  const [ results ] = useState([]);
   const inputRef = useRef();
 
   const handleFileSelect = (e) => setFile(e.target.files[0]);
