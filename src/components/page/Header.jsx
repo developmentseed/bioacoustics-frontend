@@ -1,11 +1,25 @@
 'use client';
-import { Box, Container } from '@chakra-ui/react';
+import { Box, Container, HStack, Text } from '@chakra-ui/react';
+import NavItem from './NavItem';
 
 export default function Header () {
   return (
     <Box as="header" py="4" boxShadow="base">
-      <Container>
-        <Box>EcoEcho</Box>
+      <Container display="flex" alignItems="baseline" justifyContent="space-between">
+        <Text
+          fontSize="lg"
+          fontWeight="bold"
+          textTransform="uppercase"
+          color="primary.400"
+        >
+          EcoEcho
+        </Text>
+        <Box as="nav">
+          <HStack as="ul" listStyleType="none" fontSize="sm" fontWeight="bold">
+            <NavItem href="/search">Search</NavItem>
+            <NavItem href="/about">About</NavItem>
+          </HStack>
+        </Box>
       </Container>
     </Box>
   );

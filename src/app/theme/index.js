@@ -2,6 +2,7 @@ import { extendTheme } from '@chakra-ui/react';
 import { Lexend } from '@next/font/google';
 
 import Button from './Button';
+import Container from './Container';
 import Heading from './Heading';
 
 const lexend = Lexend({ subsets: ['latin'], display: 'swap' });
@@ -37,6 +38,7 @@ export default extendTheme({
   },
   components: {
     Button,
-    Heading
+    Container,
+    Heading,
   },
 });
