@@ -8,11 +8,11 @@ export default function Header () {
       <Container display="flex" alignItems="baseline" justifyContent="space-between">
         <Text
           fontSize="lg"
-          fontWeight="bold"
+          fontWeight="light"
           textTransform="uppercase"
           color="primary.400"
         >
-          EcoEcho
+          Eco<Text as="span" color="primary.200" fontWeight="bold">Echo</Text>
         </Text>
         <Box as="nav">
           <HStack as="ul" listStyleType="none" fontSize="sm" fontWeight="bold">
