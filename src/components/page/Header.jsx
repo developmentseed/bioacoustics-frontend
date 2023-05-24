@@ -2,17 +2,25 @@
 import { Box, Container, HStack, Text } from '@chakra-ui/react';
 import NavItem from './NavItem';
 
-export default function Header () {
+export default function Header() {
   return (
     <Box as="header" py="4" boxShadow="base">
-      <Container display="flex" alignItems="baseline" justifyContent="space-between">
+      <Container
+        maxW="container.xl"
+        display="flex"
+        alignItems="baseline"
+        justifyContent="space-between"
+      >
         <Text
           fontSize="lg"
           fontWeight="light"
           textTransform="uppercase"
           color="primary.400"
         >
-          Eco<Text as="span" color="primary.200" fontWeight="bold">Echo</Text>
+          Eco
+          <Text as="span" color="primary.200" fontWeight="bold">
+            Echo
+          </Text>
         </Text>
         <Box as="nav">
           <HStack as="ul" listStyleType="none" fontSize="sm" fontWeight="bold">

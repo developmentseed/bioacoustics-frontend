@@ -15,7 +15,7 @@ export default function Upload() {
   return (
     <main>
       <InpageHeader>
-        <Container>
+        <Container maxW="container.xl">
           <Box bg="white" p="5" borderRadius="5" boxShadow="lg">
             <Heading as="h1" size="md">
               Search
