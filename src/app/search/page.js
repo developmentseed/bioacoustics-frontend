@@ -1,14 +1,14 @@
 'use client';
-import { useRef, useState } from 'react';
-import { Box, Button, Container, Heading, Text } from '@chakra-ui/react';
+import { useState } from 'react';
+import { Box, Container, Heading, Text } from '@chakra-ui/react';
 
-import SpectrogramPlayer from '@/components/audio/SpectrogramPlayer';
 import { InpageHeader } from '@/components/page';
+import AudioClipper from './AudioClipper';
+import AudioSelectForm from './AudioSelectForm';
 
 export default function Upload() {
   const [file, setFile] = useState();
   const [results] = useState([]);
-  const inputRef = useRef();
 
   const handleFileSelect = (e) => setFile(e.target.files[0]);
 
@@ -17,43 +17,13 @@ export default function Upload() {
       <InpageHeader>
         <Container maxW="container.xl">
           <Box bg="white" p="5" borderRadius="5" boxShadow="lg">
-            <Heading as="h1" size="md">
+            <Heading as="h1" size="md" mb="2">
               Search
             </Heading>
-            <Text>Upload audio to search for similar sounds</Text>
             {!file ? (
-              <Box
-                as="form"
-                border="2px dashed"
-                borderColor="primary.400"
-                borderRadius="5"
-                textAlign="center"
-                mt="5"
-                p="5"
-              >
-                <Text>Click to select from your device</Text>
-                <Text id="file-hint" color="neutral.300" mb="3" fontSize="sm">
-                  Maximum audio length 10 minutes. Maximum file size 1 Gb
-                </Text>
-                <input
-                  ref={inputRef}
-                  type="file"
-                  name="file"
-                  onChange={handleFileSelect}
-                  aria-describedby="file-hint"
-                  style={{ display: 'none' }}
-                />
-                <Button
-                  type="button"
-                  variant="primary"
-                  size="sm"
-                  onClick={() => inputRef.current.click()}
-                >
-                  Select File
-                </Button>
-              </Box>
+              <AudioSelectForm handleFileSelect={handleFileSelect} />
             ) : (
-              <SpectrogramPlayer file={file} clippable />
+              <AudioClipper file={file} />
             )}
           </Box>
         </Container>
