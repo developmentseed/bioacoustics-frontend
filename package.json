@@ -10,8 +10,14 @@
     "test": "jest"
   },
   "dependencies": {
+    "@chakra-ui/next-js": "^2.1.3",
+    "@chakra-ui/react": "^2.6.1",
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@next/font": "^13.4.2",
     "eslint": "8.39.0",
     "eslint-config-next": "13.4.0",
+    "framer-motion": "^10.12.12",
     "next": "13.4.0",
     "prop-types": "^15.8.1",
     "react": "18.2.0",
