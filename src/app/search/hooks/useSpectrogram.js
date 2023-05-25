@@ -1,8 +1,20 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import SpectrogramPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.spectrogram';
+import MinimapPlugin from 'wavesurfer.js/src/plugin/minimap';
+import colormap from 'colormap';
+import CursorPlugin from 'wavesurfer.js/src/plugin/cursor';
+import PlayheadPlugin from 'wavesurfer.js/src/plugin/playhead';
+import RegionsPlugin from 'wavesurfer.js/src/plugin/regions';
+import TimelinePlugin from 'wavesurfer.js/src/plugin/timeline';
 
-const MAX_ZOOM = 5;
+const MAX_ZOOM = 10;
+
+const colorMap = colormap({
+    colormap: 'viridis',
+    nshades: 256,
+    format: 'float'
+});
 
 export default function useSpectrogramNavigation(file, waveformId, spectrogramId) {
   const wavesurferRef = useRef();
@@ -16,12 +28,41 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
     var wavesurfer = WaveSurfer.create({
       container: `#${CSS.escape(waveformId)}`,
       scrollParent: true,
+      autoCenter: true,
       plugins: [
         SpectrogramPlugin.create({
             wavesurfer: wavesurfer,
             container: `#${CSS.escape(spectrogramId)}`,
-            labels: false,
+            labels: true,
             height: 256,
+            colorMap: colorMap,
+        }),
+        MinimapPlugin.create({
+          container: '#minimap',
+          waveColor: '#777',
+          progressColor: '#222',
+          height: 20
+        }),
+        CursorPlugin.create({
+          showTime: true,
+            opacity: 1,
+            customShowTimeStyle: {
+                'background-color': '#000',
+                color: '#fff',
+                padding: '2px',
+                'font-size': '10px'
+            }
+        }),
+        PlayheadPlugin.create({
+          returnOnPause: false,
+          moveOnSeek: true,
+          draw: true
+        }),
+        RegionsPlugin.create({
+          
+        }),
+        TimelinePlugin.create({
+          container: '#timeline',
         })
       ]
     });

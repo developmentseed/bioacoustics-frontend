@@ -21,8 +21,10 @@ export default function AudioClipper({ file }) {
   return (
     <>
       <Text>{file.name}</Text>
-      <Box id={waveformId} width="100%" height="0" />
       <Box id={spectrogramId} {...spectrogramProps} />
+      <Box id={waveformId} width="100%" height="0" />
+      <Box id="timeline" width="100%" height="20" />
+      <Box id="minimap" width="100%" height="0" />
 
       <HStack mt="2">
         <HStack>
