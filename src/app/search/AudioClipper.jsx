@@ -2,7 +2,7 @@ import { useId } from 'react';
 import { Box, ButtonGroup, HStack, IconButton, Text } from '@chakra-ui/react';
 
 import { TFile } from '@/types';
-import { MinusIcon, PlusIcon, ResetZoomIcon } from '@/icons';
+import { MdAdd, MdRemove, MdFullscreen } from 'react-icons/md';
 
 import useSpectrogram from './hooks/useSpectrogram';
 
@@ -28,10 +28,10 @@ export default function AudioClipper({ file }) {
         <HStack>
           <Text color="primary.400" fontSize="sm">Zoom</Text>
           <ButtonGroup isAttached variant="outline">
-            <IconButton icon={<PlusIcon />} type="button" size="xs" {...zoomInButtonProps} aria-label="Zoom in" />
-            <IconButton icon={<MinusIcon />} type="button" size="xs" {...zoomOutButtonProps} aria-label="Zoom out" />
+            <IconButton icon={<MdAdd />} type="button" size="xs" {...zoomInButtonProps} aria-label="Zoom in" />
+            <IconButton icon={<MdRemove />} type="button" size="xs" {...zoomOutButtonProps} aria-label="Zoom out" />
           </ButtonGroup>
-          <IconButton icon={<ResetZoomIcon />} type="button" variant="outline" size="xs" {...resetZoomButtonProps} aria-label="Reset zoom" />
+          <IconButton icon={<MdFullscreen />} type="button" variant="outline" size="xs" {...resetZoomButtonProps} aria-label="Reset zoom" />
         </HStack>
       </HStack>
     </>
