@@ -4,7 +4,8 @@ import SpectrogramPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.spectrogram'
 
 const MAX_ZOOM = 5;
 
-export default function useSpectrogramNavigation(file, wavesurferRef, waveformId, spectrogramId) {
+export default function useSpectrogramNavigation(file, waveformId, spectrogramId) {
+  const wavesurferRef = useRef();
   const spectrogramRef = useRef();
   const spectrogramCenter = useRef(0.5);
   const [ zoom, setZoom ] = useState(1);

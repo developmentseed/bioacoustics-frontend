@@ -1,10 +1,14 @@
 'use client';
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { Box, Container, Heading, Text } from '@chakra-ui/react';
 
+import { Loading } from '@/components';
 import { InpageHeader } from '@/components/page';
-import AudioClipper from './AudioClipper';
 import AudioSelectForm from './AudioSelectForm';
+const AudioClipper = dynamic(() => import('./AudioClipper'), {
+  loading: () => <Loading size="xl" />,
+});
 
 export default function Upload() {
   const [file, setFile] = useState();
