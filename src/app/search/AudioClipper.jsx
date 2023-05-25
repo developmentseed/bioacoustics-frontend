@@ -9,7 +9,6 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
-  // SliderMark,
   Text,
 } from '@chakra-ui/react';
 
@@ -26,13 +25,6 @@ export default function AudioClipper({ file }) {
   const spectrogramId = useId();
 
   const {
-    zoomInButtonProps,
-    zoomOutButtonProps,
-    resetZoomButtonProps,
-    spectrogramProps
-  } = useSpectrogram(file, waveformId, spectrogramId);
-
-  const {
     isPlaying,
     currentTime,
     duration,
@@ -40,11 +32,22 @@ export default function AudioClipper({ file }) {
     scrubberProps
   } = useAudioPlayer(file);
 
+  const {
+    zoomInButtonProps,
+    zoomOutButtonProps,
+    resetZoomButtonProps,
+    spectrogramProps,
+    playPositionProps,
+  } = useSpectrogram(file, waveformId, spectrogramId, currentTime, duration);
+
   return (
     <>
       <Text>{file.name}</Text>
-      <Box id={waveformId} width="100%" height="0" />
-      <Box id={spectrogramId} {...spectrogramProps} />
+      <Box position="relative" height="256px">
+        <Box position="absolute" top="-4px" border="1px solid white" borderRadius="5px" width="5px" height="264px" bgColor="red" zIndex={5} {...playPositionProps} />
+        <Box position="absolute" top="0" left="0" id={spectrogramId} width="100%" {...spectrogramProps} />
+        <Box position="absolute" top="0" left="0" id={waveformId} width="100%" height="0" visibility="hidden" />
+      </Box>
       <HStack mt="2" gap="5">
         <HStack gap="2">
           <Button
