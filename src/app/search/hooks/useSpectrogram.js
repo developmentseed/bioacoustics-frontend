@@ -10,6 +10,7 @@ export default function useSpectrogramNavigation(file, wavesurferRef, waveformId
   const [ zoom, setZoom ] = useState(1);
   const [ spectrogramCursor, setSpectrogramCursor ] = useState('grab');
 
+  // Initialises the spectrogram with the audio data
   useEffect(() => {
     var wavesurfer = WaveSurfer.create({
       container: `#${CSS.escape(waveformId)}`,
@@ -34,6 +35,7 @@ export default function useSpectrogramNavigation(file, wavesurferRef, waveformId
     wavesurferRef.current = wavesurfer;
   }, [file, waveformId, spectrogramId, wavesurferRef]);
 
+  // Rerenders the spectrogram whenever the zoom level has changed
   useEffect(() => {
     if (wavesurferRef.current.isReady) {
       const duration = wavesurferRef.current.getDuration();
@@ -45,10 +47,15 @@ export default function useSpectrogramNavigation(file, wavesurferRef, waveformId
     }
   }, [wavesurferRef, zoom]);
 
+  // Event handler for zoom-in click
   const handleZoomIn = () => setZoom(zoom + 1);
 
+  // Event handler for zoom-out click
   const handleZoomOut = () => setZoom(zoom - 1);
 
+  // Event handler mouse-move over the spectrogram
+  // Calculates the new center position relative to full length of the audio,
+  // i.e. the beginning of the track is 0, the end is 1, half-way is .5
   const handleMouseMove = useCallback((e) => {
     const width = spectrogramRef.current.clientWidth;
 
@@ -60,16 +67,21 @@ export default function useSpectrogramNavigation(file, wavesurferRef, waveformId
     }
   }, [wavesurferRef, zoom]);
 
+  // Event handler for mouse-down events over the spectrogram
+  // Activates panning by registering the mouse-move handler
   const handleMouseDown = useCallback((e) => {
     e.target.addEventListener('mousemove', handleMouseMove);
     setSpectrogramCursor('ew-resize');
   }, [handleMouseMove]);
 
+  // Event handler for mouse-up events over the spectrogram
+  // Deactivates panning by removing the mouse-move handler
   const handleMouseUp = useCallback((e) => {
     e.target.removeEventListener('mousemove', handleMouseMove);
     setSpectrogramCursor('grab');
   }, [handleMouseMove]);
 
+  // Event handler for the zoom-reset click
   const handleResetZoom = useCallback(() => setZoom(1), []);
 
   return {
