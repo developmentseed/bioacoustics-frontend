@@ -113,6 +113,8 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
 
   return {
     zoom,
+    spectrogramCenter,
+    spectrogramRef,
     zoomInButtonProps: {
       onClick: handleZoomIn,
       isDisabled: zoom === MAX_ZOOM
