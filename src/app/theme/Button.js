@@ -8,6 +8,10 @@ const Button = defineStyleConfig({
     primary: {
       bgColor: 'primary.400',
       color: 'white'
+    },
+    outline: {
+      color: 'primary.400',
+      borderColor: 'primary.400'
     }
   }
 });
