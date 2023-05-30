@@ -49,7 +49,7 @@ export default function AudioClipper({ file }) {
         <Box position="absolute" top="0" left="0" id={waveformId} width="100%" height="0" visibility="hidden" />
       </Box>
       <HStack mt="2" gap="5">
-        <HStack gap="2">
+        <HStack gap="2" flex="1">
           <Button
             type="button"
             variant="ghost"
@@ -65,7 +65,7 @@ export default function AudioClipper({ file }) {
             {isPlaying ? 'Pause' : 'Play'}
           </Button>
           <TimeBox time={currentTime} />
-          <Slider min={0} max={duration} step={0.1} width="300px" {...scrubberProps}>
+          <Slider min={0} max={duration} step={0.1} minW="300px" flex="1" {...scrubberProps}>
             <SliderTrack bg="neutral.100">
               <SliderFilledTrack bg="primary.400" />
             </SliderTrack>
