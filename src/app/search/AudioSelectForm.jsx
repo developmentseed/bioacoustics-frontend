@@ -9,7 +9,6 @@ export default function AudioSelectForm({ handleFileSelect }) {
     <Box>
       <Text>Upload audio to search for similar sounds</Text>
       <Box
-        as="form"
         border="2px dashed"
         borderColor="primary.400"
         borderRadius="5"

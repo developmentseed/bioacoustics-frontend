@@ -1,11 +1,12 @@
 'use client';
 import dynamic from 'next/dynamic';
-import { Box, Button, Container, Heading, Text } from '@chakra-ui/react';
+import { Box, Button, Container, Heading } from '@chakra-ui/react';
 
 import { Loading } from '@/components';
 import { InpageHeader } from '@/components/page';
 import AudioSelectForm from './AudioSelectForm';
 import useSearchForm from './hooks/useSearchForm';
+import Results from './Results';
 const AudioClipper = dynamic(() => import('./AudioClipper'), {
   loading: () => <Loading size="xl" />,
 });
@@ -14,6 +15,7 @@ export default function Upload() {
   const {
     file,
     results,
+    isSubmitting,
     handleFileSelect,
     handleFormSubmit
    } = useSearchForm();
@@ -32,23 +34,19 @@ export default function Upload() {
               <AudioClipper file={file} />
             )}
             <Box textAlign="right" mt="2">
-              <Button variant="primary" type="submit" onClick={handleFormSubmit}>Search</Button>
+              <Button
+                variant="primary"
+                type="submit"
+                onClick={handleFormSubmit}
+                isDisabled={isSubmitting}
+              >
+                Search
+              </Button>
             </Box>
           </Box>
         </Container>
       </InpageHeader>
-      <Container mt="10">
-        {results.length > 0 ? (
-          <p>TODO: Showing some results here.</p>
-        ) : (
-          <Box textAlign="center">
-            <Heading as="h2" size="base">
-              Results
-            </Heading>
-            <Text>Upload audio to view results</Text>
-          </Box>
-        )}
-      </Container>
+      <Results results={results} isLoading={isSubmitting} />
     </main>
   );
 }
