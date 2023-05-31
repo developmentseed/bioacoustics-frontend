@@ -1,7 +1,6 @@
 import { useId } from 'react';
 import {
   Box,
-  Button,
   ButtonGroup,
   HStack,
   IconButton,
@@ -50,20 +49,17 @@ export default function AudioClipper({ file }) {
       </Box>
       <HStack mt="2" gap="5">
         <HStack gap="2" flex="1">
-          <Button
+          <IconButton
             type="button"
             variant="ghost"
-            size="sm"
-            leftIcon={isPlaying ? <MdPauseCircleOutline /> : <MdPlayCircleOutline />}
-            px="0"
-            _hover={{
-              background: 'white',
-              color: 'primary.500',
-            }}
+            borderRadius="full"
+            color="primary.400"
+            colorScheme="blackAlpha"
+            icon={isPlaying ? <MdPauseCircleOutline fontSize="1.75rem" /> : <MdPlayCircleOutline fontSize="1.75rem" />}
+            aria-label={isPlaying ? 'Pause' : 'Play'}
+            title={isPlaying ? 'Pause' : 'Play'}
             {...playButtonProps}
-          >
-            {isPlaying ? 'Pause' : 'Play'}
-          </Button>
+          />
           <TimeBox time={currentTime} />
           <Slider min={0} max={duration} step={0.1} minW="300px" flex="1" {...scrubberProps}>
             <SliderTrack bg="neutral.100">
