@@ -40,7 +40,7 @@ export default function TableView({ results }) {
             <Th>Timestamp</Th>
           </Tr>
         </Thead>
-        <Tbody>
+        <Tbody data-testid="results-table">
           {results.map((result) => <ResultRow key={result.id} result={result} />)}
         </Tbody>
       </Table>
