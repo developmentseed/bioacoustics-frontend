@@ -6,7 +6,7 @@ import { Loading } from '@/components';
 import { InpageHeader } from '@/components/page';
 import AudioSelectForm from './AudioSelectForm';
 import useSearchForm from './hooks/useSearchForm';
-import Results from './Results';
+import Results from './results';
 const AudioClipper = dynamic(() => import('./AudioClipper'), {
   loading: () => <Loading size="xl" />,
 });
@@ -18,7 +18,7 @@ export default function Upload() {
     isSubmitting,
     handleFileSelect,
     handleFormSubmit
-   } = useSearchForm();
+  } = useSearchForm();
 
   return (
     <main>
