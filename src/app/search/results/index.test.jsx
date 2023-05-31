@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import Results from './';
 
@@ -16,5 +17,19 @@ describe('Results', () => {
       />);
     expect(screen.queryByTestId('loading')).not.toBeInTheDocument();
     expect(screen.queryByTestId('results-table')).toBeInTheDocument();
+  });
+
+  it('renders the results table', async () => {
+    render(
+      <Results
+        isLoading={false}
+        results={[{ id: 1, distance: 1.234, entity: { site_name: 'Site A', subsite_name: 'A.1', file_timestamp: 1620360000 }}]}
+      />);
+    expect(screen.queryByTestId('results-table')).toBeInTheDocument();
+    expect(screen.queryByTestId('results-grid')).not.toBeInTheDocument();
+
+    userEvent.click(screen.getByLabelText('View results in grid'));
+    expect(await screen.findByTestId('results-grid')).toBeInTheDocument();
+    expect(screen.queryByTestId('results-table')).not.toBeInTheDocument();
   });
 });
