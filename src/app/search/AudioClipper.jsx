@@ -53,8 +53,6 @@ export default function AudioClipper({ file }) {
             type="button"
             variant="ghost"
             borderRadius="full"
-            color="primary.400"
-            colorScheme="blackAlpha"
             icon={isPlaying ? <MdPauseCircleOutline fontSize="1.75rem" /> : <MdPlayCircleOutline fontSize="1.75rem" />}
             aria-label={isPlaying ? 'Pause' : 'Play'}
             title={isPlaying ? 'Pause' : 'Play'}
