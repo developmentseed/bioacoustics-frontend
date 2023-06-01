@@ -9,6 +9,7 @@ import {
   TableContainer,
 } from '@chakra-ui/react';
 import { TMatch } from '@/types';
+import { formatDate } from '@/utils';
 
 function ResultRow({ result }) {
   const { id, distance, entity: { site_name, subsite_name, file_timestamp } } = result;
@@ -18,7 +19,7 @@ function ResultRow({ result }) {
       <Td>{ distance }</Td>
       <Td>{ site_name }</Td>
       <Td>{ subsite_name }</Td>
-      <Td>{ file_timestamp }</Td>
+      <Td>{ formatDate(file_timestamp) }</Td>
     </Tr>
   );
 }

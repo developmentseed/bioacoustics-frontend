@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import T from 'prop-types';
 import { Box, ButtonGroup, Container, Flex, Heading, IconButton, Spacer, Text } from '@chakra-ui/react';
-import { MdMenu, MdGridView } from 'react-icons/md';
+import { MdMenu, MdGridView, MdGridOn } from 'react-icons/md';
 
 import { Loading } from '@/components';
 import { TMatch } from '@/types';
@@ -10,7 +10,8 @@ import GridView from './GridView';
 
 const VIEWS = {
   table: 1,
-  grid: 2
+  grid_sm: 2,
+  grid_lg: 3,
 };
 
 export default function Results({ isLoading, results }) {
@@ -41,18 +42,26 @@ export default function Results({ isLoading, results }) {
                 onClick={() => setView(VIEWS.table)}
               />
               <IconButton
-                variant={view === VIEWS.grid ? 'primary': 'outline'}
+                variant={view === VIEWS.grid_lg ? 'primary': 'outline'}
                 icon={<MdGridView />}
                 type="button"
                 size="xs"
-                aria-label="View results in grid"
-                onClick={() => setView(VIEWS.grid)}
+                aria-label="View results in large grid"
+                onClick={() => setView(VIEWS.grid_lg)}
+              />
+              <IconButton
+                variant={view === VIEWS.grid_sm ? 'primary': 'outline'}
+                icon={<MdGridOn />}
+                type="button"
+                size="xs"
+                aria-label="View results in small grid"
+                onClick={() => setView(VIEWS.grid_sm)}
               />
             </ButtonGroup>
             </Box>
           </Flex>
           {view === VIEWS.table && <TableView results={results} />}
-          {view === VIEWS.grid && <GridView results={results} />}
+          {[VIEWS.grid_sm, VIEWS.grid_lg].includes(view) && <GridView results={results} large={view === VIEWS.grid_lg} />}
         </>
       ) : (
         <Text>Upload audio to view results</Text>
