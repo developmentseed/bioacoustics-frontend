@@ -48,7 +48,7 @@ ToolbarButton.propTypes = {
 };
 
 
-export default function AudioClipper({ file }) {
+export default function AudioClipper({ file, setClip }) {
   const waveformId = useId();
   const spectrogramId = useId();
 
@@ -64,6 +64,7 @@ export default function AudioClipper({ file }) {
     zoom,
     spectrogramCenter,
     spectrogramRef,
+    hasDragged,
     zoomInButtonProps,
     zoomOutButtonProps,
     resetZoomButtonProps,
@@ -73,41 +74,57 @@ export default function AudioClipper({ file }) {
 
   const {
     isClipping,
-    // clipCenterPx,
-    // clipWidthPx,
+    clipCenterPx,
+    clipWidthPx,
+    handleClipSet,
     clipButtonProps,
     cancelButtonProps,
     submitButtonProps
-  } = useClipper(duration, spectrogramCenter, zoom, spectrogramRef);
+  } = useClipper(duration, spectrogramCenter, zoom, spectrogramRef, hasDragged, setClip);
 
   return (
     <>
       <Text>{file.name}</Text>
       <Box position="relative" height="256px">
         <Box position="absolute" top="-4px" border="1px solid white" borderRadius="5px" width="5px" height="264px" bgColor="red" zIndex={7} {...playPositionProps} />
-        <Box position="absolute" top="0" left="0" id={spectrogramId} width="100%" {...spectrogramProps}>
-          {/* <Box
-            position="absolute"
-            top="0"
-            left="0"
-            width="100%"
-            height="256px"
-            overflow="hidden"
-            display="inline-block"
-            zIndex={5}
-            _before={{
-              content: '""',
-              display: 'block',
-              width: `${clipWidthPx}px`, // TODO: Should be dynamic
-              height: '256px',
-              position: 'absolute',
-              top: '50%',
-              left: clipCenterPx, // TODO: Should be dynamic
-              zIndex: 6,
-              border: '1000px solid rgba(0, 0, 0, 0.6)',
-              transform: 'translate(-50%, -50%)'
-            }}
-          /> */}
+        <Box position="absolute" top="0" left="0" id={spectrogramId} width="100%" onClick={handleClipSet} {...spectrogramProps}>
+          {clipCenterPx !== undefined && (
+            <Box
+              position="absolute"
+              top="0"
+              left="0"
+              width="100%"
+              height="256px"
+              overflow="hidden"
+              display="inline-block"
+              zIndex={5}
+              _before={{
+                content: '""',
+                display: 'block',
+                width: `${clipWidthPx}px`,
+                height: '256px',
+                position: 'absolute',
+                top: '50%',
+                left: clipCenterPx,
+                zIndex: 6,
+                border: '99999px solid rgba(0, 0, 0, 0.6)',
+                transform: 'translate(-50%, -50%)'
+              }}
+              _after={{
+                content: '""',
+                display: 'block',
+                width: `${clipWidthPx}px`,
+                height: '246px',
+                position: 'absolute',
+                top: '128',
+                left: clipCenterPx,
+                zIndex: 6,
+                border: '5px solid #A4FF31',
+                borderRadius: '7px',
+                transform: 'translate(-50%, -50%)'
+              }}
+            />
+          )}
         </Box>
         <Box position="absolute" top="0" left="0" id={waveformId} width="100%" height="0" visibility="hidden" />
       </Box>
@@ -161,5 +178,6 @@ export default function AudioClipper({ file }) {
 }
 
 AudioClipper.propTypes = {
-  file: TFile
+  file: TFile,
+  setClip: T.func.isRequired
 };

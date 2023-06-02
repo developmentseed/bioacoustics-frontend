@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Box, Button, Container, Heading } from '@chakra-ui/react';
 
@@ -12,6 +13,8 @@ const AudioClipper = dynamic(() => import('./AudioClipper'), {
 });
 
 export default function Upload() {
+  const [clipStart, setClipStart] = useState();
+  const [clipLength, setClipLength] = useState();
   const {
     file,
     results,
@@ -19,6 +22,11 @@ export default function Upload() {
     handleFileSelect,
     handleFormSubmit
   } = useSearchForm();
+
+  const setClip = (start, length) => {
+    setClipStart(start);
+    setClipLength(length);
+  };
 
   return (
     <main>
@@ -31,7 +39,7 @@ export default function Upload() {
             {!file ? (
               <AudioSelectForm handleFileSelect={handleFileSelect} />
             ) : (
-              <AudioClipper file={file} />
+              <AudioClipper file={file} setClip={setClip} />
             )}
             <Box textAlign="right" mt="2">
               <Button
