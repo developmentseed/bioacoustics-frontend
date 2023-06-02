@@ -12,6 +12,9 @@ const Button = defineStyleConfig({
     outline: {
       color: 'primary.400',
       borderColor: 'primary.400'
+    },
+    ghost: {
+      color: 'primary.400',
     }
   }
 });
