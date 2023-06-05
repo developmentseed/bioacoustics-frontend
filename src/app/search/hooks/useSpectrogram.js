@@ -106,7 +106,7 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
     const width = spectrogramRef.current.clientWidth;
 
     const newPosition = spectrogramCenter.current + (e.movementX * -1 / width);
-    const limit = 1 / Math.pow(zoom, 2);
+    const limit = 1 / (zoom * 2);
     if (newPosition >= limit && newPosition <= 1 - limit) {
       wavesurferRef.current.seekAndCenter(newPosition);
       spectrogramCenter.current = newPosition;
