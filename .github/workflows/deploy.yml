@@ -23,6 +23,10 @@ jobs:
       with:
         credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
 
+    - id: 'install-dependencies'
+      name: 'Install dependencies'
+      run: yarn install
+
     - id: 'build-staging'
       name: 'Build Staging'
       run: yarn build
