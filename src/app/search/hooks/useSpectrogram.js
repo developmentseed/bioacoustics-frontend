@@ -70,11 +70,34 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
     }
   }, [wavesurferRef, zoom]);
 
+  const zoomTo = useCallback((newZoom) => {
+    if (newZoom === 1) {
+      spectrogramCenter.current = 0.5;
+    } else {
+      const panPadding = 1 / newZoom / 2;
+      const minCenter = panPadding;
+      const maxCenter = 1 - panPadding;
+
+      if (spectrogramCenter.current < maxCenter) {
+        spectrogramCenter.current = Math.max(spectrogramCenter.current, minCenter);
+      }
+      
+      if (spectrogramCenter.current > minCenter) {
+        spectrogramCenter.current = Math.min(spectrogramCenter.current, maxCenter);
+      }
+    }
+
+    setZoom(newZoom);
+  }, []);
+
   // Event handler for zoom-in click
-  const handleZoomIn = () => setZoom(zoom + 1);
+  const handleZoomIn = () => zoomTo(zoom + 1);
 
   // Event handler for zoom-out click
-  const handleZoomOut = () => setZoom(zoom - 1);
+  const handleZoomOut = () => zoomTo(zoom - 1);
+
+  // Event handler for the zoom-reset click
+  const handleResetZoom = useCallback(() => zoomTo(1), [zoomTo]);
 
   // Event handler mouse-move over the spectrogram
   // Calculates the new center position relative to full length of the audio,
@@ -104,12 +127,6 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
     e.target.removeEventListener('mousemove', handleMouseMove);
     setSpectrogramCursor('grab');
   }, [handleMouseMove]);
-
-  // Event handler for the zoom-reset click
-  const handleResetZoom = useCallback(() => {
-    setZoom(1);
-    spectrogramCenter.current = 0.5;
-  }, []);
 
   return {
     zoom,
