@@ -35,6 +35,6 @@ jobs:
         destination: 'bioacoustics-devseed-staging-frontend'
 
     - id: 'uploaded-files-staging'
-      uses: 'foo/bar@main'
+      uses: 'google-github-actions/auth@v1'
       env:
         files: '${{ steps.upload-folder-staging.outputs.uploaded }}'
