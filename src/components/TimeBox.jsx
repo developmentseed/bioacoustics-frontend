@@ -3,7 +3,10 @@ import { Box } from '@chakra-ui/react';
 
 const formatTime = (time) => {
   const currentTimeInSeconds = Math.floor(time);
-  const minutes = Math.floor(currentTimeInSeconds / 60);
+  let minutes = Math.floor(currentTimeInSeconds / 60);
+  if (minutes < 10) {
+    minutes = `0${minutes}`;
+  }
   let seconds = currentTimeInSeconds % 60;
   if (seconds < 10) {
     seconds = `0${seconds}`;
