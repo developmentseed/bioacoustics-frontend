@@ -39,3 +39,4 @@ jobs:
       with:
         path: 'out'
         destination: 'bioacoustics-devseed-staging-frontend'
+        parent: false
