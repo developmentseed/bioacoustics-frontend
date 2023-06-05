@@ -24,7 +24,7 @@ jobs:
 
     - id: 'build-staging'
       name: 'Build Staging'
-      with:
+      run: yarn build
         
     - id: 'upload-folder-staging'
       name: 'Upload Staging'
