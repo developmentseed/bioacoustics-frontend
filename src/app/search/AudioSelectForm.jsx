@@ -2,6 +2,8 @@ import { useRef } from 'react';
 import T from 'prop-types';
 import { Box, Button, Text } from '@chakra-ui/react';
 
+import { ACCEPTED_AUDIO_TYPES } from '@/settings';
+
 export default function AudioSelectForm({ handleFileSelect }) {
   const inputRef = useRef();
 
@@ -32,6 +34,7 @@ export default function AudioSelectForm({ handleFileSelect }) {
           onChange={handleFileSelect}
           aria-describedby="file-hint"
           style={{ display: 'none' }}
+          accept={ACCEPTED_AUDIO_TYPES.join(',')}
         />
         <Button
           type="button"
