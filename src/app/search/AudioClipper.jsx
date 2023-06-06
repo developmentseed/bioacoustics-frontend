@@ -7,6 +7,9 @@ import {
   Flex,
   HStack,
   IconButton,
+  Input,
+  InputLeftAddon,
+  InputGroup,
   Slider,
   SliderTrack,
   SliderFilledTrack,
@@ -82,7 +85,9 @@ export default function AudioClipper({ file, setClip }) {
     clipButtonProps,
     cancelButtonProps,
     submitButtonProps,
-    dragButtonProps
+    dragButtonProps,
+    inInputProps,
+    outInputProps
   } = useClipper(duration, spectrogramCenter, zoom, spectrogramRef, hasDragged, setClip);
 
   return (
@@ -166,7 +171,15 @@ export default function AudioClipper({ file, setClip }) {
         <Center>
           <HStack mt="2" gap="5" align="center">
             <Button type="button" variant="ghost" size="xs" {...cancelButtonProps}>Cancel</Button>
-            <Button type="button" variant="primary" size="xs" {...submitButtonProps}>Clip</Button>
+            <InputGroup size="xs" w="20">
+              <InputLeftAddon>In</InputLeftAddon>
+              <Input type="text" {...inInputProps} />
+            </InputGroup>
+            <InputGroup size="xs" w="24">
+              <InputLeftAddon>Out</InputLeftAddon>
+              <Input type="text" {...outInputProps} />
+            </InputGroup>
+            <Button type="button" variant="primary" size="xs" {...submitButtonProps}>Confirm</Button>
           </HStack>
         </Center>
       )}

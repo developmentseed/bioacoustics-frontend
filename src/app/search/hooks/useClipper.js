@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
+import { formatTime } from '@/utils';
 
 export default function useClipper(duration, spectrogramCenter, zoom, spectrogramRef, hasDragged, setClip) {
   const [ isClipping, setIsClipping ] = useState(false);
@@ -135,6 +136,14 @@ export default function useClipper(duration, spectrogramCenter, zoom, spectrogra
     dragButtonProps: {
       onMouseDown: handleDragMouseDown,
       onClick: handleDragClick
+    },
+    inInputProps: {
+      readOnly: true,
+      value: formatTime(clipCenter - clipLength / 2)
+    },
+    outInputProps: {
+      readOnly: true,
+      value: formatTime(clipCenter - clipLength / 2)
     }
   };
 }
