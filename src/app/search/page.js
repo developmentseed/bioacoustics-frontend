@@ -13,8 +13,8 @@ const AudioClipper = dynamic(() => import('./AudioClipper'), {
 });
 
 export default function Upload() {
-  const [clipStart, setClipStart] = useState();
-  const [clipLength, setClipLength] = useState();
+  const [clipStart, setClipStart] = useState(); // eslint-disable-line
+  const [clipLength, setClipLength] = useState(); // eslint-disable-line
   const {
     file,
     results,
