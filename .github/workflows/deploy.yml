@@ -17,13 +17,13 @@ jobs:
     - id: 'checkout'
       uses: 'actions/checkout@v3'
 
-    # - id: 'auth'
-    #   name: 'Authenticate to Google Cloud'
-    #   uses: 'google-github-actions/auth@v1'
-    #   env:
-    #     GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-    #   with:
-    #     credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
+    - id: 'auth'
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v1'
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+      with:
+        credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
 
     - id: 'install-dependencies'
       name: 'Install dependencies'
@@ -33,23 +33,23 @@ jobs:
       name: 'Build Staging'
       run: yarn build
         
-    - id: 'install-surge'
-      name: 'Install Surge'
-      run: npm install -g surge
+    # - id: 'install-surge'
+    #   name: 'Install Surge'
+    #   run: npm install -g surge
 
-    - id: 'deploy-surge-staging'
-      name: 'Deploy Staging'
-      uses: dswistowski/surge-sh-action@v1
-      with:
-        domain: 'ecoecho-staging.surge.sh'
-        project: 'out'
-        login: 'sajjad@developmentseed.org'
-        token: ${{ secrets.surge_token }}
-
-    # - id: 'upload-folder-staging'
-    #   name: 'Upload Staging'
-    #   uses: 'google-github-actions/upload-cloud-storage@v1'
+    # - id: 'deploy-surge-staging'
+    #   name: 'Deploy Staging'
+    #   uses: dswistowski/surge-sh-action@v1
     #   with:
-    #     path: 'out'
-    #     destination: 'bioacoustics-devseed-staging-frontend'
-    #     parent: false
+    #     domain: 'ecoecho-staging.surge.sh'
+    #     project: 'out'
+    #     login: 'sajjad@developmentseed.org'
+    #     token: ${{ secrets.surge_token }}
+
+    - id: 'upload-folder-staging'
+      name: 'Upload Staging'
+      uses: 'google-github-actions/upload-cloud-storage@v1'
+      with:
+        path: 'out'
+        destination: 'bioacoustics-devseed-staging-frontend'
+        parent: false
