@@ -1,6 +1,5 @@
 import { useId } from 'react';
 import {
-  Alert,
   Box,
   ButtonGroup,
   HStack,
@@ -13,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 
 import { TFile } from '@/types';
-import { TimeBox } from '@/components';
+import { TimeBox, Error } from '@/components';
 import { MdAdd, MdRemove, MdFullscreen, MdPlayCircleOutline, MdPauseCircleOutline} from 'react-icons/md';
 
 import useSpectrogram from './hooks/useSpectrogram';
@@ -46,7 +45,7 @@ export default function AudioClipper({ file }) {
   return (
     <>
       <Text>{file.name}</Text>
-      { clipLengthError && <Alert status="warning" my="2" px="2" py="1" fontSize="sm" border="1px solid" borderColor="orange.300">{ clipLengthError }</Alert> }
+      { clipLengthError && <Error>{ clipLengthError }</Error> }
       <Box position="relative" height="256px">
         <Box position="absolute" top="-4px" border="1px solid white" borderRadius="5px" width="5px" height="264px" bgColor="red" zIndex={5} {...playPositionProps} />
         <Box position="absolute" top="0" left="0" id={spectrogramId} width="100%" {...spectrogramProps} />

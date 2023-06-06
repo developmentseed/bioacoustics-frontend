@@ -1,11 +1,46 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import T from 'prop-types';
-import { Box, Button, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Text } from '@chakra-ui/react';
 
-import { ACCEPTED_AUDIO_TYPES } from '@/settings';
+import { ACCEPTED_AUDIO_TYPES, MAX_AUDIO_LENGTH, MAX_AUDIO_SIZE } from '@/settings';
+import { Error } from '@/components';
 
 export default function AudioSelectForm({ handleFileSelect }) {
   const inputRef = useRef();
+  const [ error, setError ] = useState();
+  const [ name, setName ] = useState();
+
+  const validate = (file) => {
+    return new Promise((resolve) => {
+      const audioUrl = URL.createObjectURL(file);
+      const el = document.createElement('audio');
+      el.setAttribute('src', audioUrl);
+      el.setAttribute('preload', 'metadata');
+      el.addEventListener('loadedmetadata', () => {
+        const errors = [];
+        if (el.duration > MAX_AUDIO_LENGTH) {
+          errors.push('The audio length exceeds the limit of 5 minutes. Upload a shorter recording.');
+        }
+        if (file.size > MAX_AUDIO_SIZE) {
+          errors.push('The file size exceeds the limit of 1GB. Upload a smaller file.');
+        }
+        resolve(errors);
+      });
+    });
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    setName(file.name);
+
+    const errors = await validate(file);
+    if (errors.length > 0) {
+      setError(errors.join(' '));
+    } else {
+      handleFileSelect(file);
+    }
+
+  };
 
   return (
     <Box>
@@ -31,19 +66,23 @@ export default function AudioSelectForm({ handleFileSelect }) {
           ref={inputRef}
           type="file"
           name="file"
-          onChange={handleFileSelect}
+          onChange={handleFileChange}
           aria-describedby="file-hint"
           style={{ display: 'none' }}
           accept={ACCEPTED_AUDIO_TYPES.join(',')}
         />
-        <Button
-          type="button"
-          variant="primary"
-          size="sm"
-          onClick={() => inputRef.current.click()}
-        >
-          Select File
-        </Button>
+        <Flex gap="2" justifyContent="center" alignItems="baseline">
+          <Button
+            type="button"
+            variant="primary"
+            size="sm"
+            onClick={() => inputRef.current.click()}
+          >
+            Select File
+          </Button>
+          {name && <Text>{name}</Text>}
+        </Flex>
+        {error && <Error>{ error }</Error> }
       </Box>
     </Box>
   );
