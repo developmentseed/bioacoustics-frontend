@@ -39,7 +39,12 @@ jobs:
 
     - id: 'deploy-surge-staging'
       name: 'Deploy Staging'
-      run: surge out/ ecoecho-staging.surge.sh
+      uses: dswistowski/surge-sh-action@v1
+      with:
+        domain: 'ecoecho-staging.surge.sh'
+        project: 'out'
+        login: 'sajjad@developmentseed.org'
+        token: ${{ secrets.surge_token }}
 
     # - id: 'upload-folder-staging'
     #   name: 'Upload Staging'
