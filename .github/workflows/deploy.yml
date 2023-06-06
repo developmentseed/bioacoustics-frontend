@@ -35,7 +35,7 @@ jobs:
         
     - id: 'install-surge'
       name: 'Install Surge'
-      run: yarn add surge
+      run: npm install -g surge
 
     - id: 'deploy-surge-staging'
       name: 'Deploy Staging'
