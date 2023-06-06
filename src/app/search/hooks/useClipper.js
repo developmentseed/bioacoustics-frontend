@@ -7,7 +7,7 @@ export default function useClipper(duration, spectrogramCenter, zoom, spectrogra
   const clipCenterRef = useRef();
   const [ clipCenter, setClipCenter ] = useState();
   const [ clipCenterPx, setClipCenterPx ] = useState();
-  const clipHandleWidth = 15;
+  const clipHandleWidth = 10;
 
   const setCenter = useCallback((val) => {
     clipCenterRef.current = val;

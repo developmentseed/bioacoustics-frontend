@@ -94,7 +94,7 @@ export default function AudioClipper({ file, setClip }) {
     <>
       <Text>{file.name}</Text>
       <Box position="relative" height="256px" overflow="hidden">
-        <Box position="absolute" top="-4px" border="1px solid white" borderRadius="5px" width="5px" height="264px" bgColor="red" zIndex={7} {...playPositionProps} />
+        <Box position="absolute" borderRadius="5px" width="2px" height="256px" bgColor="red" zIndex={7} boxShadow="0 0 2px 0px rgba(255,255,255,0.5)" {...playPositionProps} />
         <Box position="absolute" top="0" left="0" id={spectrogramId} width="100%" onClick={handleClipSet} {...spectrogramProps}>
           {clipCenterPx !== undefined && (
             <>
@@ -107,7 +107,7 @@ export default function AudioClipper({ file, setClip }) {
                 height="256px"
                 bgColor="#A4FF31"
                 zIndex={7}
-                borderRadius="5px 0 0 5px"
+                borderRadius="4px 0 0 4px"
                 cursor="col-resize"
                 {...dragButtonProps}
               >
@@ -122,7 +122,7 @@ export default function AudioClipper({ file, setClip }) {
                 height="256px"
                 bgColor="#A4FF31"
                 zIndex={7}
-                borderRadius="0 5px 5px 0"
+                borderRadius="0 4px 4px 0"
                 cursor="col-resize"
                 {...dragButtonProps}
               >
