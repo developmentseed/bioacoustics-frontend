@@ -14,9 +14,9 @@ const AudioClipper = dynamic(() => import('./AudioClipper'), {
 export default function Upload() {
   const {
     file,
+    setFile,
     results,
     isSubmitting,
-    handleFileSelect,
     handleFormSubmit
   } = useSearchForm();
 
@@ -29,7 +29,7 @@ export default function Upload() {
               Search
             </Heading>
             {!file ? (
-              <AudioSelectForm handleFileSelect={handleFileSelect} />
+              <AudioSelectForm handleFileSelect={setFile} />
             ) : (
               <AudioClipper file={file} />
             )}
