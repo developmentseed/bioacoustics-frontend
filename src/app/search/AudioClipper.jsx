@@ -41,12 +41,12 @@ export default function AudioClipper({ file }) {
     playPositionProps,
   } = useSpectrogram(file, waveformId, spectrogramId, currentTime, duration);
 
-  const { error } = useFileValidation(file, duration);
+  const { clipLengthError } = useFileValidation(file, duration);
 
   return (
     <>
       <Text>{file.name}</Text>
-      { error && <Alert status="warning" my="2" px="2" py="1" fontSize="sm" border="1px solid" borderColor="orange.300">{ error }</Alert> }
+      { clipLengthError && <Alert status="warning" my="2" px="2" py="1" fontSize="sm" border="1px solid" borderColor="orange.300">{ clipLengthError }</Alert> }
       <Box position="relative" height="256px">
         <Box position="absolute" top="-4px" border="1px solid white" borderRadius="5px" width="5px" height="264px" bgColor="red" zIndex={5} {...playPositionProps} />
         <Box position="absolute" top="0" left="0" id={spectrogramId} width="100%" {...spectrogramProps} />
