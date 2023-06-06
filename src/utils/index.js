@@ -1,5 +1,5 @@
-import pause from './pause';
+import formatDate from './formatDate';
 
 export {
-  pause,
+  formatDate,
 };
