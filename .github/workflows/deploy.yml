@@ -39,7 +39,7 @@ jobs:
 
     - id: 'deploy-surge-staging'
       name: 'Deploy Staging'
-      run: surge out/ ecoecho-staging.ds.io
+      run: surge out/ ecoecho-staging.surge.sh
 
     # - id: 'upload-folder-staging'
     #   name: 'Upload Staging'
