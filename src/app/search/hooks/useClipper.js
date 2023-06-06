@@ -123,7 +123,7 @@ export default function useClipper(duration, spectrogramCenter, zoom, spectrogra
     handleClipSet,
     clipButtonProps: {
       onClick: handleClipButtonClick,
-      isDisabled: isClipping
+      isDisabled: duration < 5 || isClipping
     },
     cancelButtonProps: {
       onClick: handleCancelButtonClick
