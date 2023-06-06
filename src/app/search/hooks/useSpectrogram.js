@@ -105,20 +105,22 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
     }
   }, [zoom, setCenter, updatePlayPosition]);
 
-  // Event handler for mouse-down events over the spectrogram
-  // Activates panning by registering the mouse-move handler
-  const handleMouseDown = useCallback((e) => {
-    e.target.addEventListener('mousemove', handleMouseMove);
-    setSpectrogramCursor('ew-resize');
-  }, [handleMouseMove]);
-
   // Event handler for mouse-up events over the spectrogram
   // Deactivates panning by removing the mouse-move handler
   const handleMouseUp = useCallback((e) => {
     e.target.removeEventListener('mousemove', handleMouseMove);
+    e.target.removeEventListener('mouseup', handleMouseUp);
     setSpectrogramCursor('grab');
     setTimeout(() => hasDragged.current = false, 50);
   }, [handleMouseMove]);
+
+    // Event handler for mouse-down events over the spectrogram
+  // Activates panning by registering the mouse-move handler
+  const handleMouseDown = useCallback((e) => {
+    e.target.addEventListener('mousemove', handleMouseMove);
+    e.target.addEventListener('mouseup', handleMouseUp);
+    setSpectrogramCursor('ew-resize');
+  }, [handleMouseMove, handleMouseUp]);
 
   // Event handler for the zoom-reset click
   const handleResetZoom = useCallback(() => {
@@ -146,7 +148,6 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
     spectrogramProps: {
       ref: spectrogramRef,
       onMouseDown: handleMouseDown,
-      onMouseUp: handleMouseUp,
       cursor: spectrogramCursor,
     },
     playPositionProps: {

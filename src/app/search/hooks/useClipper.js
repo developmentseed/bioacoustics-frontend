@@ -1,10 +1,17 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 
 export default function useClipper(duration, spectrogramCenter, zoom, spectrogramRef, hasDragged, setClip) {
   const [ isClipping, setIsClipping ] = useState(false);
   const clipLength = 1; // in seconds
+  const clipCenterRef = useRef();
   const [ clipCenter, setClipCenter ] = useState();
   const [ clipCenterPx, setClipCenterPx ] = useState();
+  const clipHandleWidth = 15;
+
+  const setCenter = useCallback((val) => {
+    clipCenterRef.current = val;
+    setClipCenter(val);
+  }, [clipCenterRef]);
 
   const clipWidthPx = useMemo(
     () => {
@@ -41,7 +48,7 @@ export default function useClipper(duration, spectrogramCenter, zoom, spectrogra
 
   const handleCancelButtonClick = () => {
     setIsClipping(false);
-    setClipCenter();
+    setCenter();
   };
 
   const handleSubmitButtonClick = () => {
@@ -65,13 +72,54 @@ export default function useClipper(duration, spectrogramCenter, zoom, spectrogra
     const clickPositionPx = e.clientX - left + windowLeftPx;
     const clickPositionRelative = clickPositionPx / spectrogramSize;
     const clickPositionTime = clickPositionRelative * duration;
-    setClipCenter(clickPositionTime);
-  }, [duration, hasDragged, isClipping, spectrogramCenter, spectrogramRef, zoom]);
+    setCenter(clickPositionTime);
+  }, [duration, hasDragged, isClipping, setCenter, spectrogramCenter, spectrogramRef, zoom]);
+
+  const handleMouseMove = useCallback((e) => {
+    const width = spectrogramRef.current.clientWidth;
+    const spectrogramSize = width * zoom;
+    
+    const windowSizeRelative = 1 / zoom;
+    const windowLeftRelative = spectrogramCenter - windowSizeRelative / 2;
+    const windowLeftPx = windowLeftRelative * spectrogramSize;
+    
+    const { left } = spectrogramRef.current.getBoundingClientRect();
+    const dragPositionPx = e.clientX - left + windowLeftPx;
+    const dragPositionRelative = dragPositionPx / spectrogramSize;
+    const dragPositionTime = dragPositionRelative * duration;
+
+    const pixelPerSecond = spectrogramSize / duration;
+    const handleOffset = (clipHandleWidth / 2) / pixelPerSecond;
+
+    const clipCenterTime = dragPositionTime > clipCenterRef.current
+      ? dragPositionTime - (clipLength / 2 + handleOffset)
+      : dragPositionTime + (clipLength / 2 + handleOffset);
+
+    setCenter(clipCenterTime);
+  }, [clipCenterRef, duration, setCenter, spectrogramCenter, spectrogramRef, zoom]);
+
+  
+  const handleDragMouseUp = useCallback((e) => {
+    e.stopPropagation();
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleDragMouseUp);
+  }, [handleMouseMove]);
+  
+  const handleDragMouseDown = useCallback((e) => {
+    e.stopPropagation();
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleDragMouseUp);
+  }, [handleMouseMove, handleDragMouseUp]);
+
+  const handleDragClick = (e) => {
+    e.stopPropagation();
+  };
 
   return {
     isClipping,
     clipCenterPx,
     clipWidthPx,
+    clipHandleWidth,
     handleClipSet,
     clipButtonProps: {
       onClick: handleClipButtonClick,
@@ -83,6 +131,10 @@ export default function useClipper(duration, spectrogramCenter, zoom, spectrogra
     submitButtonProps: {
       onClick: handleSubmitButtonClick,
       isDisabled: !clipCenter
+    },
+    dragButtonProps: {
+      onMouseDown: handleDragMouseDown,
+      onClick: handleDragClick
     }
   };
 }

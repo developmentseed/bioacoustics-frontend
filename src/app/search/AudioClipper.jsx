@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Flex,
   HStack,
   IconButton,
   Slider,
@@ -16,7 +17,7 @@ import {
 
 import { TFile } from '@/types';
 import { TimeBox } from '@/components';
-import { MdAdd, MdRemove, MdFullscreen, MdPlayCircleOutline, MdPauseCircleOutline, MdContentCut } from 'react-icons/md';
+import { MdAdd, MdRemove, MdFullscreen, MdPlayCircleOutline, MdPauseCircleOutline, MdContentCut, MdDragIndicator } from 'react-icons/md';
 
 import useSpectrogram from './hooks/useSpectrogram';
 import useAudioPlayer from './hooks/useAudioPLayer';
@@ -76,10 +77,12 @@ export default function AudioClipper({ file, setClip }) {
     isClipping,
     clipCenterPx,
     clipWidthPx,
+    clipHandleWidth,
     handleClipSet,
     clipButtonProps,
     cancelButtonProps,
-    submitButtonProps
+    submitButtonProps,
+    dragButtonProps
   } = useClipper(duration, spectrogramCenter, zoom, spectrogramRef, hasDragged, setClip);
 
   return (
@@ -89,41 +92,72 @@ export default function AudioClipper({ file, setClip }) {
         <Box position="absolute" top="-4px" border="1px solid white" borderRadius="5px" width="5px" height="264px" bgColor="red" zIndex={7} {...playPositionProps} />
         <Box position="absolute" top="0" left="0" id={spectrogramId} width="100%" onClick={handleClipSet} {...spectrogramProps}>
           {clipCenterPx !== undefined && (
-            <Box
-              position="absolute"
-              top="0"
-              left="0"
-              width="100%"
-              height="256px"
-              overflow="hidden"
-              display="inline-block"
-              zIndex={5}
-              _before={{
-                content: '""',
-                display: 'block',
-                width: `${clipWidthPx}px`,
-                height: '256px',
-                position: 'absolute',
-                top: '50%',
-                left: clipCenterPx,
-                zIndex: 6,
-                border: '99999px solid rgba(0, 0, 0, 0.6)',
-                transform: 'translate(-50%, -50%)'
-              }}
-              _after={{
-                content: '""',
-                display: 'block',
-                width: `${clipWidthPx}px`,
-                height: '246px',
-                position: 'absolute',
-                top: '128',
-                left: clipCenterPx,
-                zIndex: 6,
-                border: '5px solid #A4FF31',
-                borderRadius: '7px',
-                transform: 'translate(-50%, -50%)'
-              }}
-            />
+            <>
+              <Flex
+                alignItems="center"
+                position="absolute"
+                top="0"
+                left={`${clipCenterPx - clipWidthPx / 2 - clipHandleWidth}px`}
+                width={`${clipHandleWidth}px`}
+                height="256px"
+                bgColor="#A4FF31"
+                zIndex={7}
+                borderRadius="5px 0 0 5px"
+                cursor="col-resize"
+                {...dragButtonProps}
+              >
+                <MdDragIndicator />
+              </Flex>
+              <Flex
+                alignItems="center"
+                position="absolute"
+                top="0"
+                left={`${clipCenterPx + clipWidthPx / 2}px`}
+                width={`${clipHandleWidth}px`}
+                height="256px"
+                bgColor="#A4FF31"
+                zIndex={7}
+                borderRadius="0 5px 5px 0"
+                cursor="col-resize"
+                {...dragButtonProps}
+              >
+                <MdDragIndicator />
+              </Flex>
+              <Box
+                position="absolute"
+                top="0"
+                left="0"
+                width="100%"
+                height="256px"
+                overflow="hidden"
+                display="inline-block"
+                zIndex={5}
+                _before={{
+                  content: '""',
+                  display: 'block',
+                  width: `${clipWidthPx}px`,
+                  height: '256px',
+                  position: 'absolute',
+                  top: '50%',
+                  left: clipCenterPx,
+                  zIndex: 6,
+                  border: '99999px solid rgba(0, 0, 0, 0.6)',
+                  transform: 'translate(-50%, -50%)'
+                }}
+                _after={{
+                  content: '""',
+                  display: 'block',
+                  width: `${clipWidthPx}px`,
+                  height: '250px',
+                  position: 'absolute',
+                  top: '128',
+                  left: clipCenterPx,
+                  zIndex: 6,
+                  border: '3px solid #A4FF31',
+                  transform: 'translate(-50%, -50%)'
+                }}
+              />
+            </>
           )}
         </Box>
         <Box position="absolute" top="0" left="0" id={waveformId} width="100%" height="0" visibility="hidden" />
