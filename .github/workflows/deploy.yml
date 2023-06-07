@@ -32,19 +32,6 @@ jobs:
     - id: 'build-staging'
       name: 'Build Staging'
       run: yarn build
-        
-    # - id: 'install-surge'
-    #   name: 'Install Surge'
-    #   run: npm install -g surge
-
-    # - id: 'deploy-surge-staging'
-    #   name: 'Deploy Staging'
-    #   uses: dswistowski/surge-sh-action@v1
-    #   with:
-    #     domain: 'ecoecho-staging.surge.sh'
-    #     project: 'out'
-    #     login: 'sajjad@developmentseed.org'
-    #     token: ${{ secrets.surge_token }}
 
     - id: 'upload-folder-staging'
       name: 'Upload Staging'
