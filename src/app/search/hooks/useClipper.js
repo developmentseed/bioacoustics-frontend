@@ -8,6 +8,7 @@ export default function useClipper(duration, spectrogramCenter, zoom, spectrogra
   const [ clipCenter, setClipCenter ] = useState();
   const [ clipCenterPx, setClipCenterPx ] = useState();
   const clipHandleWidth = 10;
+  const hasClipDragged = useRef();
 
   const setCenter = useCallback((val) => {
     clipCenterRef.current = val;
@@ -60,7 +61,7 @@ export default function useClipper(duration, spectrogramCenter, zoom, spectrogra
   };
 
   const handleClipSet = useCallback((e) => {
-    if (!isClipping || hasDragged.current) return;
+    if (!isClipping || hasDragged.current || hasClipDragged.current) return;
 
     const width = spectrogramRef.current.clientWidth;
     const spectrogramSize = width * zoom;
@@ -77,6 +78,7 @@ export default function useClipper(duration, spectrogramCenter, zoom, spectrogra
   }, [duration, hasDragged, isClipping, setCenter, spectrogramCenter, spectrogramRef, zoom]);
 
   const handleMouseMove = useCallback((e) => {
+    hasClipDragged.current = true;
     const width = spectrogramRef.current.clientWidth;
     const spectrogramSize = width * zoom;
     
@@ -96,7 +98,10 @@ export default function useClipper(duration, spectrogramCenter, zoom, spectrogra
       ? dragPositionTime - (clipLength / 2 + handleOffset)
       : dragPositionTime + (clipLength / 2 + handleOffset);
 
-    setCenter(clipCenterTime);
+    if ((clipCenterTime + clipLength / 2 < duration) && (clipCenterTime - clipLength / 2 > 0)) {
+      setCenter(clipCenterTime);
+    }
+
   }, [clipCenterRef, duration, setCenter, spectrogramCenter, spectrogramRef, zoom]);
 
   
@@ -104,6 +109,7 @@ export default function useClipper(duration, spectrogramCenter, zoom, spectrogra
     e.stopPropagation();
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', handleDragMouseUp);
+    setTimeout(() => hasClipDragged.current = false, 50);
   }, [handleMouseMove]);
   
   const handleDragMouseDown = useCallback((e) => {
