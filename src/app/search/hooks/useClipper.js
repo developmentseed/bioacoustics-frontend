@@ -108,9 +108,11 @@ export default function useClipper(duration, spectrogramCenter, zoom, spectrogra
   
   const handleDragMouseDown = useCallback((e) => {
     e.stopPropagation();
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleDragMouseUp);
-  }, [handleMouseMove, handleDragMouseUp]);
+    if (isClipping) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleDragMouseUp);
+    }
+  }, [isClipping, handleMouseMove, handleDragMouseUp]);
 
   const handleDragClick = (e) => {
     e.stopPropagation();
@@ -135,7 +137,8 @@ export default function useClipper(duration, spectrogramCenter, zoom, spectrogra
     },
     dragButtonProps: {
       onMouseDown: handleDragMouseDown,
-      onClick: handleDragClick
+      onClick: handleDragClick,
+      cursor: isClipping ? 'col-resize' : 'default'
     },
     inInputProps: {
       readOnly: true,

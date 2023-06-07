@@ -112,7 +112,6 @@ export default function AudioClipper({ file, setClip }) {
                 bgColor="#A4FF31"
                 zIndex={7}
                 borderRadius="4px 0 0 4px"
-                cursor="col-resize"
                 {...dragButtonProps}
               >
                 <MdDragIndicator />
@@ -127,7 +126,6 @@ export default function AudioClipper({ file, setClip }) {
                 bgColor="#A4FF31"
                 zIndex={7}
                 borderRadius="0 4px 4px 0"
-                cursor="col-resize"
                 {...dragButtonProps}
               >
                 <MdDragIndicator />
