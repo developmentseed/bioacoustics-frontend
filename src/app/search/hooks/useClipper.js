@@ -3,7 +3,7 @@ import { formatTime } from '@/utils';
 
 export default function useClipper(duration, spectrogramCenter, zoom, spectrogramRef, hasDragged, setClip) {
   const [ isClipping, setIsClipping ] = useState(false);
-  const clipLength = 5; // in seconds
+  const clipLength = 2; // in seconds
   const clipCenterRef = useRef();
   const [ clipCenter, setClipCenter ] = useState();
   const [ clipCenterPx, setClipCenterPx ] = useState();
@@ -124,7 +124,7 @@ export default function useClipper(duration, spectrogramCenter, zoom, spectrogra
     handleClipSet,
     clipButtonProps: {
       onClick: handleClipButtonClick,
-      isDisabled: duration <= 5 || isClipping
+      isDisabled: duration <= 4 || isClipping
     },
     cancelButtonProps: {
       onClick: handleCancelButtonClick
@@ -139,11 +139,11 @@ export default function useClipper(duration, spectrogramCenter, zoom, spectrogra
     },
     inInputProps: {
       readOnly: true,
-      value: formatTime(clipCenter - clipLength / 2)
+      value: clipCenter ? formatTime(clipCenter - clipLength / 2) : ''
     },
     outInputProps: {
       readOnly: true,
-      value: formatTime(clipCenter - clipLength / 2)
+      value: clipCenter ? formatTime(clipCenter + clipLength / 2) : ''
     }
   };
 }
