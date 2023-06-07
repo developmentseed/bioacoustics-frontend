@@ -4,29 +4,23 @@ import { Box, Button, Flex, Text } from '@chakra-ui/react';
 
 import { ACCEPTED_AUDIO_TYPES, MAX_AUDIO_LENGTH, MAX_AUDIO_SIZE } from '@/settings';
 import { Error } from '@/components';
+import getDuration from '@/utils/getDuration';
 
 export default function AudioSelectForm({ handleFileSelect }) {
   const inputRef = useRef();
   const [ error, setError ] = useState();
   const [ name, setName ] = useState();
 
-  const validate = (file) => {
-    return new Promise((resolve) => {
-      const audioUrl = URL.createObjectURL(file);
-      const el = document.createElement('audio');
-      el.setAttribute('src', audioUrl);
-      el.setAttribute('preload', 'metadata');
-      el.addEventListener('loadedmetadata', () => {
-        const errors = [];
-        if (el.duration > MAX_AUDIO_LENGTH) {
-          errors.push('The audio length exceeds the limit of 5 minutes. Upload a shorter recording.');
-        }
-        if (file.size > MAX_AUDIO_SIZE) {
-          errors.push('The file size exceeds the limit of 1GB. Upload a smaller file.');
-        }
-        resolve(errors);
-      });
-    });
+  const validate = async (file) => {
+    const duration = await getDuration(file);
+    const errors = [];
+    if (duration > MAX_AUDIO_LENGTH) {
+      errors.push('The audio length exceeds the limit of 5 minutes. Upload a shorter recording.');
+    }
+    if (file.size > MAX_AUDIO_SIZE) {
+      errors.push('The file size exceeds the limit of 1GB. Upload a smaller file.');
+    }
+    return errors;
   };
 
   const handleFileChange = async (e) => {
