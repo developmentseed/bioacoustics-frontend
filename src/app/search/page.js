@@ -1,10 +1,13 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
 import dynamic from 'next/dynamic';
 import { Box, Button, Container, Heading } from '@chakra-ui/react';
 
 import { Loading } from '@/components';
 import { InpageHeader } from '@/components/page';
+import { MAX_AUDIO_CLIP_LENGTH } from '@/settings';
+import getDuration from '@/utils/getDuration';
+
 import AudioSelectForm from './AudioSelectForm';
 import useSearchForm from './hooks/useSearchForm';
 import Results from './results';
@@ -13,8 +16,11 @@ const AudioClipper = dynamic(() => import('./AudioClipper'), {
 });
 
 export default function Upload() {
-  const [clipStart, setClipStart] = useState(); // eslint-disable-line
+  const [clipStart, setClipStart] = useState();
   const [clipLength, setClipLength] = useState(); // eslint-disable-line
+  const [ duration, setDuration ] = useState();
+
+  
   const {
     file,
     setFile,
@@ -22,11 +28,20 @@ export default function Upload() {
     isSubmitting,
     handleFormSubmit
   } = useSearchForm();
-
+  
   const setClip = (start, length) => {
     setClipStart(start);
     setClipLength(length);
   };
+  
+  useEffect(() => {
+    if (file) {
+      getDuration(file).then(setDuration);
+    } else { 
+      setDuration();
+    }
+  }, [file]);
+  const disableSubmit = isSubmitting || (duration > MAX_AUDIO_CLIP_LENGTH && !clipStart);
 
   return (
     <main>
@@ -46,7 +61,7 @@ export default function Upload() {
                 variant="primary"
                 type="submit"
                 onClick={handleFormSubmit}
-                isDisabled={isSubmitting}
+                isDisabled={disableSubmit}
               >
                 Search
               </Button>
