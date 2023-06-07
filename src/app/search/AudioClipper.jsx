@@ -19,12 +19,13 @@ import {
 } from '@chakra-ui/react';
 
 import { TFile } from '@/types';
-import { TimeBox } from '@/components';
+import { TimeBox, Error } from '@/components';
 import { MdAdd, MdRemove, MdFullscreen, MdPlayCircleOutline, MdPauseCircleOutline, MdContentCut, MdDragIndicator } from 'react-icons/md';
 
 import useSpectrogram from './hooks/useSpectrogram';
 import useAudioPlayer from './hooks/useAudioPLayer';
 import useClipper from './hooks/useClipper';
+import useFileValidation from './hooks/useFileValidation';
 
 
 function ToolbarButton({ children, leftIcon, ...props }) {
@@ -90,9 +91,12 @@ export default function AudioClipper({ file, setClip }) {
     outInputProps
   } = useClipper(duration, spectrogramCenter, zoom, spectrogramRef, hasDragged, setClip);
 
+  const { clipLengthError } = useFileValidation(file, duration);
+
   return (
     <>
       <Text>{file.name}</Text>
+      { clipLengthError && <Error>{ clipLengthError }</Error> }
       <Box position="relative" height="256px" overflow="hidden">
         <Box position="absolute" borderRadius="5px" width="2px" height="256px" bgColor="red" zIndex={7} boxShadow="0 0 2px 0px rgba(255,255,255,0.5)" {...playPositionProps} />
         <Box position="absolute" top="0" left="0" id={spectrogramId} width="100%" onClick={handleClipSet} {...spectrogramProps}>

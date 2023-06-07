@@ -17,9 +17,9 @@ export default function Upload() {
   const [clipLength, setClipLength] = useState(); // eslint-disable-line
   const {
     file,
+    setFile,
     results,
     isSubmitting,
-    handleFileSelect,
     handleFormSubmit
   } = useSearchForm();
 
@@ -37,7 +37,7 @@ export default function Upload() {
               Search
             </Heading>
             {!file ? (
-              <AudioSelectForm handleFileSelect={handleFileSelect} />
+              <AudioSelectForm handleFileSelect={setFile} />
             ) : (
               <AudioClipper file={file} setClip={setClip} />
             )}

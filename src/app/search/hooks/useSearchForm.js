@@ -5,8 +5,6 @@ export default function useSearchForm() {
   const [ results, setResults ] = useState([]);
   const [ isSubmitting, setIsSubmitting ] = useState(false);
 
-  const handleFileSelect = (e) => setFile(e.target.files[0]);
-
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
@@ -27,9 +25,9 @@ export default function useSearchForm() {
 
   return {
     file,
+    setFile,
     results,
     isSubmitting,
-    handleFileSelect,
     handleFormSubmit
   };
 }
