@@ -37,12 +37,12 @@ export default function AudioSelectForm({ handleFileSelect }) {
   };
 
   return (
-    <Box>
-      <Text>Upload audio to search for similar sounds</Text>
+    <Box bg="white" p="2" borderRadius="12" boxShadow="lg">
       <Box
         border="2px dashed"
+        bg="blackAlpha.50"
         borderColor="primary.400"
-        borderRadius="5"
+        borderRadius="6"
         textAlign="center"
         p="5"
         mt="1"

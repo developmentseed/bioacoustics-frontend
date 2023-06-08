@@ -104,7 +104,7 @@ export default function AudioClipper({ file, setClip }) {
 
   return (
     <>
-      <Text>{file.name}</Text>
+      <Text fontSize="sm" fontWeight="semibold" mb="2">{file.name}</Text>
       {clipLengthError && <Error>{clipLengthError}</Error>}
       <Box
         position="relative"
