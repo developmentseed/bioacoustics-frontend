@@ -132,34 +132,40 @@ export default function AudioClipper({ file, setClip }) {
         >
           {clipCenterPx !== undefined && (
             <>
-              <Flex
-                alignItems="center"
-                position="absolute"
-                top="0"
-                left={`${clipCenterPx - clipWidthPx / 2 - clipHandleWidth}px`}
-                width={`${clipHandleWidth}px`}
-                height={`${SPECTROGRAM_HEIGHT}px`}
-                bgColor="#A4FF31"
-                zIndex={7}
-                borderRadius="4px 0 0 4px"
-                {...dragButtonProps}
-              >
-                <MdDragIndicator />
-              </Flex>
-              <Flex
-                alignItems="center"
-                position="absolute"
-                top="0"
-                left={`${clipCenterPx + clipWidthPx / 2}px`}
-                width={`${clipHandleWidth}px`}
-                height={`${SPECTROGRAM_HEIGHT}px`}
-                bgColor="#A4FF31"
-                zIndex={7}
-                borderRadius="0 4px 4px 0"
-                {...dragButtonProps}
-              >
-                <MdDragIndicator />
-              </Flex>
+              {isClipping && (
+                <>
+                  <Flex
+                    alignItems="center"
+                    position="absolute"
+                    top="0"
+                    left={`${
+                      clipCenterPx - clipWidthPx / 2 - clipHandleWidth
+                    }px`}
+                    width={`${clipHandleWidth}px`}
+                    height={`${SPECTROGRAM_HEIGHT}px`}
+                    bgColor="#A4FF31"
+                    zIndex={7}
+                    borderRadius="4px 0 0 4px"
+                    {...dragButtonProps}
+                  >
+                    <MdDragIndicator />
+                  </Flex>
+                  <Flex
+                    alignItems="center"
+                    position="absolute"
+                    top="0"
+                    left={`${clipCenterPx + clipWidthPx / 2}px`}
+                    width={`${clipHandleWidth}px`}
+                    height={`${SPECTROGRAM_HEIGHT}px`}
+                    bgColor="#A4FF31"
+                    zIndex={7}
+                    borderRadius="0 4px 4px 0"
+                    {...dragButtonProps}
+                  >
+                    <MdDragIndicator />
+                  </Flex>
+                </>
+              )}
               <Box
                 position="absolute"
                 top="0"
