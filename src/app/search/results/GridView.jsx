@@ -64,7 +64,7 @@ export default function GridView({ results, large }) {
 
   return (
     <Grid templateColumns={`repeat(${gridNumber}, 1fr)`} gap={5} data-testid="results-grid">
-      {results.map((result) => <ResultCard key={result.id} result={result} large={large} />)}
+      {results.map((result) => <ResultCard key={result.file_seq_id} result={result} large={large} />)}
     </Grid>
   );
 }
