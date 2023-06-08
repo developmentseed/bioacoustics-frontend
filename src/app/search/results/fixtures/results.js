@@ -8,7 +8,8 @@ const results = [
       site_name: 'Site A',
       subsite_name: 'A.1',
       file_timestamp: 1620360000,
-      image_url: 'https://example.com/1.png'
+      image_url: 'https://example.com/1.png',
+      clip_offset_in_file: 1000,
     }
   }, {
     id: 2,
@@ -19,7 +20,8 @@ const results = [
       site_name: 'Site A',
       subsite_name: 'A.2',
       file_timestamp: 1594958400,
-      image_url: 'https://example.com/2.png'
+      image_url: 'https://example.com/2.png',
+      clip_offset_in_file: 2000,
     }
   }, {
     id: 3,
@@ -30,7 +32,8 @@ const results = [
       site_name: 'Site B',
       subsite_name: 'B.1',
       file_timestamp: 1604109600,
-      image_url: 'https://example.com/3.png'
+      image_url: 'https://example.com/3.png',
+      clip_offset_in_file: 3000,
     }
   }
 ];

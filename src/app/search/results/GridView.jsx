@@ -7,7 +7,7 @@ import { formatDate } from '@/utils';
 import { sitenameDisplay } from './utils';
 
 function ResultCard({ result, large }) {
-  const { entity: { filename, file_timestamp, image_url }} = result;
+  const { entity: { filename, file_timestamp, image_url, clip_offset_in_file }} = result;
   const gridConfig = `min-content min-content ${large ? 'min-content' : ''} 1fr`;
 
   return (
@@ -39,8 +39,10 @@ function ResultCard({ result, large }) {
           <Grid templateColumns="min-content 1fr" gap="1">
             <GridItem><b>Site:</b></GridItem>
             <GridItem>{ sitenameDisplay(result) }</GridItem>
-            <GridItem><b>Date:</b></GridItem>
+            <GridItem><b>Recording time:</b></GridItem>
             <GridItem>{ formatDate(file_timestamp) }</GridItem>
+            <GridItem><b>Result time:</b></GridItem>
+            <GridItem>{ formatDate(file_timestamp + clip_offset_in_file) }</GridItem>
           </Grid>
         )}
         <GridItem alignSelf="end">

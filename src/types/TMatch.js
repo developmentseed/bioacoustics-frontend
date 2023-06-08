@@ -10,6 +10,7 @@ const TMatch = T.shape({
     image_url: T.string.isRequired,
     site_name: T.string.isRequired,
     subsite_name: T.string.isRequired,
+    clip_offset_in_file: T.number.isRequired
   }).isRequired
 });
 
