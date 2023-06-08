@@ -3,6 +3,7 @@ const results = [
     id: 1,
     distance: 1.234,
     entity: {
+      filename: 'site/one-bird.flac',
       file_seq_id: '1',
       site_name: 'Site A',
       subsite_name: 'A.1',
@@ -13,6 +14,7 @@ const results = [
     id: 2,
     distance: 2.345,
     entity: {
+      filename: 'site/two-birds.flac',
       file_seq_id: '2',
       site_name: 'Site A',
       subsite_name: 'A.2',
@@ -23,6 +25,7 @@ const results = [
     id: 3,
     distance: 3.456,
     entity: {
+      filename: 'site/every-little-thing-is-gonna-be-alright.flac',
       file_seq_id: '3',
       site_name: 'Site B',
       subsite_name: 'B.1',

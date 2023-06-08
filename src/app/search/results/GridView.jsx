@@ -1,5 +1,5 @@
 import T from 'prop-types';
-import { Button, Card, CardBody, Flex, Grid, GridItem, IconButton, Image, Link, Text } from '@chakra-ui/react';
+import { Button, Card, CardBody, Grid, GridItem, IconButton, Image, Link, Text } from '@chakra-ui/react';
 import { MdPlayArrow, MdOpenInNew } from 'react-icons/md';
 
 import { TMatch } from '@/types';
@@ -7,14 +7,14 @@ import { formatDate } from '@/utils';
 import { sitenameDisplay } from './utils';
 
 function ResultCard({ result, large }) {
-  const { id, entity: { file_timestamp, image_url }} = result;
+  const { entity: { filename, file_timestamp, image_url }} = result;
   const gridConfig = `min-content min-content ${large ? 'min-content' : ''} 1fr`;
 
   return (
     <Card size="sm" fontSize="sm" data-testid="result-card">
       <CardBody as={Grid} gap={2} templateRows={gridConfig}>
-        <Flex>
-          <Text flex="1">{ id }</Text> {/* TODO: Replace with file name */}
+        <Grid gap="1" templateColumns="1fr min-content">
+          <Text textOverflow="ellipsis" overflow="hidden" whiteSpace="nowrap">{ filename.split('/')[1] }</Text>
           <IconButton
             type="button"
             variant="primary"
@@ -24,7 +24,7 @@ function ResultCard({ result, large }) {
             aria-label="Play"
             title="Play"
           />
-        </Flex>
+        </Grid>
         <Image
           src={image_url}
           alt="Spectrogram" // TODO
