@@ -7,11 +7,18 @@ const MAX_ZOOM = 5;
 export default function useSpectrogramNavigation(file, waveformId, spectrogramId, currentTime, duration) {
   const wavesurferRef = useRef();
   const spectrogramRef = useRef();
-  const spectrogramCenter = useRef(0.5);
+  const spectrogramCenterRef = useRef(0.5);
+  const [ spectrogramCenter, setSpectrogramCenter ] = useState(0.5);
   const [ zoom, setZoom ] = useState(1);
   const [ spectrogramCursor, setSpectrogramCursor ] = useState('grab');
   const [ playPosition, setPlayPosition ] = useState();
   const [ playPositionDisplay, setPlayPositionDisplay ] = useState('block');
+  const hasDragged = useRef(false);
+
+  const setCenter = useCallback((val) => {
+    spectrogramCenterRef.current = val;
+    setSpectrogramCenter(val);
+  }, []);
 
   // Initialises the spectrogram with the audio data
   useEffect(() => {
@@ -42,7 +49,7 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
     const width = spectrogramRef.current.clientWidth;
 
     const relativeWindowSize = 1 / zoom; // The relative size of the display window. At zoom level 2 it covers .5 of the whole track.
-    const relativeWindowLeft = spectrogramCenter.current - relativeWindowSize / 2; // The position of the left edge of the display window, relative to the whole track.
+    const relativeWindowLeft = spectrogramCenterRef.current - relativeWindowSize / 2; // The position of the left edge of the display window, relative to the whole track.
     const relativeTime = currentTime / duration; // The current time of the audio playback, relative to the whole track.
 
     const spectrogramSize = width * zoom; // The size of the whole spectrogram in pixels, ie. zoom level 2 it's twice as big as the displayed spectrogram.
@@ -65,25 +72,25 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
       const width = spectrogramRef.current.clientWidth;
       const pixelPerSecond = width / duration;
       wavesurferRef.current.zoom(pixelPerSecond * zoom);
-      wavesurferRef.current.seekAndCenter(spectrogramCenter.current || 0.5);
+      wavesurferRef.current.seekAndCenter(spectrogramCenterRef.current || 0.5);
       wavesurferRef.current.spectrogram.init();
     }
   }, [wavesurferRef, zoom]);
 
   const zoomTo = useCallback((newZoom) => {
     if (newZoom === 1) {
-      spectrogramCenter.current = 0.5;
+      spectrogramCenterRef.current = 0.5;
     } else {
       const panPadding = 1 / newZoom / 2;
       const minCenter = panPadding;
       const maxCenter = 1 - panPadding;
 
-      if (spectrogramCenter.current < maxCenter) {
-        spectrogramCenter.current = Math.max(spectrogramCenter.current, minCenter);
+      if (spectrogramCenterRef.current < maxCenter) {
+        spectrogramCenterRef.current = Math.max(spectrogramCenterRef.current, minCenter);
       }
       
-      if (spectrogramCenter.current > minCenter) {
-        spectrogramCenter.current = Math.min(spectrogramCenter.current, maxCenter);
+      if (spectrogramCenterRef.current > minCenter) {
+        spectrogramCenterRef.current = Math.min(spectrogramCenterRef.current, maxCenter);
       }
     }
 
@@ -103,33 +110,40 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
   // Calculates the new center position relative to full length of the audio,
   // i.e. the beginning of the track is 0, the end is 1, half-way is .5
   const handleMouseMove = useCallback((e) => {
+    hasDragged.current = true;
     const width = spectrogramRef.current.clientWidth;
 
-    const newPosition = spectrogramCenter.current + (e.movementX * -1 / width);
+    const newPosition = spectrogramCenterRef.current + (e.movementX * -1 / width);
     const limit = 1 / (zoom * 2);
     if (newPosition >= limit && newPosition <= 1 - limit) {
       wavesurferRef.current.seekAndCenter(newPosition);
-      spectrogramCenter.current = newPosition;
+      setCenter(newPosition);
       updatePlayPosition();
     }
-  }, [wavesurferRef, zoom, updatePlayPosition]);
-
-  // Event handler for mouse-down events over the spectrogram
-  // Activates panning by registering the mouse-move handler
-  const handleMouseDown = useCallback((e) => {
-    e.target.addEventListener('mousemove', handleMouseMove);
-    setSpectrogramCursor('ew-resize');
-  }, [handleMouseMove]);
+  }, [zoom, setCenter, updatePlayPosition]);
 
   // Event handler for mouse-up events over the spectrogram
   // Deactivates panning by removing the mouse-move handler
   const handleMouseUp = useCallback((e) => {
     e.target.removeEventListener('mousemove', handleMouseMove);
+    e.target.removeEventListener('mouseup', handleMouseUp);
     setSpectrogramCursor('grab');
+    setTimeout(() => hasDragged.current = false, 50);
   }, [handleMouseMove]);
+
+    // Event handler for mouse-down events over the spectrogram
+  // Activates panning by registering the mouse-move handler
+  const handleMouseDown = useCallback((e) => {
+    e.target.addEventListener('mousemove', handleMouseMove);
+    e.target.addEventListener('mouseup', handleMouseUp);
+    setSpectrogramCursor('ew-resize');
+  }, [handleMouseMove, handleMouseUp]);
 
   return {
     zoom,
+    spectrogramCenter,
+    spectrogramRef,
+    hasDragged,
     zoomInButtonProps: {
       onClick: handleZoomIn,
       isDisabled: zoom === MAX_ZOOM
@@ -145,7 +159,6 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
     spectrogramProps: {
       ref: spectrogramRef,
       onMouseDown: handleMouseDown,
-      onMouseUp: handleMouseUp,
       cursor: spectrogramCursor,
     },
     playPositionProps: {

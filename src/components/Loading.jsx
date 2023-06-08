@@ -3,7 +3,7 @@ import { Center, Spinner } from '@chakra-ui/react';
 
 export default function Loading({ size = 'md' }) {
   return (
-    <Center p="5">
+    <Center p="5" data-testid="loading">
       <Spinner size={size} />
     </Center>
   );

@@ -1,15 +1,6 @@
 import T from 'prop-types';
 import { Box } from '@chakra-ui/react';
-
-const formatTime = (time) => {
-  const currentTimeInSeconds = Math.floor(time);
-  const minutes = Math.floor(currentTimeInSeconds / 60);
-  let seconds = currentTimeInSeconds % 60;
-  if (seconds < 10) {
-    seconds = `0${seconds}`;
-  }
-  return `${minutes}:${seconds}`;
-};
+import { formatTime } from '@/utils';
 
 export default function TimeBox({ time = 0 }) {
   return (

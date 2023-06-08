@@ -1,49 +1,76 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
 import dynamic from 'next/dynamic';
-import { Box, Container, Heading, Text } from '@chakra-ui/react';
+import { Box, Button, Container, Heading } from '@chakra-ui/react';
 
 import { Loading } from '@/components';
 import { InpageHeader } from '@/components/page';
+import { MAX_AUDIO_CLIP_LENGTH } from '@/settings';
+import getDuration from '@/utils/getDuration';
+
 import AudioSelectForm from './AudioSelectForm';
+import useSearchForm from './hooks/useSearchForm';
+import Results from './results';
 const AudioClipper = dynamic(() => import('./AudioClipper'), {
   loading: () => <Loading size="xl" />,
 });
 
 export default function Upload() {
-  const [file, setFile] = useState();
-  const [results] = useState([]);
+  const [clipStart, setClipStart] = useState();
+  const [clipLength, setClipLength] = useState(); // eslint-disable-line
+  const [ duration, setDuration ] = useState();
 
-  const handleFileSelect = (e) => setFile(e.target.files[0]);
+  
+  const {
+    file,
+    setFile,
+    results,
+    isSubmitting,
+    handleFormSubmit
+  } = useSearchForm();
+  
+  const setClip = (start, length) => {
+    setClipStart(start);
+    setClipLength(length);
+  };
+  
+  useEffect(() => {
+    if (file) {
+      getDuration(file).then(setDuration);
+    } else { 
+      setDuration();
+    }
+  }, [file]);
 
   return (
     <main>
       <InpageHeader>
         <Container maxW="container.xl">
-          <Box bg="white" p="5" borderRadius="5" boxShadow="lg">
+          <Box bg="white" p="5" borderRadius="5" boxShadow="lg" as="form">
             <Heading as="h1" size="md" mb="2">
               Search
             </Heading>
             {!file ? (
-              <AudioSelectForm handleFileSelect={handleFileSelect} />
+              <AudioSelectForm handleFileSelect={setFile} />
             ) : (
-              <AudioClipper file={file} />
+              <AudioClipper file={file} setClip={setClip} />
+            )}
+            {file && (duration <= MAX_AUDIO_CLIP_LENGTH || clipStart) && (
+              <Box textAlign="right" mt="2">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  onClick={handleFormSubmit}
+                  isDisabled={isSubmitting}
+                >
+                  Search
+                </Button>
+              </Box>
             )}
           </Box>
         </Container>
       </InpageHeader>
-      <Container mt="10">
-        {results.length > 0 ? (
-          <p>TODO: Showing some results here.</p>
-        ) : (
-          <Box textAlign="center">
-            <Heading as="h2" size="base">
-              Results
-            </Heading>
-            <Text>Upload audio to view results</Text>
-          </Box>
-        )}
-      </Container>
+      <Results results={results} isLoading={isSubmitting} />
     </main>
   );
 }
