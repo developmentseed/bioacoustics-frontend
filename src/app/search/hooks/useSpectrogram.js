@@ -77,17 +77,34 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
     }
   }, [wavesurferRef, zoom]);
 
+  const zoomTo = useCallback((newZoom) => {
+    if (newZoom === 1) {
+      spectrogramCenterRef.current = 0.5;
+    } else {
+      const panPadding = 1 / newZoom / 2;
+      const minCenter = panPadding;
+      const maxCenter = 1 - panPadding;
+
+      if (spectrogramCenterRef.current < maxCenter) {
+        spectrogramCenterRef.current = Math.max(spectrogramCenterRef.current, minCenter);
+      }
+      
+      if (spectrogramCenterRef.current > minCenter) {
+        spectrogramCenterRef.current = Math.min(spectrogramCenterRef.current, maxCenter);
+      }
+    }
+
+    setZoom(newZoom);
+  }, []);
+
   // Event handler for zoom-in click
-  const handleZoomIn = () => setZoom(zoom + 1);
+  const handleZoomIn = () => zoomTo(zoom + 1);
 
   // Event handler for zoom-out click
-  const handleZoomOut = () => {
-    const newZoom = zoom - 1;
-    setZoom(newZoom);
-    if (newZoom === 1) {
-      setCenter(0.5);
-    }
-  };
+  const handleZoomOut = () => zoomTo(zoom - 1);
+
+  // Event handler for the zoom-reset click
+  const handleResetZoom = useCallback(() => zoomTo(1), [zoomTo]);
 
   // Event handler mouse-move over the spectrogram
   // Calculates the new center position relative to full length of the audio,
@@ -97,7 +114,7 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
     const width = spectrogramRef.current.clientWidth;
 
     const newPosition = spectrogramCenterRef.current + (e.movementX * -1 / width);
-    const limit = 1 / Math.pow(zoom, 2);
+    const limit = 1 / (zoom * 2);
     if (newPosition >= limit && newPosition <= 1 - limit) {
       wavesurferRef.current.seekAndCenter(newPosition);
       setCenter(newPosition);
@@ -121,12 +138,6 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
     e.target.addEventListener('mouseup', handleMouseUp);
     setSpectrogramCursor('ew-resize');
   }, [handleMouseMove, handleMouseUp]);
-
-  // Event handler for the zoom-reset click
-  const handleResetZoom = useCallback(() => {
-    setZoom(1);
-    setCenter(0.5);
-  }, [setCenter]);
 
   return {
     zoom,
