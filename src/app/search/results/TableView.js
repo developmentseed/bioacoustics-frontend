@@ -31,14 +31,14 @@ ResultRow.propTypes = {
 export default function TableView({ results }) {
   return (
     <TableContainer>
-      <Table variant="simple">
+      <Table size="sm" bg="white">
         <Thead>
           <Tr>
-            <Th>ID</Th>
-            <Th>Distance</Th>
-            <Th>Site name</Th>
-            <Th>Subsite</Th>
-            <Th>Timestamp</Th>
+            <Th py={2} color="blackAlpha.600">ID</Th>
+            <Th py={2} color="blackAlpha.600">Distance</Th>
+            <Th py={2} color="blackAlpha.600">Site name</Th>
+            <Th py={2} color="blackAlpha.600">Subsite</Th>
+            <Th py={2} color="blackAlpha.600">Timestamp</Th>
           </Tr>
         </Thead>
         <Tbody data-testid="results-table">
