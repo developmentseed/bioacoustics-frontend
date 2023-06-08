@@ -1,12 +1,12 @@
 import T from 'prop-types';
-import { Button, Box, Card, CardBody, Flex, Grid, GridItem, IconButton, Link, Text } from '@chakra-ui/react';
+import { Button, Card, CardBody, Flex, Grid, GridItem, IconButton, Image, Link, Text } from '@chakra-ui/react';
 import { MdPlayArrow, MdOpenInNew } from 'react-icons/md';
 
 import { TMatch } from '@/types';
 import { formatDate } from '@/utils';
 
 function ResultCard({ result, large }) {
-  const { id, entity: { site_name, file_timestamp }} = result;
+  const { id, entity: { site_name, file_timestamp, image_url }} = result;
   const gridConfig = `min-content min-content ${large ? 'min-content' : ''} 1fr`;
 
   return (
@@ -24,9 +24,16 @@ function ResultCard({ result, large }) {
             title="Play"
           />
         </Flex>
-        <Box bgColor="blackAlpha.300" h="20" textAlign="center">
-          <Text fontSize="xs">Spectrogram placeholder</Text>  {/* TODO: Load spectrogram image */}
-        </Box>
+        <Image
+          src={image_url}
+          alt="Spectrogram" // TODO
+          loading="lazy"
+          fit="fill"
+          htmlHeight="256"
+          htmlWidth="215"
+          height="100"
+          width="100%"
+        />
         {large && (
           <Grid templateColumns="min-content 1fr" gap="1">
             <GridItem><b>Site:</b></GridItem>

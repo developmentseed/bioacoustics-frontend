@@ -7,6 +7,7 @@ const TMatch = T.shape({
     site_name: T.string.isRequired,
     subsite_name: T.string.isRequired,
     file_timestamp: T.number.isRequired,
+    image_url: T.string.isRequired,
   }).isRequired
 });
 
