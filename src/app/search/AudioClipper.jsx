@@ -20,13 +20,20 @@ import {
 
 import { TFile } from '@/types';
 import { TimeBox, Error } from '@/components';
-import { MdAdd, MdRemove, MdFullscreen, MdPlayCircleOutline, MdPauseCircleOutline, MdContentCut, MdDragIndicator } from 'react-icons/md';
+import {
+  MdAdd,
+  MdRemove,
+  MdFullscreen,
+  MdPlayCircleOutline,
+  MdPauseCircleOutline,
+  MdContentCut,
+  MdDragIndicator,
+} from 'react-icons/md';
 
 import useSpectrogram from './hooks/useSpectrogram';
 import useAudioPlayer from './hooks/useAudioPLayer';
 import useClipper from './hooks/useClipper';
 import useFileValidation from './hooks/useFileValidation';
-
 
 function ToolbarButton({ children, leftIcon, ...props }) {
   return (
@@ -42,31 +49,26 @@ function ToolbarButton({ children, leftIcon, ...props }) {
       }}
       {...props}
     >
-      { children }
+      {children}
     </Button>
   );
 }
 
 ToolbarButton.propTypes = {
   children: T.node.isRequired,
-  leftIcon: T.node
+  leftIcon: T.node,
 };
-
 
 export default function AudioClipper({ file, setClip }) {
   const waveformId = useId();
   const spectrogramId = useId();
 
-  const {
-    isPlaying,
-    currentTime,
-    duration,
-    playButtonProps,
-    scrubberProps
-  } = useAudioPlayer(file);
+  const { isPlaying, currentTime, duration, playButtonProps, scrubberProps } =
+    useAudioPlayer(file);
 
   const {
     zoom,
+    SPECTROGRAM_HEIGHT,
     spectrogramCenter,
     spectrogramRef,
     hasDragged,
@@ -88,18 +90,46 @@ export default function AudioClipper({ file, setClip }) {
     submitButtonProps,
     dragButtonProps,
     inInputProps,
-    outInputProps
-  } = useClipper(duration, spectrogramCenter, zoom, spectrogramRef, hasDragged, setClip);
+    outInputProps,
+  } = useClipper(
+    duration,
+    spectrogramCenter,
+    zoom,
+    spectrogramRef,
+    hasDragged,
+    setClip
+  );
 
   const { clipLengthError } = useFileValidation(file, duration);
 
   return (
     <>
       <Text>{file.name}</Text>
-      { clipLengthError && <Error>{ clipLengthError }</Error> }
-      <Box position="relative" height="256px" overflow="hidden">
-        <Box position="absolute" borderRadius="5px" width="2px" height="256px" bgColor="red" zIndex={7} boxShadow="0 0 2px 0px rgba(255,255,255,0.5)" {...playPositionProps} />
-        <Box position="absolute" top="0" left="0" id={spectrogramId} width="100%" onClick={handleClipSet} {...spectrogramProps}>
+      {clipLengthError && <Error>{clipLengthError}</Error>}
+      <Box
+        position="relative"
+        height={`${SPECTROGRAM_HEIGHT}px`}
+        overflow="hidden"
+      >
+        <Box
+          position="absolute"
+          borderRadius="5px"
+          width="2px"
+          height={`${SPECTROGRAM_HEIGHT}px`}
+          bgColor="red"
+          zIndex={7}
+          boxShadow="0 0 2px 0px rgba(255,255,255,0.5)"
+          {...playPositionProps}
+        />
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          id={spectrogramId}
+          width="100%"
+          onClick={handleClipSet}
+          {...spectrogramProps}
+        >
           {clipCenterPx !== undefined && (
             <>
               <Flex
@@ -108,7 +138,7 @@ export default function AudioClipper({ file, setClip }) {
                 top="0"
                 left={`${clipCenterPx - clipWidthPx / 2 - clipHandleWidth}px`}
                 width={`${clipHandleWidth}px`}
-                height="256px"
+                height={`${SPECTROGRAM_HEIGHT}px`}
                 bgColor="#A4FF31"
                 zIndex={7}
                 borderRadius="4px 0 0 4px"
@@ -122,7 +152,7 @@ export default function AudioClipper({ file, setClip }) {
                 top="0"
                 left={`${clipCenterPx + clipWidthPx / 2}px`}
                 width={`${clipHandleWidth}px`}
-                height="256px"
+                height={`${SPECTROGRAM_HEIGHT}px`}
                 bgColor="#A4FF31"
                 zIndex={7}
                 borderRadius="0 4px 4px 0"
@@ -135,7 +165,7 @@ export default function AudioClipper({ file, setClip }) {
                 top="0"
                 left="0"
                 width="100%"
-                height="256px"
+                height={`${SPECTROGRAM_HEIGHT}px`}
                 overflow="hidden"
                 display="inline-block"
                 zIndex={5}
@@ -143,36 +173,51 @@ export default function AudioClipper({ file, setClip }) {
                   content: '""',
                   display: 'block',
                   width: `${clipWidthPx}px`,
-                  height: '256px',
+                  height: `${SPECTROGRAM_HEIGHT}px`,
                   position: 'absolute',
                   top: '50%',
                   left: clipCenterPx,
                   zIndex: 6,
                   border: '99999px solid rgba(0, 0, 0, 0.6)',
-                  transform: 'translate(-50%, -50%)'
+                  transform: 'translate(-50%, -50%)',
                 }}
                 _after={{
                   content: '""',
                   display: 'block',
                   width: `${clipWidthPx}px`,
-                  height: '250px',
+                  height: `${SPECTROGRAM_HEIGHT}px`,
                   position: 'absolute',
                   top: '128',
                   left: clipCenterPx,
                   zIndex: 6,
                   border: '3px solid #A4FF31',
-                  transform: 'translate(-50%, -50%)'
+                  transform: 'translate(-50%, -50%)',
                 }}
               />
             </>
           )}
         </Box>
-        <Box position="absolute" top="0" left="0" id={waveformId} width="100%" height="0" visibility="hidden" />
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          id={waveformId}
+          width="100%"
+          height="0"
+          visibility="hidden"
+        />
       </Box>
       {isClipping && (
         <Center>
           <HStack mt="2" gap="5" align="center">
-            <Button type="button" variant="ghost" size="xs" {...cancelButtonProps}>Cancel</Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="xs"
+              {...cancelButtonProps}
+            >
+              Cancel
+            </Button>
             <InputGroup size="xs" w="20">
               <InputLeftAddon>In</InputLeftAddon>
               <Input type="text" {...inInputProps} />
@@ -181,7 +226,14 @@ export default function AudioClipper({ file, setClip }) {
               <InputLeftAddon>Out</InputLeftAddon>
               <Input type="text" {...outInputProps} />
             </InputGroup>
-            <Button type="button" variant="primary" size="xs" {...submitButtonProps}>Confirm</Button>
+            <Button
+              type="button"
+              variant="primary"
+              size="xs"
+              {...submitButtonProps}
+            >
+              Confirm
+            </Button>
           </HStack>
         </Center>
       )}
@@ -191,35 +243,73 @@ export default function AudioClipper({ file, setClip }) {
             type="button"
             variant="ghost"
             borderRadius="full"
-            icon={isPlaying ? <MdPauseCircleOutline fontSize="1.75rem" /> : <MdPlayCircleOutline fontSize="1.75rem" />}
+            icon={
+              isPlaying ? (
+                <MdPauseCircleOutline fontSize="1.75rem" />
+              ) : (
+                <MdPlayCircleOutline fontSize="1.75rem" />
+              )
+            }
             aria-label={isPlaying ? 'Pause' : 'Play'}
             title={isPlaying ? 'Pause' : 'Play'}
             {...playButtonProps}
           />
           <TimeBox time={currentTime} />
-          <Slider min={0} max={duration} step={0.1} minW="300px" flex="1" {...scrubberProps}>
+          <Slider
+            min={0}
+            max={duration}
+            step={0.1}
+            minW="300px"
+            flex="1"
+            {...scrubberProps}
+          >
             <SliderTrack bg="neutral.100">
               <SliderFilledTrack bg="primary.400" />
             </SliderTrack>
-            <SliderThumb color="white" border="2px solid" borderColor="primary.400" borderRadius="5px" width="2" height="5" />
+            <SliderThumb
+              color="white"
+              border="2px solid"
+              borderColor="primary.400"
+              borderRadius="5px"
+              width="2"
+              height="5"
+            />
           </Slider>
           <TimeBox time={duration} />
         </HStack>
 
-        <ToolbarButton
-          leftIcon={<MdContentCut />}
-          {...clipButtonProps}
-        >
+        <ToolbarButton leftIcon={<MdContentCut />} {...clipButtonProps}>
           Clip
         </ToolbarButton>
 
         <HStack>
-          <Text color="primary.400" fontSize="sm">Zoom</Text>
+          <Text color="primary.400" fontSize="sm">
+            Zoom
+          </Text>
           <ButtonGroup isAttached variant="outline">
-            <IconButton icon={<MdAdd />} type="button" size="xs" {...zoomInButtonProps} aria-label="Zoom in" />
-            <IconButton icon={<MdRemove />} type="button" size="xs" {...zoomOutButtonProps} aria-label="Zoom out" />
+            <IconButton
+              icon={<MdAdd />}
+              type="button"
+              size="xs"
+              {...zoomInButtonProps}
+              aria-label="Zoom in"
+            />
+            <IconButton
+              icon={<MdRemove />}
+              type="button"
+              size="xs"
+              {...zoomOutButtonProps}
+              aria-label="Zoom out"
+            />
           </ButtonGroup>
-          <IconButton icon={<MdFullscreen />} type="button" variant="outline" size="xs" {...resetZoomButtonProps} aria-label="Reset zoom" />
+          <IconButton
+            icon={<MdFullscreen />}
+            type="button"
+            variant="outline"
+            size="xs"
+            {...resetZoomButtonProps}
+            aria-label="Reset zoom"
+          />
         </HStack>
       </HStack>
     </>
@@ -228,5 +318,5 @@ export default function AudioClipper({ file, setClip }) {
 
 AudioClipper.propTypes = {
   file: TFile,
-  setClip: T.func.isRequired
+  setClip: T.func.isRequired,
 };
