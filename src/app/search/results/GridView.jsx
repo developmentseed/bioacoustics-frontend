@@ -4,9 +4,10 @@ import { MdPlayArrow, MdOpenInNew } from 'react-icons/md';
 
 import { TMatch } from '@/types';
 import { formatDate } from '@/utils';
+import { sitenameDisplay } from './utils';
 
 function ResultCard({ result, large }) {
-  const { id, entity: { site_name, file_timestamp, image_url }} = result;
+  const { id, entity: { file_timestamp, image_url }} = result;
   const gridConfig = `min-content min-content ${large ? 'min-content' : ''} 1fr`;
 
   return (
@@ -37,7 +38,7 @@ function ResultCard({ result, large }) {
         {large && (
           <Grid templateColumns="min-content 1fr" gap="1">
             <GridItem><b>Site:</b></GridItem>
-            <GridItem>{ site_name }</GridItem>
+            <GridItem>{ sitenameDisplay(result) }</GridItem>
             <GridItem><b>Date:</b></GridItem>
             <GridItem>{ formatDate(file_timestamp) }</GridItem>
           </Grid>
@@ -64,7 +65,7 @@ export default function GridView({ results, large }) {
 
   return (
     <Grid templateColumns={`repeat(${gridNumber}, 1fr)`} gap={5} data-testid="results-grid">
-      {results.map((result) => <ResultCard key={result.file_seq_id} result={result} large={large} />)}
+      {results.map((result) => <ResultCard key={result.entity.file_seq_id} result={result} large={large} />)}
     </Grid>
   );
 }

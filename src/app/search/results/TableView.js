@@ -10,15 +10,15 @@ import {
 } from '@chakra-ui/react';
 import { TMatch } from '@/types';
 import { formatDate } from '@/utils';
+import { sitenameDisplay } from './utils';
 
 function ResultRow({ result }) {
-  const { id, distance, entity: { site_name, subsite_name, file_timestamp } } = result;
+  const { id, distance, entity: { file_timestamp } } = result;
   return (
     <Tr>
       <Td>{ id }</Td>
       <Td>{ distance }</Td>
-      <Td>{ site_name }</Td>
-      <Td>{ subsite_name }</Td>
+      <Td>{ sitenameDisplay(result) }</Td>
       <Td>{ formatDate(file_timestamp) }</Td>
     </Tr>
   );
@@ -36,8 +36,7 @@ export default function TableView({ results }) {
           <Tr>
             <Th>ID</Th>
             <Th>Distance</Th>
-            <Th>Site name</Th>
-            <Th>Subsite</Th>
+            <Th>Site</Th>
             <Th>Timestamp</Th>
           </Tr>
         </Thead>
