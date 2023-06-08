@@ -41,7 +41,6 @@ export default function Upload() {
       setDuration();
     }
   }, [file]);
-  const disableSubmit = isSubmitting || (duration > MAX_AUDIO_CLIP_LENGTH && !clipStart);
 
   return (
     <main>
@@ -56,16 +55,18 @@ export default function Upload() {
             ) : (
               <AudioClipper file={file} setClip={setClip} />
             )}
-            <Box textAlign="right" mt="2">
-              <Button
-                variant="primary"
-                type="submit"
-                onClick={handleFormSubmit}
-                isDisabled={disableSubmit}
-              >
-                Search
-              </Button>
-            </Box>
+            {file && (duration <= MAX_AUDIO_CLIP_LENGTH || clipStart) && (
+              <Box textAlign="right" mt="2">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  onClick={handleFormSubmit}
+                  isDisabled={isSubmitting}
+                >
+                  Search
+                </Button>
+              </Box>
+            )}
           </Box>
         </Container>
       </InpageHeader>
