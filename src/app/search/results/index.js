@@ -1,6 +1,15 @@
 import { useState } from 'react';
 import T from 'prop-types';
-import { Box, ButtonGroup, Container, Flex, Heading, IconButton, Spacer, Text } from '@chakra-ui/react';
+import {
+  Box,
+  ButtonGroup,
+  Container,
+  Flex,
+  Heading,
+  IconButton,
+  Spacer,
+  Text,
+} from '@chakra-ui/react';
 import { MdMenu, MdGridView, MdGridOn } from 'react-icons/md';
 
 import { Loading } from '@/components';
@@ -15,62 +24,66 @@ const VIEWS = {
 };
 
 export default function Results({ isLoading, results }) {
-  const [ view, setView ] = useState(VIEWS.table);
+  const [view, setView] = useState(VIEWS.table);
 
   if (isLoading) {
     return <Loading />;
   }
 
   return (
-    <Container mt="10" maxW="container.xl">
-      <Heading as="h2" size="base">Results</Heading>
-      {results.length > 0 ? (
-        <>
-          <Flex mb="2">
-            <Box>
-            Showing { results.length } matches
-            </Box>
-            <Spacer />
-            <Box>
-            <ButtonGroup isAttached variant="outline">
-              <IconButton
-                variant={view === VIEWS.table ? 'primary': 'outline'}
-                icon={<MdMenu />}
-                type="button"
-                size="xs"
-                aria-label="View results in table"
-                onClick={() => setView(VIEWS.table)}
-              />
-              <IconButton
-                variant={view === VIEWS.grid_lg ? 'primary': 'outline'}
-                icon={<MdGridView />}
-                type="button"
-                size="xs"
-                aria-label="View results in large grid"
-                onClick={() => setView(VIEWS.grid_lg)}
-              />
-              <IconButton
-                variant={view === VIEWS.grid_sm ? 'primary': 'outline'}
-                icon={<MdGridOn />}
-                type="button"
-                size="xs"
-                aria-label="View results in small grid"
-                onClick={() => setView(VIEWS.grid_sm)}
-              />
-            </ButtonGroup>
-            </Box>
-          </Flex>
-          {view === VIEWS.table && <TableView results={results} />}
-          {[VIEWS.grid_sm, VIEWS.grid_lg].includes(view) && <GridView results={results} large={view === VIEWS.grid_lg} />}
-        </>
-      ) : (
-        <Text>Upload audio to view results</Text>
-      )}
-    </Container>
+    <Box py="10" bg="blackAlpha.50" minH="100%" flex="1">
+      <Container maxW="container.xl" display="flex" flexDirection="column" gap={4}>
+        <Heading as="h2" size="base">
+          Results
+        </Heading>
+        {results.length > 0 ? (
+          <>
+            <Flex mb="2">
+              <Box>Showing {results.length} matches</Box>
+              <Spacer />
+              
+                <ButtonGroup isAttached variant="outline" bg="white">
+                  <IconButton
+                    variant={view === VIEWS.table ? 'primary' : 'outline'}
+                    icon={<MdMenu />}
+                    type="button"
+                    size="xs"
+                    aria-label="View results in table"
+                    onClick={() => setView(VIEWS.table)}
+                  />
+                  <IconButton
+                    variant={view === VIEWS.grid_lg ? 'primary' : 'outline'}
+                    icon={<MdGridView />}
+                    type="button"
+                    size="xs"
+                    aria-label="View results in large grid"
+                    onClick={() => setView(VIEWS.grid_lg)}
+                  />
+                  <IconButton
+                    variant={view === VIEWS.grid_sm ? 'primary' : 'outline'}
+                    icon={<MdGridOn />}
+                    type="button"
+                    size="xs"
+                    aria-label="View results in small grid"
+                    onClick={() => setView(VIEWS.grid_sm)}
+                  />
+                </ButtonGroup>
+              
+            </Flex>
+            {view === VIEWS.table && <TableView results={results} />}
+            {[VIEWS.grid_sm, VIEWS.grid_lg].includes(view) && (
+              <GridView results={results} large={view === VIEWS.grid_lg} />
+            )}
+          </>
+        ) : (
+          <Text>Upload audio to view results</Text>
+        )}
+      </Container>
+    </Box>
   );
 }
 
 Results.propTypes = {
   isLoading: T.bool,
-  results: T.arrayOf(TMatch)
+  results: T.arrayOf(TMatch),
 };

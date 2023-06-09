@@ -5,6 +5,7 @@ import SpectrogramPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.spectrogram'
 const MAX_ZOOM = 5;
 
 export default function useSpectrogramNavigation(file, waveformId, spectrogramId, currentTime, duration) {
+  const SPECTROGRAM_HEIGHT = 144;
   const wavesurferRef = useRef();
   const spectrogramRef = useRef();
   const spectrogramCenterRef = useRef(0.5);
@@ -30,7 +31,7 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
             wavesurfer: wavesurfer,
             container: `#${CSS.escape(spectrogramId)}`,
             labels: false,
-            height: 256,
+            height: SPECTROGRAM_HEIGHT,
         })
       ]
     });
@@ -141,6 +142,7 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
 
   return {
     zoom,
+    SPECTROGRAM_HEIGHT,
     spectrogramCenter,
     spectrogramRef,
     hasDragged,
