@@ -31,7 +31,7 @@ export default function Results({ isLoading, results }) {
   }
 
   return (
-    <Box pt="10" bg="blackAlpha.50">
+    <Box py="10" bg="blackAlpha.50" minH="100%" flex="1">
       <Container maxW="container.xl" display="flex" flexDirection="column" gap={4}>
         <Heading as="h2" size="base">
           Results

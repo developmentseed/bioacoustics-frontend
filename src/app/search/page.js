@@ -37,7 +37,7 @@ export default function Upload() {
   }, [file]);
 
   return (
-    <main>
+    <Box as="main" minH="100%" display="flex" flexDirection="column">
       <InpageHeader>
         <Container maxW="container.xl">
           <Heading as="h1" size="md" mb="2">
@@ -66,6 +66,6 @@ export default function Upload() {
         </Container>
       </InpageHeader>
       <Results results={results} isLoading={isSubmitting} />
-    </main>
+    </Box>
   );
 }
