@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import SpectrogramPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.spectrogram';
+import TimelinePlugin from 'wavesurfer.js/src/plugin/timeline';
 
 const MAX_ZOOM = 5;
 
@@ -32,6 +33,12 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
             container: `#${CSS.escape(spectrogramId)}`,
             labels: false,
             height: SPECTROGRAM_HEIGHT,
+        }),
+        TimelinePlugin.create({
+          container: '#timeline',
+          timeInterval: 0.5,
+          primaryLabelInterval: 2,
+          secondaryLabelInterval: 10,
         })
       ]
     });

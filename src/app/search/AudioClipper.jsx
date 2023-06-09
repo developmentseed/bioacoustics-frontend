@@ -213,6 +213,12 @@ export default function AudioClipper({ file, setClip }) {
           visibility="hidden"
         />
       </Box>
+      <Box
+        left="0"
+        id="timeline"
+        width="100%"
+      />
+      <Text fontSize="xs" m={1} textAlign="center">Time (Seconds)</Text>
       {isClipping && (
         <Center>
           <HStack mt="2" gap="5" align="center">
