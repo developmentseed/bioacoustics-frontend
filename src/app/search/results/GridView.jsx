@@ -21,7 +21,7 @@ function ResultCard({ result, large }) {
         </Grid>
         <Image
           src={image_url}
-          alt="Spectrogram" // TODO
+          alt={`Spectrogram for match from ${filename}`}
           loading="lazy"
           fit="fill"
           htmlHeight="256"
