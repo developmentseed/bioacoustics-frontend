@@ -1,25 +1,46 @@
 import T from 'prop-types';
-import { Box, Button, Card, CardBody, Grid, GridItem, IconButton, Image, Link } from '@chakra-ui/react';
+import { Box, Button, Card, CardBody, Grid, GridItem, IconButton, Image, Link, keyframes} from '@chakra-ui/react';
 import { MdOpenInNew } from 'react-icons/md';
 
 import { TMatch } from '@/types';
 import { formatDate } from '@/utils';
 import { getAudioUrlfromImageUrl, sitenameDisplay } from './utils';
 import AudioPlayer from './AudioPlayer';
+import useAudioPlayer from '../hooks/useAudioPLayer';
 
 function ResultCard({ result, large }) {
   const { entity: { filename, file_timestamp, image_url, clip_offset_in_file }} = result;
-  const gridConfig = `min-content min-content ${large ? 'min-content' : ''} 1fr`;
+  const gridConfig = `min-content ${large ? 'min-content' : ''} 1fr`;
   const audioUrl = getAudioUrlfromImageUrl(image_url);
+  const { isPlaying } = useAudioPlayer(audioUrl);
+  const slide = keyframes`
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+`;
 
   return (
     <Card size="sm" fontSize="xs" data-testid="result-card">
-      <CardBody as={Grid} gap={2} templateRows={gridConfig} p={0}>
+      <CardBody as={Grid} gap={2} templateRows={gridConfig} p={0} pb={1}>
         <Box position="absolute" right={1} top={1} zIndex={10}>
           <AudioPlayer audioSrc={audioUrl} />
         </Box>
         <Box 
           position="relative"
+          _after={{
+            content: '" "',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '0%',
+            height: '100%',
+            zIndex: 2,
+            boxShadow: 'inset 0 0 0 120px rgba(0,0,0,0.5)',
+            animation: isPlaying && `${slide} 5s linear 1 forwards`,
+          }}
         >
           <Image
             src={image_url}
