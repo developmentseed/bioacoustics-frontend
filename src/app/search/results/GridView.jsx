@@ -1,10 +1,11 @@
 import T from 'prop-types';
 import { Button, Card, CardBody, Grid, GridItem, IconButton, Image, Link, Text } from '@chakra-ui/react';
-import { MdPlayArrow, MdOpenInNew } from 'react-icons/md';
+import { MdOpenInNew } from 'react-icons/md';
 
 import { TMatch } from '@/types';
 import { formatDate } from '@/utils';
 import { getAudioUrlfromImageUrl, sitenameDisplay } from './utils';
+import AudioPlayer from './AudioPlayer';
 
 function ResultCard({ result, large }) {
   const { entity: { filename, file_timestamp, image_url, clip_offset_in_file }} = result;
@@ -16,15 +17,7 @@ function ResultCard({ result, large }) {
       <CardBody as={Grid} gap={2} templateRows={gridConfig}>
         <Grid gap="1" templateColumns="1fr min-content">
           <Text textOverflow="ellipsis" overflow="hidden" whiteSpace="nowrap">{ filename.split('/')[1] }</Text>
-          <IconButton
-            type="button"
-            variant="primary"
-            borderRadius="full"
-            size="xs"
-            icon={<MdPlayArrow />}
-            aria-label="Play"
-            title="Play"
-          />
+          <AudioPlayer audioSrc={audioUrl} />
         </Grid>
         <Image
           src={image_url}
