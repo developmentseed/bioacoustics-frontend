@@ -1,11 +1,12 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function useAudioPlayer(file) {
   const [ isPlaying, setIsPlaying ] = useState(false);
   const [ duration, setDuration ] = useState();
   const [ currentTime, setCurrentTime ] = useState(0);
+  const [ audioElement, setAudioElement ] = useState();
 
-  const audioElement = useMemo(() => {
+  useEffect(() => {
     const audioUrl = URL.createObjectURL(file);
     const el = document.createElement('audio');
     el.setAttribute('src', audioUrl);
@@ -19,7 +20,7 @@ export default function useAudioPlayer(file) {
     el.addEventListener('ended', () => {
       setIsPlaying(false);
     });
-    return el;
+    setAudioElement(el);
   }, [file]);
   
   const handlePlayButtonClick = () => {
