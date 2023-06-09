@@ -48,7 +48,7 @@ export default function Upload() {
             {!file ? (
               <AudioSelectForm handleFileSelect={setFile} />
             ) : (
-              <AudioClipper file={file} setClip={setClip} />
+              <AudioClipper file={file} isClipConfirmed={!!clipStart} setClip={setClip} />
             )}
             {file && (duration <= MAX_AUDIO_CLIP_LENGTH || clipStart) && (
               <Box textAlign="right" mt="2">
