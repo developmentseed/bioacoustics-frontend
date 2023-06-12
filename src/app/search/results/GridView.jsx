@@ -8,7 +8,7 @@ import { getAudioUrlfromImageUrl, sitenameDisplay } from './utils';
 import AudioPlayer from './AudioPlayer';
 
 function ResultCard({ result, large }) {
-  const { entity: { filename, file_timestamp, image_url, clip_offset_in_file }} = result;
+  const { entity: { filename, file_seq_id, file_timestamp, image_url, clip_offset_in_file }} = result;
   const gridConfig = `min-content min-content ${large ? 'min-content' : ''} 1fr`;
   const audioUrl = getAudioUrlfromImageUrl(image_url);
 
@@ -41,9 +41,9 @@ function ResultCard({ result, large }) {
         )}
         <GridItem alignSelf="end">
           {large ? (
-            <Button as={Link} variant="link" href={audioUrl} target="_blank" rightIcon={<MdOpenInNew />} size="sm">Full Recording</Button>
+            <Button as={Link} variant="link" href={`https://data.acousticobservatory.org/listen/${file_seq_id}`} target="_blank" rightIcon={<MdOpenInNew />} size="sm">Full Recording</Button>
           ): (
-            <IconButton as={Link} variant="link" href={audioUrl} target="_blank" icon={<MdOpenInNew />} size="sm" title="Full Recording" display="inline" />
+            <IconButton as={Link} variant="link" href={`https://data.acousticobservatory.org/listen/${file_seq_id}`} target="_blank" icon={<MdOpenInNew />} size="sm" title="Full Recording" display="inline" />
           )}
         </GridItem>
       </CardBody>
