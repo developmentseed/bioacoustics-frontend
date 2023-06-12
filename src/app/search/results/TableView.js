@@ -17,7 +17,7 @@ import { sitenameDisplay, getAudioUrlfromImageUrl } from './utils';
 import AudioPlayer from './AudioPlayer';
 
 function ResultRow({ result }) {
-  const { distance, entity: { file_timestamp, file_seq_id, image_url } } = result;
+  const { distance, entity: { file_timestamp, clip_offset_in_file, file_seq_id, image_url } } = result;
   const audioUrl = getAudioUrlfromImageUrl(image_url);
 
   return (
@@ -28,6 +28,7 @@ function ResultRow({ result }) {
       <Td>{ distance.toFixed(4) }</Td>
       <Td>{ sitenameDisplay(result) }</Td>
       <Td>{ formatDate(file_timestamp) }</Td>
+      <Td>{ formatDate(file_timestamp + clip_offset_in_file) }</Td>
       <Td>
         <IconButton as={Link} variant="link" href={`https://data.acousticobservatory.org/listen/${file_seq_id}`} target="_blank" icon={<MdOpenInNew />} size="sm" title="Full Recording" display="inline" />
       </Td>
@@ -48,7 +49,8 @@ export default function TableView({ results }) {
             <Th />
             <Th py={2} color="blackAlpha.600">Distance</Th>
             <Th py={2} color="blackAlpha.600">Site</Th>
-            <Th py={2} color="blackAlpha.600">Timestamp</Th>
+            <Th py={2} color="blackAlpha.600">Recorded</Th>
+            <Th py={2} color="blackAlpha.600">Result</Th>
             <Th />
           </Tr>
         </Thead>
