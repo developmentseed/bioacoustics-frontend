@@ -9,13 +9,13 @@ import TableView from './TableView';
 import GridView from './GridView';
 
 const VIEWS = {
-  table: 1,
+  grid_lg: 1,
   grid_sm: 2,
-  grid_lg: 3,
+  table: 3,
 };
 
 export default function Results({ isLoading, results }) {
-  const [ view, setView ] = useState(VIEWS.table);
+  const [ view, setView ] = useState(VIEWS.grid_lg);
 
   if (isLoading) {
     return <Loading />;
@@ -34,14 +34,6 @@ export default function Results({ isLoading, results }) {
             <Box>
             <ButtonGroup isAttached variant="outline">
               <IconButton
-                variant={view === VIEWS.table ? 'primary': 'outline'}
-                icon={<MdMenu />}
-                type="button"
-                size="xs"
-                aria-label="View results in table"
-                onClick={() => setView(VIEWS.table)}
-              />
-              <IconButton
                 variant={view === VIEWS.grid_lg ? 'primary': 'outline'}
                 icon={<MdGridView />}
                 type="button"
@@ -56,6 +48,14 @@ export default function Results({ isLoading, results }) {
                 size="xs"
                 aria-label="View results in small grid"
                 onClick={() => setView(VIEWS.grid_sm)}
+              />
+              <IconButton
+                variant={view === VIEWS.table ? 'primary': 'outline'}
+                icon={<MdMenu />}
+                type="button"
+                size="xs"
+                aria-label="View results in table"
+                onClick={() => setView(VIEWS.table)}
               />
             </ButtonGroup>
             </Box>
