@@ -64,7 +64,7 @@ export default function Results({ isLoading, results }) {
           {[VIEWS.grid_sm, VIEWS.grid_lg].includes(view) && <GridView results={results} large={view === VIEWS.grid_lg} />}
         </>
       ) : (
-        <Text>Upload audio to view results</Text>
+        <Text>Upload and submit audio query to view results</Text>
       )}
     </Container>
   );
