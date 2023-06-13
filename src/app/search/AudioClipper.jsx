@@ -63,8 +63,7 @@ export default function AudioClipper({ file, setClip }) {
   const waveformId = useId();
   const spectrogramId = useId();
 
-  const { isPlaying, currentTime, duration, playButtonProps, scrubberProps } =
-    useAudioPlayer(file);
+  const { isPlaying, currentTime, duration, playButtonProps, scrubberProps } = useAudioPlayer(file);
 
   const {
     zoom,
