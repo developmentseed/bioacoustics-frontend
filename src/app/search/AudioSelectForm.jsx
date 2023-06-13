@@ -37,12 +37,12 @@ export default function AudioSelectForm({ handleFileSelect }) {
   };
 
   return (
-    <Box>
-      <Text>Upload audio to search for similar sounds</Text>
+    <Box bg="white" p="2" borderRadius="12" boxShadow="lg">
       <Box
         border="2px dashed"
+        bg="blackAlpha.50"
         borderColor="primary.400"
-        borderRadius="5"
+        borderRadius="6"
         textAlign="center"
         p="5"
         mt="1"
@@ -54,7 +54,7 @@ export default function AudioSelectForm({ handleFileSelect }) {
           mb="3"
           fontSize="sm"
         >
-          Maximum audio length 10 minutes. Maximum file size 1 Gb
+          Maximum audio length 5 minutes. Maximum file size 1 Gb
         </Text>
         <input
           ref={inputRef}
@@ -65,7 +65,7 @@ export default function AudioSelectForm({ handleFileSelect }) {
           style={{ display: 'none' }}
           accept={ACCEPTED_AUDIO_TYPES.join(',')}
         />
-        <Flex gap="2" justifyContent="center" alignItems="baseline">
+        <Flex gap="2" justifyContent="center" alignItems={['center', null, 'baseline']} flexDirection={['column', null, 'row']}>
           <Button
             type="button"
             variant="primary"

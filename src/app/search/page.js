@@ -1,7 +1,7 @@
 'use client';
-import { useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { Box, Button, Container, Heading } from '@chakra-ui/react';
+import { Box, Button, Container, Heading, Text } from '@chakra-ui/react';
 
 import { Loading } from '@/components';
 import { InpageHeader } from '@/components/page';
@@ -18,42 +18,37 @@ const AudioClipper = dynamic(() => import('./AudioClipper'), {
 export default function Upload() {
   const [clipStart, setClipStart] = useState();
   const [clipLength, setClipLength] = useState(); // eslint-disable-line
-  const [ duration, setDuration ] = useState();
+  const [duration, setDuration] = useState();
 
-  
-  const {
-    file,
-    setFile,
-    results,
-    isSubmitting,
-    handleFormSubmit
-  } = useSearchForm();
-  
+  const { file, setFile, results, isSubmitting, handleFormSubmit } =
+    useSearchForm();
+
   const setClip = (start, length) => {
     setClipStart(start);
     setClipLength(length);
   };
-  
+
   useEffect(() => {
     if (file) {
       getDuration(file).then(setDuration);
-    } else { 
+    } else {
       setDuration();
     }
   }, [file]);
 
   return (
-    <main>
+    <Box as="main" minH="100%" display="flex" flexDirection="column">
       <InpageHeader>
         <Container maxW="container.xl">
-          <Box bg="white" p="5" borderRadius="5" boxShadow="lg" as="form">
-            <Heading as="h1" size="md" mb="2">
-              Search
-            </Heading>
+          <Heading as="h1" size="md" mb="2">
+            Audio Similarity Search
+          </Heading>
+          {!file && <Text fontSize="sm" mb="2">Upload audio to search for similar sounds</Text>}
+          <form>
             {!file ? (
               <AudioSelectForm handleFileSelect={setFile} />
             ) : (
-              <AudioClipper file={file} setClip={setClip} />
+              <AudioClipper file={file} isClipConfirmed={!!clipStart} setClip={setClip} />
             )}
             {file && (duration <= MAX_AUDIO_CLIP_LENGTH || clipStart) && (
               <Box textAlign="right" mt="2">
@@ -67,10 +62,10 @@ export default function Upload() {
                 </Button>
               </Box>
             )}
-          </Box>
+          </form>
         </Container>
       </InpageHeader>
       <Results results={results} isLoading={isSubmitting} />
-    </main>
+    </Box>
   );
 }

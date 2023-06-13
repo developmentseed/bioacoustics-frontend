@@ -13,17 +13,16 @@ import {
 import { MdOpenInNew } from 'react-icons/md';
 import { TMatch } from '@/types';
 import { formatDate } from '@/utils';
-import { sitenameDisplay, getAudioUrlfromImageUrl } from './utils';
+import { sitenameDisplay, } from './utils';
 import AudioPlayer from './AudioPlayer';
 
 function ResultRow({ result }) {
-  const { distance, entity: { file_timestamp, clip_offset_in_file, file_seq_id, image_url } } = result;
-  const audioUrl = getAudioUrlfromImageUrl(image_url);
+  const { distance, entity: { file_timestamp, clip_offset_in_file, file_seq_id, audio_url } } = result;
 
   return (
     <Tr>
       <Td>
-        <AudioPlayer audioSrc={audioUrl} />
+        <AudioPlayer audioSrc={audio_url} />
       </Td>
       <Td>{ distance.toFixed(4) }</Td>
       <Td>{ sitenameDisplay(result) }</Td>

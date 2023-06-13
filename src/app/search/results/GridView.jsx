@@ -4,20 +4,20 @@ import { MdOpenInNew } from 'react-icons/md';
 
 import { TMatch } from '@/types';
 import { formatDate } from '@/utils';
-import { getAudioUrlfromImageUrl, sitenameDisplay } from './utils';
+import { sitenameDisplay } from './utils';
 import AudioPlayer from './AudioPlayer';
 
 function ResultCard({ result, large }) {
-  const { entity: { filename, file_seq_id, file_timestamp, image_url, clip_offset_in_file }} = result;
+  const { entity: { file_seq_id, filename, file_timestamp, image_url, audio_url, clip_offset_in_file }} = result;
   const gridConfig = `min-content min-content ${large ? 'min-content' : ''} 1fr`;
-  const audioUrl = getAudioUrlfromImageUrl(image_url);
+  const fullAudioUrl = `https://data.acousticobservatory.org/listen/${file_seq_id}`;
 
   return (
     <Card size="sm" fontSize="sm" data-testid="result-card">
       <CardBody as={Grid} gap={2} templateRows={gridConfig}>
         <Grid gap="1" templateColumns="1fr min-content">
           <Text textOverflow="ellipsis" overflow="hidden" whiteSpace="nowrap">{ filename.split('/')[1] }</Text>
-          <AudioPlayer audioSrc={audioUrl} />
+          <AudioPlayer audioSrc={audio_url} />
         </Grid>
         <Image
           src={image_url}
@@ -41,9 +41,9 @@ function ResultCard({ result, large }) {
         )}
         <GridItem alignSelf="end">
           {large ? (
-            <Button as={Link} variant="link" href={`https://data.acousticobservatory.org/listen/${file_seq_id}`} target="_blank" rightIcon={<MdOpenInNew />} size="sm">Full Recording</Button>
+            <Button as={Link} variant="link" href={fullAudioUrl} target="_blank" rightIcon={<MdOpenInNew />} size="sm">Full Recording</Button>
           ): (
-            <IconButton as={Link} variant="link" href={`https://data.acousticobservatory.org/listen/${file_seq_id}`} target="_blank" icon={<MdOpenInNew />} size="sm" title="Full Recording" display="inline" />
+            <IconButton as={Link} variant="link" href={fullAudioUrl} target="_blank" icon={<MdOpenInNew />} size="sm" title="Full Recording" display="inline" />
           )}
         </GridItem>
       </CardBody>
@@ -60,7 +60,7 @@ export default function GridView({ results, large }) {
   const gridNumber = large ? 4 : 6;
 
   return (
-    <Grid templateColumns={`repeat(${gridNumber}, 1fr)`} gap={5} data-testid="results-grid">
+    <Grid templateColumns={`repeat(${gridNumber}, 1fr)`} gap={large ? 4 : 2} data-testid="results-grid">
       {results.map((result) => <ResultCard key={result.entity.file_seq_id} result={result} large={large} />)}
     </Grid>
   );

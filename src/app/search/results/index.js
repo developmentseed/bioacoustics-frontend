@@ -1,6 +1,15 @@
 import { useState } from 'react';
 import T from 'prop-types';
-import { Box, ButtonGroup, Container, Flex, Heading, IconButton, Spacer, Text } from '@chakra-ui/react';
+import {
+  Box,
+  ButtonGroup,
+  Container,
+  Flex,
+  Heading,
+  IconButton,
+  Spacer,
+  Text,
+} from '@chakra-ui/react';
 import { MdMenu, MdGridView, MdGridOn } from 'react-icons/md';
 
 import { Loading } from '@/components';
@@ -15,7 +24,7 @@ const VIEWS = {
 };
 
 export default function Results({ isLoading, results }) {
-  const [ view, setView ] = useState(VIEWS.grid_lg);
+  const [view, setView] = useState(VIEWS.table);
 
   if (isLoading) {
     return <Loading />;
@@ -72,5 +81,5 @@ export default function Results({ isLoading, results }) {
 
 Results.propTypes = {
   isLoading: T.bool,
-  results: T.arrayOf(TMatch)
+  results: T.arrayOf(TMatch),
 };
