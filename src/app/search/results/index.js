@@ -24,7 +24,7 @@ const VIEWS = {
 };
 
 export default function Results({ isLoading, results }) {
-  const [view, setView] = useState(VIEWS.table);
+  const [view, setView] = useState(VIEWS.grid_lg);
 
   if (isLoading) {
     return <Loading />;
