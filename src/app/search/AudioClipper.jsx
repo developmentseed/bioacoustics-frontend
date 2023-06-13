@@ -59,7 +59,7 @@ ToolbarButton.propTypes = {
   leftIcon: T.node,
 };
 
-export default function AudioClipper({ file, setClip }) {
+export default function AudioClipper({ file, isClipConfirmed, setClip }) {
   const waveformId = useId();
   const spectrogramId = useId();
 
@@ -104,7 +104,7 @@ export default function AudioClipper({ file, setClip }) {
   return (
     <>
       <Text fontSize="sm" fontWeight="semibold" mb="2">{file.name}</Text>
-      {clipLengthError && <Error>{clipLengthError}</Error>}
+      {(clipLengthError && !isClipConfirmed) && <Error>{clipLengthError}</Error>}
       <Box
         position="relative"
         height={`${SPECTROGRAM_HEIGHT}px`}
@@ -330,4 +330,5 @@ export default function AudioClipper({ file, setClip }) {
 AudioClipper.propTypes = {
   file: TFile,
   setClip: T.func.isRequired,
+  isClipConfirmed: T.bool.isRequired,
 };
