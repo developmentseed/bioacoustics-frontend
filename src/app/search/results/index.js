@@ -18,68 +18,64 @@ import TableView from './TableView';
 import GridView from './GridView';
 
 const VIEWS = {
-  table: 1,
+  grid_lg: 1,
   grid_sm: 2,
-  grid_lg: 3,
+  table: 3,
 };
 
 export default function Results({ isLoading, results }) {
-  const [view, setView] = useState(VIEWS.table);
+  const [view, setView] = useState(VIEWS.grid_lg);
 
   if (isLoading) {
     return <Loading />;
   }
 
   return (
-    <Box py="10" bg="blackAlpha.50" minH="100%" flex="1">
-      <Container maxW="container.xl" display="flex" flexDirection="column" gap={4}>
-        <Heading as="h2" size="base">
-          Results
-        </Heading>
-        {results.length > 0 ? (
-          <>
-            <Flex mb="2">
-              <Box>Showing {results.length} matches</Box>
-              <Spacer />
-              
-                <ButtonGroup isAttached variant="outline" bg="white">
-                  <IconButton
-                    variant={view === VIEWS.table ? 'primary' : 'outline'}
-                    icon={<MdMenu />}
-                    type="button"
-                    size="xs"
-                    aria-label="View results in table"
-                    onClick={() => setView(VIEWS.table)}
-                  />
-                  <IconButton
-                    variant={view === VIEWS.grid_lg ? 'primary' : 'outline'}
-                    icon={<MdGridView />}
-                    type="button"
-                    size="xs"
-                    aria-label="View results in large grid"
-                    onClick={() => setView(VIEWS.grid_lg)}
-                  />
-                  <IconButton
-                    variant={view === VIEWS.grid_sm ? 'primary' : 'outline'}
-                    icon={<MdGridOn />}
-                    type="button"
-                    size="xs"
-                    aria-label="View results in small grid"
-                    onClick={() => setView(VIEWS.grid_sm)}
-                  />
-                </ButtonGroup>
-              
-            </Flex>
-            {view === VIEWS.table && <TableView results={results} />}
-            {[VIEWS.grid_sm, VIEWS.grid_lg].includes(view) && (
-              <GridView results={results} large={view === VIEWS.grid_lg} />
-            )}
-          </>
-        ) : (
-          <Text>Upload audio to view results</Text>
-        )}
-      </Container>
-    </Box>
+    <Container mt="10" maxW="container.xl">
+      <Heading as="h2" size="base">Results</Heading>
+      {results.length > 0 ? (
+        <>
+          <Flex mb="2">
+            <Box>
+            Showing { results.length } matches
+            </Box>
+            <Spacer />
+            <Box>
+            <ButtonGroup isAttached variant="outline">
+              <IconButton
+                variant={view === VIEWS.grid_lg ? 'primary': 'outline'}
+                icon={<MdGridView />}
+                type="button"
+                size="xs"
+                aria-label="View results in large grid"
+                onClick={() => setView(VIEWS.grid_lg)}
+              />
+              <IconButton
+                variant={view === VIEWS.grid_sm ? 'primary': 'outline'}
+                icon={<MdGridOn />}
+                type="button"
+                size="xs"
+                aria-label="View results in small grid"
+                onClick={() => setView(VIEWS.grid_sm)}
+              />
+              <IconButton
+                variant={view === VIEWS.table ? 'primary': 'outline'}
+                icon={<MdMenu />}
+                type="button"
+                size="xs"
+                aria-label="View results in table"
+                onClick={() => setView(VIEWS.table)}
+              />
+            </ButtonGroup>
+            </Box>
+          </Flex>
+          {view === VIEWS.table && <TableView results={results} />}
+          {[VIEWS.grid_sm, VIEWS.grid_lg].includes(view) && <GridView results={results} large={view === VIEWS.grid_lg} />}
+        </>
+      ) : (
+        <Text>Upload and submit audio query to view results</Text>
+      )}
+    </Container>
   );
 }
 
