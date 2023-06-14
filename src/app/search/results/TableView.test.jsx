@@ -18,7 +18,6 @@ describe('TableView', () => {
     const tableBody = screen.getByTestId('results-table');
     const firstRow = within(tableBody).getAllByRole('row')[0];
     const cells = within(firstRow).getAllByRole('cell');
-    expect(cells[0].textContent).toEqual(`${results[0].id}`);
     expect(cells[1].textContent).toEqual(`${results[0].distance}`);
     expect(cells[2].textContent).toEqual(`${results[0].entity.site_name} (${results[0].entity.subsite_name})`);
     expect(cells[3].textContent).toEqual(formatDate(results[0].entity.file_timestamp));

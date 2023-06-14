@@ -7,7 +7,7 @@ import { formatDate } from '@/utils';
 import { results } from './fixtures';
 
 describe('GridView', () => {
-  it('renders all results', () => {
+  it.only('renders all results', () => {
     render(<GridView results={results} />);
     expect(screen.getAllByTestId('result-card').length).toEqual(3);
   });

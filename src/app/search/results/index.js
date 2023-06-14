@@ -1,6 +1,15 @@
 import { useState } from 'react';
 import T from 'prop-types';
-import { Box, ButtonGroup, Container, Flex, Heading, IconButton, Spacer, Text } from '@chakra-ui/react';
+import {
+  Box,
+  ButtonGroup,
+  Container,
+  Flex,
+  Heading,
+  IconButton,
+  Spacer,
+  Text,
+} from '@chakra-ui/react';
 import { MdMenu, MdGridView, MdGridOn } from 'react-icons/md';
 
 import { Loading } from '@/components';
@@ -9,13 +18,13 @@ import TableView from './TableView';
 import GridView from './GridView';
 
 const VIEWS = {
-  table: 1,
+  grid_lg: 1,
   grid_sm: 2,
-  grid_lg: 3,
+  table: 3,
 };
 
 export default function Results({ isLoading, results }) {
-  const [ view, setView ] = useState(VIEWS.table);
+  const [view, setView] = useState(VIEWS.grid_lg);
 
   if (isLoading) {
     return <Loading />;
@@ -34,14 +43,6 @@ export default function Results({ isLoading, results }) {
             <Box>
             <ButtonGroup isAttached variant="outline">
               <IconButton
-                variant={view === VIEWS.table ? 'primary': 'outline'}
-                icon={<MdMenu />}
-                type="button"
-                size="xs"
-                aria-label="View results in table"
-                onClick={() => setView(VIEWS.table)}
-              />
-              <IconButton
                 variant={view === VIEWS.grid_lg ? 'primary': 'outline'}
                 icon={<MdGridView />}
                 type="button"
@@ -57,6 +58,14 @@ export default function Results({ isLoading, results }) {
                 aria-label="View results in small grid"
                 onClick={() => setView(VIEWS.grid_sm)}
               />
+              <IconButton
+                variant={view === VIEWS.table ? 'primary': 'outline'}
+                icon={<MdMenu />}
+                type="button"
+                size="xs"
+                aria-label="View results in table"
+                onClick={() => setView(VIEWS.table)}
+              />
             </ButtonGroup>
             </Box>
           </Flex>
@@ -64,7 +73,7 @@ export default function Results({ isLoading, results }) {
           {[VIEWS.grid_sm, VIEWS.grid_lg].includes(view) && <GridView results={results} large={view === VIEWS.grid_lg} />}
         </>
       ) : (
-        <Text>Upload audio to view results</Text>
+        <Text>Upload and submit audio query to view results</Text>
       )}
     </Container>
   );
@@ -72,5 +81,5 @@ export default function Results({ isLoading, results }) {
 
 Results.propTypes = {
   isLoading: T.bool,
-  results: T.arrayOf(TMatch)
+  results: T.arrayOf(TMatch),
 };

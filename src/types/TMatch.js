@@ -8,6 +8,7 @@ const TMatch = T.shape({
     file_seq_id: T.string.isRequired,
     file_timestamp: T.number.isRequired,
     image_url: T.string.isRequired,
+    audio_url: T.string.isRequired,
     site_name: T.string.isRequired,
     subsite_name: T.string.isRequired,
     clip_offset_in_file: T.number.isRequired
