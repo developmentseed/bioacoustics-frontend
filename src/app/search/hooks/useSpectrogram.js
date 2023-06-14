@@ -1,10 +1,12 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import SpectrogramPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.spectrogram';
+import TimelinePlugin from 'wavesurfer.js/src/plugin/timeline';
 
 const MAX_ZOOM = 5;
 
 export default function useSpectrogramNavigation(file, waveformId, spectrogramId, currentTime, duration) {
+  const SPECTROGRAM_HEIGHT = 144;
   const wavesurferRef = useRef();
   const spectrogramRef = useRef();
   const spectrogramCenterRef = useRef(0.5);
@@ -30,7 +32,13 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
             wavesurfer: wavesurfer,
             container: `#${CSS.escape(spectrogramId)}`,
             labels: false,
-            height: 256,
+            height: SPECTROGRAM_HEIGHT,
+        }),
+        TimelinePlugin.create({
+          container: '#timeline',
+          timeInterval: 0.5,
+          primaryLabelInterval: 2,
+          secondaryLabelInterval: 10,
         })
       ]
     });
@@ -77,17 +85,34 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
     }
   }, [wavesurferRef, zoom]);
 
+  const zoomTo = useCallback((newZoom) => {
+    if (newZoom === 1) {
+      spectrogramCenterRef.current = 0.5;
+    } else {
+      const panPadding = 1 / newZoom / 2;
+      const minCenter = panPadding;
+      const maxCenter = 1 - panPadding;
+
+      if (spectrogramCenterRef.current < maxCenter) {
+        spectrogramCenterRef.current = Math.max(spectrogramCenterRef.current, minCenter);
+      }
+      
+      if (spectrogramCenterRef.current > minCenter) {
+        spectrogramCenterRef.current = Math.min(spectrogramCenterRef.current, maxCenter);
+      }
+    }
+
+    setZoom(newZoom);
+  }, []);
+
   // Event handler for zoom-in click
-  const handleZoomIn = () => setZoom(zoom + 1);
+  const handleZoomIn = () => zoomTo(zoom + 1);
 
   // Event handler for zoom-out click
-  const handleZoomOut = () => {
-    const newZoom = zoom - 1;
-    setZoom(newZoom);
-    if (newZoom === 1) {
-      setCenter(0.5);
-    }
-  };
+  const handleZoomOut = () => zoomTo(zoom - 1);
+
+  // Event handler for the zoom-reset click
+  const handleResetZoom = useCallback(() => zoomTo(1), [zoomTo]);
 
   // Event handler mouse-move over the spectrogram
   // Calculates the new center position relative to full length of the audio,
@@ -97,7 +122,7 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
     const width = spectrogramRef.current.clientWidth;
 
     const newPosition = spectrogramCenterRef.current + (e.movementX * -1 / width);
-    const limit = 1 / Math.pow(zoom, 2);
+    const limit = 1 / (zoom * 2);
     if (newPosition >= limit && newPosition <= 1 - limit) {
       wavesurferRef.current.seekAndCenter(newPosition);
       setCenter(newPosition);
@@ -107,29 +132,24 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
 
   // Event handler for mouse-up events over the spectrogram
   // Deactivates panning by removing the mouse-move handler
-  const handleMouseUp = useCallback((e) => {
-    e.target.removeEventListener('mousemove', handleMouseMove);
-    e.target.removeEventListener('mouseup', handleMouseUp);
+  const handleMouseUp = useCallback(() => {
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
     setSpectrogramCursor('grab');
     setTimeout(() => hasDragged.current = false, 50);
   }, [handleMouseMove]);
 
-    // Event handler for mouse-down events over the spectrogram
+  // Event handler for mouse-down events over the spectrogram
   // Activates panning by registering the mouse-move handler
-  const handleMouseDown = useCallback((e) => {
-    e.target.addEventListener('mousemove', handleMouseMove);
-    e.target.addEventListener('mouseup', handleMouseUp);
+  const handleMouseDown = useCallback(() => {
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
     setSpectrogramCursor('ew-resize');
   }, [handleMouseMove, handleMouseUp]);
 
-  // Event handler for the zoom-reset click
-  const handleResetZoom = useCallback(() => {
-    setZoom(1);
-    setCenter(0.5);
-  }, [setCenter]);
-
   return {
     zoom,
+    SPECTROGRAM_HEIGHT,
     spectrogramCenter,
     spectrogramRef,
     hasDragged,

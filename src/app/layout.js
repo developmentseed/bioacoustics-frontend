@@ -1,5 +1,4 @@
 import T from 'prop-types';
-
 import Providers from './providers';
 import { Header } from '@/components/page';
 
@@ -10,8 +9,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" style={{ height: '100%' }}>
+      <body style={{ height: '100%' }}>
         <Providers>
           <Header />
           {children}

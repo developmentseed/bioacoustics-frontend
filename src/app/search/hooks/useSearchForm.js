@@ -89,10 +89,12 @@ export default function useSearchForm() {
   };
 
   return {
+    duration,
     file,
     setFile,
     results,
     isSubmitting,
+    clipStart,
     setClip,
     submitButtonProps: {
       onClick: handleFormSubmit,
