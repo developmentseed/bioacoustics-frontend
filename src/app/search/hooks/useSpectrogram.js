@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import SpectrogramPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.spectrogram';
 import TimelinePlugin from 'wavesurfer.js/src/plugin/timeline';
@@ -27,6 +27,8 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
     var wavesurfer = WaveSurfer.create({
       container: `#${CSS.escape(waveformId)}`,
       scrollParent: true,
+      responsive: true,
+      fillParent: true,
       plugins: [
         SpectrogramPlugin.create({
             wavesurfer: wavesurfer,
@@ -52,6 +54,25 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
     wavesurfer.seekAndCenter(0.5);
     wavesurferRef.current = wavesurfer;
   }, [file, waveformId, spectrogramId, wavesurferRef]);
+
+  // Handle resizing of spectrogram
+  const observer = useMemo(() => {
+    return new ResizeObserver(() => {
+      wavesurferRef.current.drawer.setWidth(spectrogramRef.current.clientWidth * window.devicePixelRatio);
+      wavesurferRef.current.spectrogram.init();
+    }); 
+  }, []);
+
+  useEffect(() => {
+    const ref = spectrogramRef.current;
+    if (spectrogramRef.current) {
+      observer.observe(ref);
+    }
+
+    return () => {
+      observer.unobserve(ref);
+    };
+  }, [observer]);
 
   const updatePlayPosition = useCallback(() => {
     const width = spectrogramRef.current.clientWidth;
