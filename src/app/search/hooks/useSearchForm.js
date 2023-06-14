@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function useSearchForm() {
   const [ file, setFile ] = useState();
   const [ results, setResults ] = useState([]);
   const [ isSubmitting, setIsSubmitting ] = useState(false);
+
+  // Reset the results when a new file is selected
+  useEffect(() => setResults([]), [file]);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();

@@ -44,6 +44,10 @@ export default function useClipper(duration, spectrogramCenter, zoom, spectrogra
     setClipCenterPx(Math.floor(clipCenterPx - windowLeftPx));
   }, [clipCenter, duration, spectrogramCenter, spectrogramRef, zoom]);
 
+  // Reset the current clip windown when a new file is
+  // selected, using the audio duration as a proxy
+  useEffect(() => setCenter(), [duration, setCenter]);
+
   const handleClipButtonClick = () => {
     setIsClipping(true);
   };

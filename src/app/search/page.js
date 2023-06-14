@@ -11,6 +11,8 @@ import getDuration from '@/utils/getDuration';
 import AudioSelectForm from './AudioSelectForm';
 import useSearchForm from './hooks/useSearchForm';
 import Results from './results';
+import AudioResetForm from './AudioResetForm';
+
 const AudioClipper = dynamic(() => import('./AudioClipper'), {
   loading: () => <Loading size="xl" />,
 });
@@ -43,6 +45,7 @@ export default function Upload() {
           <Heading as="h1" size="md" mb="2">
             Audio Similarity Search
           </Heading>
+          {file && <AudioResetForm setFile={setFile} />}
           {!file && <Text fontSize="sm" mb="2">Upload audio to search for similar sounds</Text>}
           <form>
             {!file ? (
