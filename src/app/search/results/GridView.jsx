@@ -13,7 +13,7 @@ function ResultCard({ result, large }) {
   const gridConfig = `min-content ${large ? 'min-content' : ''} 1fr`;
   const fullAudioUrl = `https://data.acousticobservatory.org/listen/${file_seq_id}`;
 
-  const { isPlaying, playButtonProps } = useAudioPlayer(audio_url);
+  const { isPlaying, currentTime, playButtonProps } = useAudioPlayer(audio_url);
   const buttonLabel = isPlaying ? 'Pause' : 'Play';
   const buttonIcon = isPlaying ? <MdPause /> : <MdPlayArrow />;
   const slide = keyframes`
@@ -52,7 +52,7 @@ function ResultCard({ result, large }) {
             height: '100%',
             zIndex: 2,
             boxShadow: 'inset 0 0 0 120px rgba(0,0,0,0.5)',
-            animation: isPlaying && `${slide} 5s linear 1 forwards`,
+            animation: isPlaying && currentTime > 0 && `${slide} 5s linear 1 forwards`,
           }}
         >
           <Image
