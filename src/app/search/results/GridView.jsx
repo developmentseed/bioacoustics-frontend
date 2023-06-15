@@ -1,14 +1,15 @@
+import { useState } from 'react';
 import T from 'prop-types';
-import { Box, Button, Card, CardBody, Grid, GridItem, IconButton, Image, Link } from '@chakra-ui/react';
+import { Box, Button, Card, CardBody, Grid, GridItem, IconButton, Image, Link, Skeleton } from '@chakra-ui/react';
 import { MdOpenInNew,  MdPlayArrow, MdPause } from 'react-icons/md';
 
 import { TMatch } from '@/types';
 import { formatDate } from '@/utils';
 import { sitenameDisplay } from './utils';
-// import AudioPlayer from './AudioPlayer';
 import useAudioPlayer from '../hooks/useAudioPLayer';
 
 function ResultCard({ result, large }) {
+  const [ imgLoaded, setImgLoaded ] = useState(false);
   const { entity: { file_seq_id, filename, file_timestamp, image_url, audio_url, clip_offset_in_file }} = result;
   const gridConfig = `min-content ${large ? 'min-content' : ''} 1fr`;
   const fullAudioUrl = `https://data.acousticobservatory.org/listen/${file_seq_id}`;
@@ -32,30 +33,34 @@ function ResultCard({ result, large }) {
             {...playButtonProps}
           />
         </Box>
-        <Box 
-          position="relative"
-          _after={{
-            content: '" "',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: isPlaying && `${(currentTime / duration) * 100}%`,
-            height: '100%',
-            zIndex: 2,
-            boxShadow: 'inset 0 0 0 120px rgba(0,0,0,0.5)',
-          }}
-        >
-          <Image
-            src={image_url}
-            alt={`Spectrogram for match from ${filename}`}
-            loading="lazy"
-            fit="fill"
-            htmlHeight="256"
-            htmlWidth="215"
-            height="100"
-            width="100%"
-          />
-        </Box>
+        <Skeleton isLoaded={imgLoaded} startColor="neutral.100" endColor="neutral.200">
+          <Box 
+            position="relative"
+            bg="neutral.100"
+            _after={{
+              content: '" "',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: isPlaying && `${(currentTime / duration) * 100}%`,
+              height: '100%',
+              zIndex: 2,
+              boxShadow: 'inset 0 0 0 120px rgba(0,0,0,0.5)',
+            }}
+          >
+            <Image
+              src={image_url}
+              alt={`Spectrogram for match from ${filename}`}
+              loading="lazy"
+              onLoad={() => setImgLoaded(true)}
+              fit="fill"
+              htmlHeight="256"
+              htmlWidth="215"
+              height="100"
+              width="100%"
+            />
+          </Box>
+        </Skeleton>
         {large && (
           <Grid templateColumns="min-content 1fr" gap="1" px={2}>
             <GridItem fontWeight="bold" color="neutral.400">Site:</GridItem>
