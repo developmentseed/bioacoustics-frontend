@@ -39,7 +39,7 @@ function ResultCard({ result, large }) {
             position: 'absolute',
             top: 0,
             left: 0,
-            width: `${(currentTime / duration) * 100}%`,
+            width: isPlaying && `${(currentTime / duration) * 100}%`,
             height: '100%',
             zIndex: 2,
             boxShadow: 'inset 0 0 0 120px rgba(0,0,0,0.5)',
