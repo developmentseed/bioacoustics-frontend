@@ -32,6 +32,7 @@ export default function Upload() {
 
   useEffect(() => {
     if (file) {
+      setClipStart();
       getDuration(file).then(setDuration);
     } else {
       setDuration();
