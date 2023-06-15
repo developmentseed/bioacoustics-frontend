@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { usePrevious } from '@chakra-ui/react';
 
-export default function useAudioPlayer(file) {
+export default function useAudioPlayer(audioUrl) {
   const [ isPlaying, setIsPlaying ] = useState(false);
   const [ duration, setDuration ] = useState();
   const [ currentTime, setCurrentTime ] = useState(0);
@@ -9,7 +9,6 @@ export default function useAudioPlayer(file) {
   const previousAudioElement = usePrevious(audioElement);
 
   useEffect(() => {
-    const audioUrl = URL.createObjectURL(file);
     const el = document.createElement('audio');
     el.setAttribute('src', audioUrl);
     el.setAttribute('preload', 'metadata');
@@ -23,7 +22,7 @@ export default function useAudioPlayer(file) {
       setIsPlaying(false);
     });
     setAudioElement(el);
-  }, [file]);
+  }, [audioUrl]);
 
   // reset the player state when a new audio is loaded
   useEffect(() => {
