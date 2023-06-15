@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
+import { usePrevious } from '@chakra-ui/react';
 
 export default function useAudioPlayer(file) {
   const [ isPlaying, setIsPlaying ] = useState(false);
   const [ duration, setDuration ] = useState();
   const [ currentTime, setCurrentTime ] = useState(0);
   const [ audioElement, setAudioElement ] = useState();
+  const previousAudioElement = usePrevious(audioElement);
 
   useEffect(() => {
     const audioUrl = URL.createObjectURL(file);
@@ -22,6 +24,15 @@ export default function useAudioPlayer(file) {
     });
     setAudioElement(el);
   }, [file]);
+
+  // reset the player state when a new audio is loaded
+  useEffect(() => {
+    if (previousAudioElement) {
+      previousAudioElement.pause();
+      setIsPlaying(false);
+      setCurrentTime(0);
+    }
+  }, [audioElement, previousAudioElement]);
   
   const handlePlayButtonClick = () => {
     isPlaying ? audioElement.pause() : audioElement.play();
