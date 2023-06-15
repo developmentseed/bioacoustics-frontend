@@ -84,10 +84,10 @@ ResultCard.propTypes = {
 };
 
 export default function GridView({ results, large }) {
-  const gridNumber = large ? 4 : 6;
+  const cardSize = large ? '15rem' : '11rem';
 
   return (
-    <Grid templateColumns={`repeat(${gridNumber}, 1fr)`} gap={large ? 4 : 2} data-testid="results-grid">
+    <Grid templateColumns={`repeat(auto-fill, minmax(${cardSize}, 1fr))`} gap={large ? 4 : 2} data-testid="results-grid">
       {results.map((result) => <ResultCard key={result.entity.file_seq_id} result={result} large={large} />)}
     </Grid>
   );
