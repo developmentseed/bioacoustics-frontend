@@ -1,5 +1,5 @@
 import T from 'prop-types';
-import { Box, Button, Card, CardBody, Grid, GridItem, IconButton, Image, Link, keyframes} from '@chakra-ui/react';
+import { Box, Button, Card, CardBody, Grid, GridItem, IconButton, Image, Link } from '@chakra-ui/react';
 import { MdOpenInNew,  MdPlayArrow, MdPause } from 'react-icons/md';
 
 import { TMatch } from '@/types';
@@ -13,23 +13,14 @@ function ResultCard({ result, large }) {
   const gridConfig = `min-content ${large ? 'min-content' : ''} 1fr`;
   const fullAudioUrl = `https://data.acousticobservatory.org/listen/${file_seq_id}`;
 
-  const { isPlaying, currentTime, playButtonProps } = useAudioPlayer(audio_url);
+  const { isPlaying, currentTime, duration, playButtonProps } = useAudioPlayer(audio_url);
   const buttonLabel = isPlaying ? 'Pause' : 'Play';
   const buttonIcon = isPlaying ? <MdPause /> : <MdPlayArrow />;
-  const slide = keyframes`
-  from {
-    width: 0%;
-  }
-  to {
-    width: 100%;
-  }
-`;
 
   return (
     <Card size="sm" fontSize="xs" data-testid="result-card">
       <CardBody as={Grid} gap={2} templateRows={gridConfig} p={0} pb={1}>
         <Box position="absolute" right={1} top={1} zIndex={10}>
-          {/* <AudioPlayer audioSrc={audio_url} /> */}
           <IconButton
             type="button"
             variant="primary"
@@ -48,11 +39,10 @@ function ResultCard({ result, large }) {
             position: 'absolute',
             top: 0,
             left: 0,
-            width: '0%',
+            width: `${(currentTime / duration) * 100}%`,
             height: '100%',
             zIndex: 2,
             boxShadow: 'inset 0 0 0 120px rgba(0,0,0,0.5)',
-            animation: isPlaying && currentTime > 0 && `${slide} 5s linear 1 forwards`,
           }}
         >
           <Image
