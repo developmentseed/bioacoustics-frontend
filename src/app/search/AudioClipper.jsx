@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { useId, useMemo } from 'react';
 import T from 'prop-types';
 import {
   Box,
@@ -63,7 +63,8 @@ export default function AudioClipper({ file, isClipConfirmed, setClip }) {
   const waveformId = useId();
   const spectrogramId = useId();
 
-  const { isPlaying, currentTime, duration, playButtonProps, scrubberProps } = useAudioPlayer(file);
+  const audioUrl = useMemo(() => URL.createObjectURL(file), [file]);
+  const { isPlaying, currentTime, duration, playButtonProps, scrubberProps } = useAudioPlayer(audioUrl);
 
   const {
     zoom,

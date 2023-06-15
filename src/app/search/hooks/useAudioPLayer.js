@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 
-export default function useAudioPlayer(file) {
+export default function useAudioPlayer(audioUrl) {
   const [ isPlaying, setIsPlaying ] = useState(false);
   const [ duration, setDuration ] = useState();
   const [ currentTime, setCurrentTime ] = useState(0);
   const [ audioElement, setAudioElement ] = useState();
 
   useEffect(() => {
-    const audioUrl = URL.createObjectURL(file);
     const el = document.createElement('audio');
     el.setAttribute('src', audioUrl);
     el.setAttribute('preload', 'metadata');
@@ -21,7 +20,7 @@ export default function useAudioPlayer(file) {
       setIsPlaying(false);
     });
     setAudioElement(el);
-  }, [file]);
+  }, [audioUrl]);
   
   const handlePlayButtonClick = () => {
     isPlaying ? audioElement.pause() : audioElement.play();
