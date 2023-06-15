@@ -31,7 +31,8 @@ export default function Results({ isLoading, results }) {
   }
 
   return (
-    <Container mt="10" maxW="container.xl">
+    <Box py="10" bg="blackAlpha.50" minH="100%" flex="1">
+      <Container maxW="container.xl" display="flex" flexDirection="column" gap={4}>
       <Heading as="h2" size="base">Results</Heading>
       {results.length > 0 ? (
         <>
@@ -75,7 +76,8 @@ export default function Results({ isLoading, results }) {
       ) : (
         <Text>Upload and submit audio query to view results</Text>
       )}
-    </Container>
+      </Container>
+    </Box>
   );
 }
 
