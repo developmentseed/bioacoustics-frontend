@@ -36,9 +36,6 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
         }),
         TimelinePlugin.create({
           container: '#timeline',
-          timeInterval: 0.5,
-          primaryLabelInterval: 2,
-          secondaryLabelInterval: 10,
         })
       ]
     });
