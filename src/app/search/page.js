@@ -11,6 +11,7 @@ import useSearchForm from './hooks/useSearchForm';
 import Results from './results';
 import AudioResetForm from './AudioResetForm';
 
+import { SitesProvider } from './context/sites';
 const AudioClipper = dynamic(() => import('./AudioClipper'), {
   loading: () => <Loading size="xl" />,
 });
@@ -28,35 +29,37 @@ export default function Upload() {
   } = useSearchForm();
 
   return (
-    <Box as="main" minH="100%" display="flex" flexDirection="column">
-      <InpageHeader>
-        <Container maxW="container.xl">
-          <Heading as="h1" size="md" mb="2">
-            Audio Similarity Search
-          </Heading>
-          {file && <AudioResetForm setFile={setFile} />}
-          {!file && <Text fontSize="sm" mb="2">Upload audio to search for similar sounds</Text>}
-          <form>
-            {!file ? (
-              <AudioSelectForm handleFileSelect={setFile} />
-            ) : (
-              <AudioClipper file={file} isClipConfirmed={!!clipStart} setClip={setClip} />
-            )}
-            {file && (duration <= MAX_AUDIO_CLIP_LENGTH || clipStart) && (
-              <Box textAlign="right" mt="2">
-                <Button
-                  variant="primary"
-                  type="submit"
-                  {...submitButtonProps}
-                >
-                  Search
-                </Button>
-              </Box>
-            )}
-          </form>
-        </Container>
-      </InpageHeader>
-      <Results results={results} isLoading={isSubmitting} />
-    </Box>
+    <SitesProvider>
+      <Box as="main" minH="100%" display="flex" flexDirection="column">
+        <InpageHeader>
+          <Container maxW="container.xl">
+            <Heading as="h1" size="md" mb="2">
+              Audio Similarity Search
+            </Heading>
+            {file && <AudioResetForm setFile={setFile} />}
+            {!file && <Text fontSize="sm" mb="2">Upload audio to search for similar sounds</Text>}
+            <form>
+              {!file ? (
+                <AudioSelectForm handleFileSelect={setFile} />
+              ) : (
+                <AudioClipper file={file} isClipConfirmed={!!clipStart} setClip={setClip} />
+              )}
+              {file && (duration <= MAX_AUDIO_CLIP_LENGTH || clipStart) && (
+                <Box textAlign="right" mt="2">
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    {...submitButtonProps}
+                  >
+                    Search
+                  </Button>
+                </Box>
+              )}
+            </form>
+          </Container>
+        </InpageHeader>
+        <Results results={results} isLoading={isSubmitting} />
+      </Box>
+    </SitesProvider>
   );
 }
