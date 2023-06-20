@@ -29,18 +29,28 @@ export default function useSearchForm() {
       .then(pushToResults);
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
     setIsSubmitting(true);
     setResults([]);
 
-    const numPages = RESULTS_MAX / RESULTS_PAGE_SIZE;
-    Promise.any(
-      Array(numPages)
+    const numPages = Math.ceil(RESULTS_MAX / RESULTS_PAGE_SIZE);
+    const batchSize = 3;
+
+    for (let pageOffset = 0; pageOffset < numPages; pageOffset += batchSize) {
+      await Promise.all(
+        Array(batchSize)
         .fill()
-        .map((_, page) => fetchResults(page))
-    ).finally(() => setIsSubmitting(false));
+        .map((_, page) => {
+          if (pageOffset + page < numPages) {
+            return fetchResults(page + pageOffset);
+          } else {
+            return Promise.resolve(true);
+          }
+        }
+      )).finally(() => setIsSubmitting(false));
+    }
   };
 
   return {
