@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { MdMenu, MdGridView, MdGridOn } from 'react-icons/md';
 
+import { RESULTS_DISPLAY_PAGE_SIZE } from '@/settings';
 import { Loading } from '@/components';
 import { TMatch } from '@/types';
 import TableView from './TableView';
@@ -33,6 +34,8 @@ export default function Results({ isLoading, results }) {
     return <Loading />;
   }
 
+  const resultStart = (page - 1) * RESULTS_DISPLAY_PAGE_SIZE + 1;
+  const resultEnd = resultStart + RESULTS_DISPLAY_PAGE_SIZE - 1;
   return (
     <Box py="10" bg="blackAlpha.50" minH="100%" flex="1">
       <Container maxW="container.xl" display="flex" flexDirection="column" gap={4}>
@@ -41,7 +44,7 @@ export default function Results({ isLoading, results }) {
           <>
             <Flex mb="2">
               <Box>
-              Showing { results.length } matches
+                View  <b>{resultStart} - {resultEnd}</b> of { results.length } results
               </Box>
               <Spacer />
               <Box>
