@@ -72,13 +72,13 @@ export default function useSearchForm() {
     });
   };
 
-  const fetchResults = (page, embedding) => {
+  const fetchResults = (page, embeddingPayload) => {
     const limit = RESULTS_PAGE_SIZE;
     const offset = page * limit;
 
     
     const formData  = new FormData();
-    formData.append('embed', JSON.stringify(embedding));
+    formData.append('embed', embeddingPayload);
     formData.append('limit', limit);
     formData.append('offset', offset);
 
@@ -114,6 +114,7 @@ export default function useSearchForm() {
     const batchSize = 3;
     const audioUpload = await prepareAudioForUpload(file);
     const embedding = await fetchEmbedding(audioUpload);
+    const embeddingPayload = JSON.stringify(embedding.embedding);
 
     for (let pageOffset = 0; pageOffset < numPages; pageOffset += batchSize) {
       await Promise.all(
@@ -121,7 +122,7 @@ export default function useSearchForm() {
         .fill()
         .map((_, page) => {
           if (pageOffset + page < numPages) {
-            return fetchResults(page + pageOffset, embedding.embedding);
+            return fetchResults(page + pageOffset, embeddingPayload);
           } else {
             return Promise.resolve(true);
           }
