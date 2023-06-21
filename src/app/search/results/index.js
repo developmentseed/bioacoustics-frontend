@@ -9,15 +9,10 @@ import {
   Heading,
   HStack,
   IconButton,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuOptionGroup,
-  MenuItemOption,
   Spacer,
   Text,
 } from '@chakra-ui/react';
-import { MdMenu, MdGridView, MdGridOn, MdKeyboardArrowDown } from 'react-icons/md';
+import { MdMenu, MdGridView, MdGridOn } from 'react-icons/md';
 
 import { RESULTS_DISPLAY_PAGE_SIZE } from '@/settings';
 import { Loading } from '@/components';
@@ -25,7 +20,7 @@ import { TMatch } from '@/types';
 import TableView from './TableView';
 import GridView from './GridView';
 import usePaginatedResults from './hooks/usePaginatedResults';
-import { useSites } from '../context/sites';
+import { SitesFilter } from './components/filters';
 
 const VIEWS = {
   grid_lg: 1,
@@ -36,7 +31,6 @@ const VIEWS = {
 export default function Results({ isLoading, results }) {
   const [view, setView] = useState(VIEWS.grid_lg);
   const { page, resultPage, numMatches, previousPageProps, nextPageProps, setSelectedSites } = usePaginatedResults(results);
-  const { sites } = useSites();
 
   useEffect(() => window.scrollTo({
     top: 450,
@@ -50,6 +44,7 @@ export default function Results({ isLoading, results }) {
 
   const resultStart = (page - 1) * RESULTS_DISPLAY_PAGE_SIZE + 1;
   const resultEnd = Math.min(resultStart + RESULTS_DISPLAY_PAGE_SIZE - 1, numMatches);
+
   return (
     <Box py="10" bg="blackAlpha.50" minH="100%" flex="1">
       <Container maxW="container.xl" display="flex" flexDirection="column" gap={4}>
@@ -58,16 +53,7 @@ export default function Results({ isLoading, results }) {
           <>
             <HStack>
               <Text textTransform="uppercase" fontSize="sm">Filters</Text>
-              <Menu closeOnSelect={false}>
-                <MenuButton as={Button} size="sm" variant="outline" rightIcon={<MdKeyboardArrowDown />}>
-                  Sites
-                </MenuButton>
-                <MenuList height="200px" overflowY="scroll" zIndex="11" fontSize="sm">
-                  <MenuOptionGroup type="checkbox" onChange={setSelectedSites}>
-                    {sites.map(({ id, name }) => <MenuItemOption key={id} value={id}>{name}</MenuItemOption>)}
-                  </MenuOptionGroup>
-                </MenuList>
-              </Menu>
+              <SitesFilter setSelectedSites={setSelectedSites} />
             </HStack>
             <Flex mb="2">
               <Box>
