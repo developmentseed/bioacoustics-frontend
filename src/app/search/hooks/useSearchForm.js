@@ -72,13 +72,13 @@ export default function useSearchForm() {
     });
   };
 
-  const fetchResults = (page, audioUpload) => {
+  const fetchResults = (page, embedding) => {
     const limit = RESULTS_PAGE_SIZE;
     const offset = page * limit;
 
     
     const formData  = new FormData();
-    formData.append('audio_file', audioUpload, file.name);
+    formData.append('embed', JSON.stringify(embedding));
     formData.append('limit', limit);
     formData.append('offset', offset);
 
@@ -88,6 +88,17 @@ export default function useSearchForm() {
     })
       .then(r => r.json())
       .then(pushToResults);
+  };
+
+  const fetchEmbedding = (audioUpload) => {
+    const formData = new FormData();
+    formData.append('audio_file', audioUpload, file.name);
+
+    return fetch('https://api.bioacoustics.ds.io/api/v1/embed/', {
+      method: 'POST',
+      body: formData,
+    })
+      .then(r => r.json());
   };
 
   /**
@@ -102,6 +113,7 @@ export default function useSearchForm() {
     const numPages = Math.ceil(RESULTS_MAX / RESULTS_PAGE_SIZE);
     const batchSize = 3;
     const audioUpload = await prepareAudioForUpload(file);
+    const embedding = await fetchEmbedding(audioUpload);
 
     for (let pageOffset = 0; pageOffset < numPages; pageOffset += batchSize) {
       await Promise.all(
@@ -109,7 +121,7 @@ export default function useSearchForm() {
         .fill()
         .map((_, page) => {
           if (pageOffset + page < numPages) {
-            return fetchResults(page + pageOffset, audioUpload);
+            return fetchResults(page + pageOffset, embedding.embedding);
           } else {
             return Promise.resolve(true);
           }
