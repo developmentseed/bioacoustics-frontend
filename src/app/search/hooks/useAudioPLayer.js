@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { usePrevious } from '@chakra-ui/react';
 
 export default function useAudioPlayer(audioUrl) {
@@ -7,6 +7,7 @@ export default function useAudioPlayer(audioUrl) {
   const [ currentTime, setCurrentTime ] = useState(0);
   const [ audioElement, setAudioElement ] = useState();
   const previousAudioElement = usePrevious(audioElement);
+  const intervalRef = useRef();
 
   useEffect(() => {
     const el = document.createElement('audio');
@@ -15,11 +16,10 @@ export default function useAudioPlayer(audioUrl) {
     el.addEventListener('loadedmetadata', () => {
       setDuration(el.duration);
     });
-    el.addEventListener('timeupdate', () => {
-      setCurrentTime(el.currentTime);
-    });
+
     el.addEventListener('ended', () => {
       setIsPlaying(false);
+      clearInterval(intervalRef.current);
     });
     setAudioElement(el);
   }, [audioUrl]);
@@ -34,12 +34,21 @@ export default function useAudioPlayer(audioUrl) {
   }, [audioElement, previousAudioElement]);
   
   const handlePlayButtonClick = () => {
-    isPlaying ? audioElement.pause() : audioElement.play();
+    if (isPlaying) {
+      audioElement.pause();
+      clearInterval(intervalRef.current);
+    } else {
+      intervalRef.current = setInterval(() => {
+        setCurrentTime(audioElement.currentTime);
+      }, 25);
+      audioElement.play();
+    }
     setIsPlaying(prev => !prev);
   };
 
   const handleScubberChange = (val) => {
     audioElement.currentTime = val;
+    setCurrentTime(val);
   };
 
   return {

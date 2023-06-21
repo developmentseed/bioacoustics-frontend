@@ -1,10 +1,13 @@
 name: Deploy frontend to GCP
 on:
   workflow_dispatch: # allows for manual invocation
+  workflow_run:
+    workflows: [Test and lint]
+    types:
+      - completed
   push:
     branches:
       - main
-      - gcp-deploy
 
 jobs:
   deploy:
