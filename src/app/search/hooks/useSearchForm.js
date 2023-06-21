@@ -74,9 +74,14 @@ export default function useSearchForm() {
 
   const fetchResults = (page, audioUpload) => {
     const limit = RESULTS_PAGE_SIZE;
-    const offset = page * limit;
+    let offset = page * limit;
+    const sum = limit + offset;
 
-    
+    // the sum of limit and offset cannot be more than 16348
+    if (sum > 16348) {
+      offset = 16348 - limit;
+    }
+
     const formData  = new FormData();
     formData.append('audio_file', audioUpload, file.name);
     formData.append('limit', limit);
@@ -100,7 +105,7 @@ export default function useSearchForm() {
     setResults([]);
 
     const numPages = Math.ceil(RESULTS_MAX / RESULTS_PAGE_SIZE);
-    const batchSize = 3;
+    const batchSize = numPages;
     const audioUpload = await prepareAudioForUpload(file);
 
     for (let pageOffset = 0; pageOffset < numPages; pageOffset += batchSize) {
