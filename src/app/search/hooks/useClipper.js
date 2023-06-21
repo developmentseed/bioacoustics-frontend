@@ -3,7 +3,7 @@ import { formatTime } from '@/utils';
 
 export default function useClipper(duration, spectrogramCenter, zoom, spectrogramRef, hasDragged, setClip) {
   const [ isClipping, setIsClipping ] = useState(false);
-  const clipLength = 2; // in seconds
+  const clipLength = 5; // in seconds
   const clipCenterRef = useRef();
   const [ clipCenter, setClipCenter ] = useState();
   const [ clipCenterPx, setClipCenterPx ] = useState();
