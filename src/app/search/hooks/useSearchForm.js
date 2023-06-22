@@ -122,7 +122,7 @@ export default function useSearchForm() {
         .fill()
         .map((_, page) => {
           if (pageOffset + page < numPages) {
-            return fetchResults(page + pageOffset, embeddingPayload);
+            return fetchResults(page + pageOffset, embedding);
           } else {
             return Promise.resolve(true);
           }
