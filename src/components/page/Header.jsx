@@ -4,7 +4,7 @@ import NavItem from './NavItem';
 
 export default function Header() {
   return (
-    <Box as="header" py="4" boxShadow="base">
+    <Box as="header" py="4" boxShadow="base" zIndex={100} position="relative">
       <Container
         maxW="container.xl"
         display="flex"
@@ -15,7 +15,7 @@ export default function Header() {
           fontSize="lg"
           fontWeight="light"
           textTransform="uppercase"
-          color="primary.400"
+          color="primary.500"
         >
           Eco
           <Text as="span" color="primary.200" fontWeight="bold">
