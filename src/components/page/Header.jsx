@@ -18,6 +18,7 @@ export default function Header() {
           textTransform="uppercase"
           color="primary.500"
           as={NextLink}
+          letterSpacing="1px"
           href="/"
           _hover={{
             opacity: 0.8,

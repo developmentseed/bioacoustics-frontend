@@ -56,7 +56,7 @@ export default function Home() {
         flexDir="column"
         justifyContent="center"
       >
-        <Flex flexDirection={['column', 'column', 'row']}>
+        <Flex flexDirection={['column', 'column', 'column', 'row']}>
           <Heading
             fontWeight="light"
             textTransform="uppercase"
@@ -77,8 +77,8 @@ export default function Home() {
               Echo
             </Heading>
           </Heading>
-          <Container ml={[null, null, '25%']}>
-            <Text mb={6} fontSize="lg">Run audio similarity search on the archive</Text>
+          <Container ml={[0, 0, '6rem']}>
+            <Text mb={6} fontSize="lg">Run audio similarity search on the acoustic archive. ECOECHO uses Machine Learning to locate similar audio data across space and time. It is intended to augment and make efficient the process of dataset gathering/generation for scientific studies.</Text>
             <Button
               as={NextLink}
               variation="solid"
