@@ -99,6 +99,7 @@ export default function useSearchForm() {
       body: formData,
     })
       .then(r => r.json());
+      .then(({ embedding }) => JSON.stringify(embedding)
   };
 
   /**
