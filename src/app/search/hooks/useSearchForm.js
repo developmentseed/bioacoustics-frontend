@@ -98,8 +98,8 @@ export default function useSearchForm() {
       method: 'POST',
       body: formData,
     })
-      .then(r => r.json());
-      .then(({ embedding }) => JSON.stringify(embedding)
+      .then(r => r.json())
+      .then(({ embedding }) => JSON.stringify(embedding);
   };
 
   /**
