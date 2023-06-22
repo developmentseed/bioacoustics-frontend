@@ -115,7 +115,6 @@ export default function useSearchForm() {
     const batchSize = 3;
     const audioUpload = await prepareAudioForUpload(file);
     const embedding = await fetchEmbedding(audioUpload);
-    const embeddingPayload = JSON.stringify(embedding.embedding);
 
     for (let pageOffset = 0; pageOffset < numPages; pageOffset += batchSize) {
       await Promise.all(
