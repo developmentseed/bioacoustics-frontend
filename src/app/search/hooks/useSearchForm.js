@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MAX_AUDIO_CLIP_LENGTH } from '@/settings';
+import { MAX_AUDIO_CLIP_LENGTH, RESULTS_MAX, SEARCH_API } from '@/settings';
 import { bufferToWave, getDuration } from '@/utils';
 
 export default function useSearchForm() {
@@ -69,6 +69,30 @@ export default function useSearchForm() {
     });
   };
 
+  const fetchResults = (embeddingPayload) => {
+    const formData  = new FormData();
+    formData.append('embed', embeddingPayload);
+    formData.append('limit', RESULTS_MAX);
+
+    return fetch(`${SEARCH_API}/search/`, {
+      method: 'POST',
+      body: formData,
+    })
+      .then(r => r.json());
+  };
+
+  const fetchEmbedding = (audioUpload) => {
+    const formData = new FormData();
+    formData.append('audio_file', audioUpload, file.name);
+
+    return fetch(`${SEARCH_API}/embed/`, {
+      method: 'POST',
+      body: formData,
+    })
+      .then(r => r.json())
+      .then(({ embedding }) => JSON.stringify(embedding));
+  };
+
   /**
    * Submit the form
    */
@@ -78,15 +102,10 @@ export default function useSearchForm() {
     setIsSubmitting(true);
     setResults([]);
 
-    const formData  = new FormData();
     const audioUpload = await prepareAudioForUpload(file);
-    formData.append('audio_file', audioUpload, file.name);
+    const embedding = await fetchEmbedding(audioUpload);
 
-    fetch('https://api.bioacoustics.ds.io/api/v1/search/', {
-      method: 'POST',
-      body: formData,
-    })
-      .then(r => r.json())
+    fetchResults(embedding)
       .then(setResults)
       .finally(() => setIsSubmitting(false));
   };

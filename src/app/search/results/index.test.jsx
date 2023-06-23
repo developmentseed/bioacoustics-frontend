@@ -5,6 +5,10 @@ import Results from './';
 import { results } from './fixtures';
 
 describe('Results', () => {
+  beforeEach(() => {
+    window.scrollTo = () => {};
+  });
+
   it('renders the loading spinner', () => {
     render(<Results isLoading={true} results={[]} />);
     expect(screen.queryByTestId('loading')).toBeInTheDocument();

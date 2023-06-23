@@ -54,7 +54,7 @@ export default function TableView({ results }) {
           </Tr>
         </Thead>
         <Tbody data-testid="results-table">
-          {results.map((result) => <ResultRow key={result.id} result={result} />)}
+          {results.map((result) => <ResultRow key={result.entity.audio_url} result={result} />)}
         </Tbody>
       </Table>
     </TableContainer>
