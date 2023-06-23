@@ -109,7 +109,7 @@ export default function GridView({ results, large, selectedResults, toggleSelect
           key={result.entity.audio_url}
           result={result}
           large={large}
-          selectedResults={selectedResults}
+          isSelected={selectedResults.includes(result.entity.audio_url)}
           toggleSelect={toggleSelect}
         />
       ))}

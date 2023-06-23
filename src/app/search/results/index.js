@@ -29,7 +29,7 @@ const VIEWS = {
 export default function Results({ isLoading, results }) {
   const [view, setView] = useState(VIEWS.grid_lg);
   const { page, resultPage, previousPageProps, nextPageProps } = usePaginatedResults(results);
-  const { selectedResults, toggleSelect } = useDownload();
+  const { selectedResults, toggleSelect, downloadLink } = useDownload(results);
 
   useEffect(() => window.scrollTo({
     top: 450,
@@ -46,7 +46,10 @@ export default function Results({ isLoading, results }) {
   return (
     <Box py="10" bg="blackAlpha.50" minH="100%" flex="1">
       <Container maxW="container.xl" display="flex" flexDirection="column" gap={4}>
-        <Heading as="h2" size="base">Results</Heading>
+        <Flex>
+          <Heading as="h2" size="base" flex="1">Results</Heading>
+          {results.length > 0 && <Button variant="primary" size="sm" as="a" href={downloadLink}>Download</Button>}
+        </Flex>
         {results.length > 0 ? (
           <>
             <Flex mb="2">
