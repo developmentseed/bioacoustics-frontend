@@ -50,6 +50,7 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
     };
     reader.readAsArrayBuffer(file);
     wavesurfer.seekAndCenter(0.5);
+    setZoom(1);
     wavesurferRef.current = wavesurfer;
   }, [file, waveformId, spectrogramId, wavesurferRef]);
 

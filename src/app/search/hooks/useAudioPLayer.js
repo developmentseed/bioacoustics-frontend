@@ -1,10 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
+import { usePrevious } from '@chakra-ui/react';
 
 export default function useAudioPlayer(audioUrl) {
   const [ isPlaying, setIsPlaying ] = useState(false);
   const [ duration, setDuration ] = useState();
   const [ currentTime, setCurrentTime ] = useState(0);
   const [ audioElement, setAudioElement ] = useState();
+  const previousAudioElement = usePrevious(audioElement);
   const intervalRef = useRef();
 
   useEffect(() => {
@@ -21,6 +23,15 @@ export default function useAudioPlayer(audioUrl) {
     });
     setAudioElement(el);
   }, [audioUrl]);
+
+  // reset the player state when a new audio is loaded
+  useEffect(() => {
+    if (previousAudioElement) {
+      previousAudioElement.pause();
+      setIsPlaying(false);
+      setCurrentTime(0);
+    }
+  }, [audioElement, previousAudioElement]);
   
   const handlePlayButtonClick = () => {
     if (isPlaying) {
@@ -37,6 +48,7 @@ export default function useAudioPlayer(audioUrl) {
 
   const handleScubberChange = (val) => {
     audioElement.currentTime = val;
+    setCurrentTime(val);
   };
 
   return {
