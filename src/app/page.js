@@ -64,6 +64,7 @@ export default function Home() {
             size="4xl"
             fontSize={['2rem', '5rem', '6rem']}
             letterSpacing="4px"
+            position="relative"
           >
             Eco
             <Heading
@@ -76,6 +77,15 @@ export default function Home() {
             >
               Echo
             </Heading>
+            <Box
+              position="absolute"
+              top="-13.75rem"
+              left="-1rem"
+              height="clamp(350px, 40vw, 550px)"
+              width="clamp(350px, 40vw, 550px)"
+              borderRadius="50%"
+              animation={`${ripple} 2s infinite linear`}
+            />
           </Heading>
           <Container ml={[0, 0, '6rem']}>
             <Text mb={6} fontSize="lg">Run audio similarity search on the Australian Ecoustic Observatory media archive. ECOECHO uses Machine Learning models developed at Google to find similar audio recordings across space and time. It is intended to augment and enable bioacoustics research.</Text>
@@ -89,14 +99,6 @@ export default function Home() {
             </Button>
           </Container>
         </Flex>
-        <Box
-          position="absolute"
-          left="-5%"
-          height="clamp(350px, 40vw, 600px)"
-          width="clamp(350px, 40vw, 600px)"
-          borderRadius="50%"
-          animation={`${ripple} 2s infinite linear`}
-        />
       </Container>
     </Box>
   );
