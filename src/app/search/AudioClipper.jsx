@@ -5,6 +5,7 @@ import {
   Button,
   ButtonGroup,
   Flex,
+  Grid,
   HStack,
   IconButton,
   Input,
@@ -34,6 +35,7 @@ import useSpectrogram from './hooks/useSpectrogram';
 import useAudioPlayer from './hooks/useAudioPLayer';
 import useClipper from './hooks/useClipper';
 import useFileValidation from './hooks/useFileValidation';
+import { FrequencyLegend } from './components';
 
 function ToolbarButton({ children, leftIcon, ...props }) {
   return (
@@ -106,119 +108,123 @@ export default function AudioClipper({ file, isClipConfirmed, setClip }) {
     <>
       <Text fontSize="sm" fontWeight="semibold" mb="2">{file.name}</Text>
       {(clipLengthError && !isClipConfirmed) && <Error>{clipLengthError}</Error>}
-      <Box
-        position="relative"
-        height={`${SPECTROGRAM_HEIGHT}px`}
-        overflow="hidden"
-      >
+      <Grid templateColumns="50px 1fr">
+        <FrequencyLegend width="50px" height={SPECTROGRAM_HEIGHT} />
         <Box
-          position="absolute"
-          borderRadius="5px"
-          width="2px"
+          position="relative"
           height={`${SPECTROGRAM_HEIGHT}px`}
-          bgColor="red"
-          zIndex={7}
-          boxShadow="0 0 2px 0px rgba(255,255,255,0.5)"
-          {...playPositionProps}
-        />
-        <Box
-          position="absolute"
-          top="0"
-          left="0"
-          id={spectrogramId}
-          width="100%"
-          onClick={handleClipSet}
-          {...spectrogramProps}
+          overflow="hidden"
         >
-          {clipCenterPx !== undefined && (
-            <>
-              {isClipping && (
-                <>
-                  <Flex
-                    alignItems="center"
-                    position="absolute"
-                    top="0"
-                    left={`${
-                      clipCenterPx - clipWidthPx / 2 - clipHandleWidth
-                    }px`}
-                    width={`${clipHandleWidth}px`}
-                    height={`${SPECTROGRAM_HEIGHT}px`}
-                    bgColor="#A4FF31"
-                    zIndex={7}
-                    borderRadius="4px 0 0 4px"
-                    {...dragButtonProps}
-                  >
-                    <MdDragIndicator />
-                  </Flex>
-                  <Flex
-                    alignItems="center"
-                    position="absolute"
-                    top="0"
-                    left={`${clipCenterPx + clipWidthPx / 2}px`}
-                    width={`${clipHandleWidth}px`}
-                    height={`${SPECTROGRAM_HEIGHT}px`}
-                    bgColor="#A4FF31"
-                    zIndex={7}
-                    borderRadius="0 4px 4px 0"
-                    {...dragButtonProps}
-                  >
-                    <MdDragIndicator />
-                  </Flex>
-                </>
-              )}
-              <Box
-                position="absolute"
-                top="0"
-                left="0"
-                width="100%"
-                height={`${SPECTROGRAM_HEIGHT}px`}
-                overflow="hidden"
-                display="inline-block"
-                zIndex={5}
-                _before={{
-                  content: '""',
-                  display: 'block',
-                  width: `${clipWidthPx}px`,
-                  height: `${SPECTROGRAM_HEIGHT}px`,
-                  position: 'absolute',
-                  top: '50%',
-                  left: clipCenterPx,
-                  zIndex: 6,
-                  border: '99999px solid rgba(0, 0, 0, 0.6)',
-                  transform: 'translate(-50%, -50%)',
-                }}
-                _after={{
-                  content: '""',
-                  display: 'block',
-                  width: `${clipWidthPx}px`,
-                  height: `calc(${SPECTROGRAM_HEIGHT}px - 6px)`,
-                  position: 'absolute',
-                  top: '50%',
-                  left: clipCenterPx,
-                  zIndex: 6,
-                  border: '3px solid #A4FF31',
-                  transform: 'translate(-50%, -50%)',
-                }}
-              />
-            </>
-          )}
+          <Box
+            position="absolute"
+            borderRadius="5px"
+            width="2px"
+            height={`${SPECTROGRAM_HEIGHT}px`}
+            bgColor="red"
+            zIndex={7}
+            boxShadow="0 0 2px 0px rgba(255,255,255,0.5)"
+            {...playPositionProps}
+          />
+          <Box
+            position="absolute"
+            top="0"
+            left="0"
+            id={spectrogramId}
+            width="100%"
+            onClick={handleClipSet}
+            {...spectrogramProps}
+          >
+            {clipCenterPx !== undefined && (
+              <>
+                {isClipping && (
+                  <>
+                    <Flex
+                      alignItems="center"
+                      position="absolute"
+                      top="0"
+                      left={`${
+                        clipCenterPx - clipWidthPx / 2 - clipHandleWidth
+                      }px`}
+                      width={`${clipHandleWidth}px`}
+                      height={`${SPECTROGRAM_HEIGHT}px`}
+                      bgColor="#A4FF31"
+                      zIndex={7}
+                      borderRadius="4px 0 0 4px"
+                      {...dragButtonProps}
+                    >
+                      <MdDragIndicator />
+                    </Flex>
+                    <Flex
+                      alignItems="center"
+                      position="absolute"
+                      top="0"
+                      left={`${clipCenterPx + clipWidthPx / 2}px`}
+                      width={`${clipHandleWidth}px`}
+                      height={`${SPECTROGRAM_HEIGHT}px`}
+                      bgColor="#A4FF31"
+                      zIndex={7}
+                      borderRadius="0 4px 4px 0"
+                      {...dragButtonProps}
+                    >
+                      <MdDragIndicator />
+                    </Flex>
+                  </>
+                )}
+                <Box
+                  position="absolute"
+                  top="0"
+                  left="0"
+                  width="100%"
+                  height={`${SPECTROGRAM_HEIGHT}px`}
+                  overflow="hidden"
+                  display="inline-block"
+                  zIndex={5}
+                  _before={{
+                    content: '""',
+                    display: 'block',
+                    width: `${clipWidthPx}px`,
+                    height: `${SPECTROGRAM_HEIGHT}px`,
+                    position: 'absolute',
+                    top: '50%',
+                    left: clipCenterPx,
+                    zIndex: 6,
+                    border: '99999px solid rgba(0, 0, 0, 0.6)',
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                  _after={{
+                    content: '""',
+                    display: 'block',
+                    width: `${clipWidthPx}px`,
+                    height: `calc(${SPECTROGRAM_HEIGHT}px - 6px)`,
+                    position: 'absolute',
+                    top: '50%',
+                    left: clipCenterPx,
+                    zIndex: 6,
+                    border: '3px solid #A4FF31',
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                />
+              </>
+            )}
+          </Box>
+          <Box
+            position="absolute"
+            top="0"
+            left="0"
+            id={waveformId}
+            width="100%"
+            height="0"
+            visibility="hidden"
+          />
         </Box>
-        <Box
-          position="absolute"
-          top="0"
-          left="0"
-          id={waveformId}
-          width="100%"
-          height="0"
-          visibility="hidden"
-        />
-      </Box>
+      </Grid>
       <Box
         left="0"
+        ml="50px"
         id="timeline"
         width="100%"
       />
-      <Text fontSize="xs" m={1} textAlign="center">Time (Seconds)</Text>
+      <Text fontSize="xs" m="1" ml="50px" textAlign="center">Time (Seconds)</Text>
       {isClipping && (
         <Center>
           <HStack mt="2" gap="5" align="center">
