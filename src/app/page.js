@@ -78,7 +78,7 @@ export default function Home() {
             </Heading>
           </Heading>
           <Container ml={[0, 0, '6rem']}>
-            <Text mb={6} fontSize="lg">Run audio similarity search on the acoustic archive. ECOECHO uses Machine Learning to locate similar audio data across space and time. It is intended to augment and make efficient the process of dataset gathering/generation for scientific studies.</Text>
+            <Text mb={6} fontSize="lg">Run audio similarity search on the Australian Ecoustic Observatory media archive. ECOECHO uses Machine Learning models developed at Google to find similar audio recordings across space and time. It is intended to augment and enable bioacoustics research.</Text>
             <Button
               as={NextLink}
               variation="solid"
