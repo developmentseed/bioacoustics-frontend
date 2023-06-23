@@ -11,6 +11,8 @@ export default function useDownload(results) {
     }
   };
 
+  const clearSelect = () => setSelectedResults([]);
+
   const downloadLink = useMemo(() => {
     const resultSet = selectedResults.length > 0
       ? results.filter((result) => selectedResults.includes(result.entity.audio_url))
@@ -37,6 +39,7 @@ export default function useDownload(results) {
   return {
     selectedResults,
     toggleSelect,
-    downloadLink
+    downloadLink,
+    clearSelect
   };
 }

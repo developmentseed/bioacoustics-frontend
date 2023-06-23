@@ -11,7 +11,7 @@ import {
   Spacer,
   Text,
 } from '@chakra-ui/react';
-import { MdMenu, MdGridView, MdGridOn } from 'react-icons/md';
+import { MdMenu, MdGridView, MdGridOn, MdClose } from 'react-icons/md';
 
 import { RESULTS_DISPLAY_PAGE_SIZE } from '@/settings';
 import { Loading } from '@/components';
@@ -29,7 +29,7 @@ const VIEWS = {
 export default function Results({ isLoading, results }) {
   const [view, setView] = useState(VIEWS.grid_lg);
   const { page, resultPage, previousPageProps, nextPageProps } = usePaginatedResults(results);
-  const { selectedResults, toggleSelect, downloadLink } = useDownload(results);
+  const { selectedResults, toggleSelect, clearSelect, downloadLink } = useDownload(results);
 
   useEffect(() => window.scrollTo({
     top: 450,
@@ -53,37 +53,43 @@ export default function Results({ isLoading, results }) {
         {results.length > 0 ? (
           <>
             <Flex mb="2">
-              <Box>
-                View  <b>{resultStart} - {resultEnd}</b> of { results.length } results
-              </Box>
+              <Flex alignItems="center">
+                <Text as="span">View <b>{resultStart} - {resultEnd}</b> of { results.length } results</Text>
+                {selectedResults.length > 0 && (
+                  <>
+                    <Text as="span" mx="3" pl="3" borderLeft="1px solid" borderColor="neutral.100">{selectedResults.length} selected</Text>
+                    <Button onClick={clearSelect} variant="link" textTransform="uppercase" letterSpacing="1px" fontWeight="normal" size="sm" leftIcon={<MdClose />}>Clear</Button>
+                  </>
+                )}
+              </Flex>
               <Spacer />
               <Box>
-              <ButtonGroup isAttached variant="outline">
-                <IconButton
-                  variant={view === VIEWS.grid_lg ? 'primary': 'outline'}
-                  icon={<MdGridView />}
-                  type="button"
-                  size="xs"
-                  aria-label="View results in large grid"
-                  onClick={() => setView(VIEWS.grid_lg)}
-                />
-                <IconButton
-                  variant={view === VIEWS.grid_sm ? 'primary': 'outline'}
-                  icon={<MdGridOn />}
-                  type="button"
-                  size="xs"
-                  aria-label="View results in small grid"
-                  onClick={() => setView(VIEWS.grid_sm)}
-                />
-                <IconButton
-                  variant={view === VIEWS.table ? 'primary': 'outline'}
-                  icon={<MdMenu />}
-                  type="button"
-                  size="xs"
-                  aria-label="View results in table"
-                  onClick={() => setView(VIEWS.table)}
-                />
-              </ButtonGroup>
+                <ButtonGroup isAttached variant="outline">
+                  <IconButton
+                    variant={view === VIEWS.grid_lg ? 'primary': 'outline'}
+                    icon={<MdGridView />}
+                    type="button"
+                    size="xs"
+                    aria-label="View results in large grid"
+                    onClick={() => setView(VIEWS.grid_lg)}
+                  />
+                  <IconButton
+                    variant={view === VIEWS.grid_sm ? 'primary': 'outline'}
+                    icon={<MdGridOn />}
+                    type="button"
+                    size="xs"
+                    aria-label="View results in small grid"
+                    onClick={() => setView(VIEWS.grid_sm)}
+                  />
+                  <IconButton
+                    variant={view === VIEWS.table ? 'primary': 'outline'}
+                    icon={<MdMenu />}
+                    type="button"
+                    size="xs"
+                    aria-label="View results in table"
+                    onClick={() => setView(VIEWS.table)}
+                  />
+                </ButtonGroup>
               </Box>
             </Flex>
             {view === VIEWS.table && (
