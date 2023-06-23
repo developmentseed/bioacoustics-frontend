@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import T from 'prop-types';
 import {
   Box,
@@ -29,6 +29,12 @@ const VIEWS = {
 export default function Results({ isLoading, results }) {
   const [view, setView] = useState(VIEWS.grid_lg);
   const { page, resultPage, previousPageProps, nextPageProps } = usePaginatedResults(results);
+
+  useEffect(() => window.scrollTo({
+    top: 450,
+    left: 0,
+    behavior: 'smooth',
+  }), [resultPage]);
 
   if (isLoading) {
     return <Loading />;
