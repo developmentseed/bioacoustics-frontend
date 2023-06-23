@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MAX_AUDIO_CLIP_LENGTH, RESULTS_MAX, RESULTS_PAGE_SIZE } from '@/settings';
+import { MAX_AUDIO_CLIP_LENGTH, RESULTS_MAX, SEARCH_API } from '@/settings';
 import { bufferToWave, getDuration } from '@/utils';
 
 export default function useSearchForm() {
@@ -66,35 +66,23 @@ export default function useSearchForm() {
     });
   };
 
-  const pushToResults = (response) => {
-    setResults(previousResults => {
-      return [...previousResults, ...response].sort((a, b) => a.distance - b.distance);
-    });
-  };
-
-  const fetchResults = (page, embeddingPayload) => {
-    const limit = RESULTS_PAGE_SIZE;
-    const offset = page * limit;
-
-    
+  const fetchResults = (embeddingPayload) => {
     const formData  = new FormData();
     formData.append('embed', embeddingPayload);
-    formData.append('limit', limit);
-    formData.append('offset', offset);
+    formData.append('limit', RESULTS_MAX);
 
-    return fetch('https://api.bioacoustics.ds.io/api/v1/search/', {
+    return fetch(`${SEARCH_API}/search/`, {
       method: 'POST',
       body: formData,
     })
-      .then(r => r.json())
-      .then(pushToResults);
+      .then(r => r.json());
   };
 
   const fetchEmbedding = (audioUpload) => {
     const formData = new FormData();
     formData.append('audio_file', audioUpload, file.name);
 
-    return fetch('https://api.bioacoustics.ds.io/api/v1/embed/', {
+    return fetch(`${SEARCH_API}/embed/`, {
       method: 'POST',
       body: formData,
     })
@@ -111,24 +99,12 @@ export default function useSearchForm() {
     setIsSubmitting(true);
     setResults([]);
 
-    const numPages = Math.ceil(RESULTS_MAX / RESULTS_PAGE_SIZE);
-    const batchSize = 3;
     const audioUpload = await prepareAudioForUpload(file);
     const embedding = await fetchEmbedding(audioUpload);
 
-    for (let pageOffset = 0; pageOffset < numPages; pageOffset += batchSize) {
-      await Promise.all(
-        Array(batchSize)
-        .fill()
-        .map((_, page) => {
-          if (pageOffset + page < numPages) {
-            return fetchResults(page + pageOffset, embedding);
-          } else {
-            return Promise.resolve(true);
-          }
-        }
-      )).finally(() => setIsSubmitting(false));
-    }
+    fetchResults(embedding)
+      .then(setResults)
+      .finally(() => setIsSubmitting(false));
   };
 
   return {
