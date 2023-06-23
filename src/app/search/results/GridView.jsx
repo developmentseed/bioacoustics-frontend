@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import T from 'prop-types';
-import { Box, Button, Card, CardBody, Grid, GridItem, IconButton, Image, Link, Skeleton } from '@chakra-ui/react';
+import { Box, Button, Card, CardBody, Checkbox, Grid, GridItem, IconButton, Image, Link, Skeleton } from '@chakra-ui/react';
 import { MdOpenInNew,  MdPlayArrow, MdPause } from 'react-icons/md';
 
 import { TMatch } from '@/types';
@@ -8,7 +8,7 @@ import { formatDate } from '@/utils';
 import { sitenameDisplay } from './utils';
 import useAudioPlayer from '../hooks/useAudioPLayer';
 
-function ResultCard({ result, large }) {
+function ResultCard({ result, large, isSelected, toggleSelect }) {
   const [ imgLoaded, setImgLoaded ] = useState(false);
   const { entity: { file_seq_id, filename, file_timestamp, image_url, audio_url, clip_offset_in_file }} = result;
   const gridConfig = `min-content ${large ? 'min-content' : ''} 1fr`;
@@ -21,6 +21,15 @@ function ResultCard({ result, large }) {
   return (
     <Card size="sm" fontSize="xs" data-testid="result-card">
       <CardBody as={Grid} gap={2} templateRows={gridConfig} p={0} pb={1}>
+        <Checkbox
+          aria-label="Click to select the result"
+          isChecked={isSelected}
+          onChange={() => toggleSelect(result.entity.audio_url)}
+          position="absolute"
+          left={2}
+          top={2}
+          zIndex={10}
+        />
         <Box position="absolute" right={1} top={1} zIndex={10}>
           <IconButton
             type="button"
@@ -85,15 +94,25 @@ function ResultCard({ result, large }) {
 
 ResultCard.propTypes = {
   result: TMatch.isRequired,
-  large: T.bool
+  large: T.bool,
+  toggleSelect: T.func.isRequired,
+  isSelected: T.bool
 };
 
-export default function GridView({ results, large }) {
+export default function GridView({ results, large, selectedResults, toggleSelect }) {
   const cardSize = large ? '15rem' : '11rem';
 
   return (
     <Grid templateColumns={`repeat(auto-fill, minmax(${cardSize}, 1fr))`} gap={large ? 4 : 2} data-testid="results-grid">
-      {results.map((result) => <ResultCard key={result.entity.audio_url} result={result} large={large} />)}
+      {results.map((result) => (
+        <ResultCard
+          key={result.entity.audio_url}
+          result={result}
+          large={large}
+          selectedResults={selectedResults}
+          toggleSelect={toggleSelect}
+        />
+      ))}
     </Grid>
   );
 }
@@ -101,5 +120,7 @@ export default function GridView({ results, large }) {
 
 GridView.propTypes = {
   results: T.arrayOf(TMatch),
-  large: T.bool
+  large: T.bool,
+  selectedResults: T.arrayOf(T.string).isRequired,
+  toggleSelect: T.func.isRequired
 };

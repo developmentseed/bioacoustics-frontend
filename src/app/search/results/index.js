@@ -18,7 +18,7 @@ import { Loading } from '@/components';
 import { TMatch } from '@/types';
 import TableView from './TableView';
 import GridView from './GridView';
-import usePaginatedResults from './hooks/usePaginatedResults';
+import { usePaginatedResults, useDownload } from './hooks';
 
 const VIEWS = {
   grid_lg: 1,
@@ -29,6 +29,7 @@ const VIEWS = {
 export default function Results({ isLoading, results }) {
   const [view, setView] = useState(VIEWS.grid_lg);
   const { page, resultPage, previousPageProps, nextPageProps } = usePaginatedResults(results);
+  const { selectedResults, toggleSelect } = useDownload();
 
   useEffect(() => window.scrollTo({
     top: 450,
@@ -82,8 +83,21 @@ export default function Results({ isLoading, results }) {
               </ButtonGroup>
               </Box>
             </Flex>
-            {view === VIEWS.table && <TableView results={resultPage} />}
-            {[VIEWS.grid_sm, VIEWS.grid_lg].includes(view) && <GridView results={resultPage} large={view === VIEWS.grid_lg} />}
+            {view === VIEWS.table && (
+              <TableView
+                results={resultPage}
+                selectedResults={selectedResults}
+                toggleSelect={toggleSelect}
+              />
+            )}
+            {[VIEWS.grid_sm, VIEWS.grid_lg].includes(view) && (
+              <GridView
+                results={resultPage}
+                large={view === VIEWS.grid_lg}
+                selectedResults={selectedResults}
+                toggleSelect={toggleSelect}
+              />
+            )}
             <Flex my="5">
               <Button {...previousPageProps} variant="outline">Previous</Button>
               <Spacer />
