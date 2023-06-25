@@ -7,6 +7,7 @@ import { results } from './fixtures';
 describe('Results', () => {
   beforeEach(() => {
     window.scrollTo = () => {};
+    window.URL.createObjectURL = () => 'https://localhost/123-456';
   });
 
   it('renders the loading spinner', () => {

@@ -8,11 +8,14 @@ import { MAX_AUDIO_CLIP_LENGTH } from '@/settings';
 
 import AudioSelectForm from './AudioSelectForm';
 import useSearchForm from './hooks/useSearchForm';
-import Results from './results';
 import AudioResetForm from './AudioResetForm';
 
 const AudioClipper = dynamic(() => import('./AudioClipper'), {
   loading: () => <Loading size="xl" />,
+});
+const Results = dynamic(() => import('./results'), {
+  loading: () => <Loading size="xl" />,
+  ssr: false
 });
 
 export default function Upload() { 
