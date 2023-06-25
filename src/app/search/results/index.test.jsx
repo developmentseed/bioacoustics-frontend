@@ -16,6 +16,7 @@ describe('Results', () => {
         { id: 2, name: 'Site B'} 
       ]
     }));
+    window.URL.createObjectURL = () => 'https://localhost/123-456';
   });
 
   it('renders the loading spinner', () => {

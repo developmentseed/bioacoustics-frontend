@@ -12,15 +12,15 @@ import {
   Spacer,
   Text,
 } from '@chakra-ui/react';
-import { MdMenu, MdGridView, MdGridOn } from 'react-icons/md';
+import { MdMenu, MdGridView, MdGridOn, MdClose } from 'react-icons/md';
 
 import { RESULTS_DISPLAY_PAGE_SIZE } from '@/settings';
 import { Loading } from '@/components';
 import { TMatch } from '@/types';
 import TableView from './TableView';
 import GridView from './GridView';
-import usePaginatedResults from './hooks/usePaginatedResults';
 import { SitesFilter } from './components/filters';
+import { usePaginatedResults, useDownload } from './hooks';
 
 const VIEWS = {
   grid_lg: 1,
@@ -31,6 +31,7 @@ const VIEWS = {
 export default function Results({ isLoading, results }) {
   const [view, setView] = useState(VIEWS.grid_lg);
   const { page, resultPage, numMatches, previousPageProps, nextPageProps, setSelectedSites } = usePaginatedResults(results);
+  const { selectedResults, toggleSelect, clearSelect, downloadLink } = useDownload(results);
 
   useEffect(() => window.scrollTo({
     top: 450,
@@ -48,7 +49,10 @@ export default function Results({ isLoading, results }) {
   return (
     <Box py="10" bg="blackAlpha.50" minH="100%" flex="1">
       <Container maxW="container.xl" display="flex" flexDirection="column" gap={4}>
-        <Heading as="h2" size="base">Results</Heading>
+        <Flex>
+          <Heading as="h2" size="base" flex="1">Results</Heading>
+          {results.length > 0 && <Button variant="primary" size="sm" as="a" href={downloadLink}>Download</Button>}
+        </Flex>
         {results.length > 0 ? (
           <>
             <HStack>
@@ -56,41 +60,60 @@ export default function Results({ isLoading, results }) {
               <SitesFilter setSelectedSites={setSelectedSites} />
             </HStack>
             <Flex mb="2">
-              <Box>
-                View  <b>{resultStart} - {resultEnd}</b> of { numMatches } results
-              </Box>
+              <Flex alignItems="center">
+                <Text as="span">View <b>{resultStart} - {resultEnd}</b> of { results.length } results</Text>
+                {selectedResults.length > 0 && (
+                  <>
+                    <Text as="span" mx="3" pl="3" borderLeft="1px solid" borderColor="neutral.100">{selectedResults.length} selected</Text>
+                    <Button onClick={clearSelect} variant="link" textTransform="uppercase" letterSpacing="1px" fontWeight="normal" size="sm" leftIcon={<MdClose />}>Clear</Button>
+                  </>
+                )}
+              </Flex>
               <Spacer />
               <Box>
-              <ButtonGroup isAttached variant="outline">
-                <IconButton
-                  variant={view === VIEWS.grid_lg ? 'primary': 'outline'}
-                  icon={<MdGridView />}
-                  type="button"
-                  size="xs"
-                  aria-label="View results in large grid"
-                  onClick={() => setView(VIEWS.grid_lg)}
-                />
-                <IconButton
-                  variant={view === VIEWS.grid_sm ? 'primary': 'outline'}
-                  icon={<MdGridOn />}
-                  type="button"
-                  size="xs"
-                  aria-label="View results in small grid"
-                  onClick={() => setView(VIEWS.grid_sm)}
-                />
-                <IconButton
-                  variant={view === VIEWS.table ? 'primary': 'outline'}
-                  icon={<MdMenu />}
-                  type="button"
-                  size="xs"
-                  aria-label="View results in table"
-                  onClick={() => setView(VIEWS.table)}
-                />
-              </ButtonGroup>
+                <ButtonGroup isAttached variant="outline">
+                  <IconButton
+                    variant={view === VIEWS.grid_lg ? 'primary': 'outline'}
+                    icon={<MdGridView />}
+                    type="button"
+                    size="xs"
+                    aria-label="View results in large grid"
+                    onClick={() => setView(VIEWS.grid_lg)}
+                  />
+                  <IconButton
+                    variant={view === VIEWS.grid_sm ? 'primary': 'outline'}
+                    icon={<MdGridOn />}
+                    type="button"
+                    size="xs"
+                    aria-label="View results in small grid"
+                    onClick={() => setView(VIEWS.grid_sm)}
+                  />
+                  <IconButton
+                    variant={view === VIEWS.table ? 'primary': 'outline'}
+                    icon={<MdMenu />}
+                    type="button"
+                    size="xs"
+                    aria-label="View results in table"
+                    onClick={() => setView(VIEWS.table)}
+                  />
+                </ButtonGroup>
               </Box>
             </Flex>
-            {view === VIEWS.table && <TableView results={resultPage} />}
-            {[VIEWS.grid_sm, VIEWS.grid_lg].includes(view) && <GridView results={resultPage} large={view === VIEWS.grid_lg} />}
+            {view === VIEWS.table && (
+              <TableView
+                results={resultPage}
+                selectedResults={selectedResults}
+                toggleSelect={toggleSelect}
+              />
+            )}
+            {[VIEWS.grid_sm, VIEWS.grid_lg].includes(view) && (
+              <GridView
+                results={resultPage}
+                large={view === VIEWS.grid_lg}
+                selectedResults={selectedResults}
+                toggleSelect={toggleSelect}
+              />
+            )}
             <Flex my="5">
               <Button {...previousPageProps} variant="outline">Previous</Button>
               <Spacer />

@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 
 export default function NavItem ({ href, children }) {
   const pathname = usePathname();
-  const isActive = pathname === href;
+  const isActive = pathname.slice(0, -1) === href;
 
   return (
     <li>
@@ -14,6 +14,11 @@ export default function NavItem ({ href, children }) {
           color={isActive ? 'primary.400' : 'neutral.400'}
           textDecoration={isActive ? 'underline' : 'none'}
           textDecorationThickness="2px"
+          _hover={{
+            opacity: 0.8,
+            color: 'primary.400',
+            transition: 'all 0.24s ease',
+          }}
         >
           {children}
         </Box>

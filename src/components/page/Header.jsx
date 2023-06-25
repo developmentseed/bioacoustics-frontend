@@ -1,10 +1,11 @@
 'use client';
 import { Box, Container, HStack, Text } from '@chakra-ui/react';
 import NavItem from './NavItem';
+import NextLink from 'next/link';
 
 export default function Header() {
   return (
-    <Box as="header" py="4" boxShadow="base">
+    <Box as="header" py="4" boxShadow="base" zIndex={100} position="relative">
       <Container
         maxW="container.xl"
         display="flex"
@@ -15,7 +16,14 @@ export default function Header() {
           fontSize="lg"
           fontWeight="light"
           textTransform="uppercase"
-          color="primary.400"
+          color="primary.500"
+          as={NextLink}
+          letterSpacing="1px"
+          href="/"
+          _hover={{
+            opacity: 0.8,
+            transition: 'all 0.24s ease',
+          }}
         >
           Eco
           <Text as="span" color="primary.200" fontWeight="bold">

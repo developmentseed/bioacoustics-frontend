@@ -50,6 +50,9 @@ export default function useClipper(duration, spectrogramCenter, zoom, spectrogra
 
   const handleClipButtonClick = () => {
     setIsClipping(true);
+    if (!clipCenter) {
+      setClipCenter(spectrogramCenter * duration);
+    }
   };
 
   const handleCancelButtonClick = () => {
