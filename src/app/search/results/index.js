@@ -7,6 +7,7 @@ import {
   Container,
   Flex,
   Heading,
+  HStack,
   IconButton,
   Spacer,
   Text,
@@ -18,6 +19,7 @@ import { Loading } from '@/components';
 import { TMatch } from '@/types';
 import TableView from './TableView';
 import GridView from './GridView';
+import { SitesFilter } from './components/filters';
 import { usePaginatedResults, useDownload } from './hooks';
 
 const VIEWS = {
@@ -28,7 +30,7 @@ const VIEWS = {
 
 export default function Results({ isLoading, results }) {
   const [view, setView] = useState(VIEWS.grid_lg);
-  const { page, resultPage, previousPageProps, nextPageProps } = usePaginatedResults(results);
+  const { page, resultPage, numMatches, previousPageProps, nextPageProps, setSelectedSites } = usePaginatedResults(results);
   const { selectedResults, toggleSelect, clearSelect, downloadLink } = useDownload(results);
 
   useEffect(() => window.scrollTo({
@@ -42,7 +44,8 @@ export default function Results({ isLoading, results }) {
   }
 
   const resultStart = (page - 1) * RESULTS_DISPLAY_PAGE_SIZE + 1;
-  const resultEnd = resultStart + RESULTS_DISPLAY_PAGE_SIZE - 1;
+  const resultEnd = Math.min(resultStart + RESULTS_DISPLAY_PAGE_SIZE - 1, numMatches);
+
   return (
     <Box py="10" bg="blackAlpha.50" minH="100%" flex="1">
       <Container maxW="container.xl" display="flex" flexDirection="column" gap={4}>
@@ -52,6 +55,10 @@ export default function Results({ isLoading, results }) {
         </Flex>
         {results.length > 0 ? (
           <>
+            <HStack>
+              <Text textTransform="uppercase" fontSize="sm">Filters</Text>
+              <SitesFilter setSelectedSites={setSelectedSites} />
+            </HStack>
             <Flex mb="2">
               <Flex alignItems="center">
                 <Text as="span">View <b>{resultStart} - {resultEnd}</b> of { results.length } results</Text>

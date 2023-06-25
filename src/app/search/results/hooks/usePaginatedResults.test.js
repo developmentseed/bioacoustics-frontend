@@ -1,15 +1,15 @@
 import { renderHook, act } from '@testing-library/react';
 import usePaginatedResults from './usePaginatedResults';
 
-const results = Array(72).fill(0).map(Number.call, Number);
+const results = Array(72).fill(0).map((_, i) => ({ id: i, entity: { site_id: i % 3 } }));
 
 describe('usePaginatedResults', () => {
   it('renders first page', () => {
     const {result} = renderHook(() => usePaginatedResults(results));
     const { resultPage, previousPageProps, nextPageProps } = result.current;
     expect(resultPage.length).toEqual(25);
-    expect(resultPage[0]).toEqual(0);
-    expect(resultPage[24]).toEqual(24);
+    expect(resultPage[0].id).toEqual(0);
+    expect(resultPage[24].id).toEqual(24);
     expect(previousPageProps.isDisabled).toBeTruthy();
     expect(nextPageProps.isDisabled).toBeFalsy();
   });
@@ -23,8 +23,8 @@ describe('usePaginatedResults', () => {
     const { page, resultPage, previousPageProps, nextPageProps } = result.current;
     expect(page).toEqual(2);
     expect(resultPage.length).toEqual(25);
-    expect(resultPage[0]).toEqual(25);
-    expect(resultPage[24]).toEqual(49);
+    expect(resultPage[0].id).toEqual(25);
+    expect(resultPage[24].id).toEqual(49);
     expect(previousPageProps.isDisabled).toBeFalsy();
     expect(nextPageProps.isDisabled).toBeFalsy();
 
@@ -48,8 +48,8 @@ describe('usePaginatedResults', () => {
     const { page, resultPage, previousPageProps, nextPageProps } = result.current;
     expect(page).toEqual(3);
     expect(resultPage.length).toEqual(22);
-    expect(resultPage[0]).toEqual(50);
-    expect(resultPage[21]).toEqual(71);
+    expect(resultPage[0].id).toEqual(50);
+    expect(resultPage[21].id).toEqual(71);
     expect(previousPageProps.isDisabled).toBeFalsy();
     expect(nextPageProps.isDisabled).toBeTruthy();
 
@@ -58,5 +58,15 @@ describe('usePaginatedResults', () => {
     });
 
     expect(result.current.page).toEqual(2);
+  });
+
+  it('filters sites', () => {
+    const { result } = renderHook(() => usePaginatedResults(results));
+    act(() => {
+      result.current.setSelectedSites([1, 2]);
+    });
+    const { resultPage } = result.current;
+    const correctResults = resultPage.every(r => [1, 2].includes(r.entity.site_id));
+    expect(correctResults).toBeTruthy();
   });
 });
