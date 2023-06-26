@@ -15,21 +15,37 @@ const validate = async (file) => {
   return errors;
 };
 
-export default function useUploadValidation(onValid) {
+const validatorAlt = async (file) => {
+  const duration = await getDuration(file);
+  if (duration > MAX_AUDIO_LENGTH) {
+    return {
+      code: 'Audio file too long',
+      message: 'The audio length exceeds the limit of 5 minutes. Upload a shorter recording.',
+    };
+  }
+  if (file.size > MAX_AUDIO_SIZE) {
+    return {
+      code:'File too large', 
+      message: 'The file size exceeds the limit of 1GB. Upload a smaller file.'
+    };
+  }
+  return null;
+};
+
+export default function useUploadValidation() {
   const [ error, setError ] = useState();
 
-  const handleFileChange = useCallback(async (e) => {
-    const file = e.target.files[0];
+  const validator = useCallback(async (file) => {
     const errors = await validate(file);
     if (errors.length > 0) {
       setError(<><b>{file.name}</b>&nbsp;{errors.join(' ')}</>);
     } else {
-      onValid(file);
+      return null;
     }
-  }, [onValid]);
+  }, []);
 
   return {
     error,
-    handleFileChange
+    validator
   };
 }
