@@ -71,7 +71,7 @@ export default function Results({ isLoading, results }) {
             </HStack>
             <Flex mb="2">
               <Flex alignItems="center">
-                <Text as="span">View <b>{resultStart} - {resultEnd}</b> of { results.length } results</Text>
+                <Text as="span">View <b>{resultStart} - {resultEnd}</b> of { numMatches } results</Text>
                 {selectedResults.length > 0 && (
                   <>
                     <Text as="span" mx="3" pl="3" borderLeft="1px solid" borderColor="neutral.100">{selectedResults.length} selected</Text>

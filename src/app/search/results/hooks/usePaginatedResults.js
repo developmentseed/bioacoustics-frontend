@@ -11,6 +11,11 @@ export default function usePaginatedResults(results) {
     if (selectedSites.length > 0) {
       filters.push(selectedSites.includes(res.entity.site_id));
     }
+    if (selectedDates.length > 0) {
+      const date = new Date(res.entity.file_timestamp * 1000 + res.entity.clip_offset_in_file);
+      filters.push(date >= selectedDates[0]);
+      selectedDates[1] && filters.push(date <= selectedDates[1]);
+    }
     
     if (filters.length > 0)
       return filters.every(x => x);

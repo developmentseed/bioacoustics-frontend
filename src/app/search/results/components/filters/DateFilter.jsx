@@ -35,6 +35,10 @@ export default function DateFilter({selectedDates, setSelectedDates}) {
     setDateInView(selectedDates[0] || new Date());
   };
 
+  const setDates = (dates) => {
+    setSelectedDates(dates.map(d => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()))));
+  };
+
   const handleOnDateSelected = ({ selectable, date }) => {
     if (!selectable) {
       return;
@@ -48,19 +52,19 @@ export default function DateFilter({selectedDates, setSelectedDates}) {
         } else {
           newDates.unshift(date);
         }
-        setSelectedDates(newDates);
+        setDates(newDates);
 
         onClose();
         return;
       }
 
       if (newDates.length === 2) {
-        setSelectedDates([date]);
+        setDates([date]);
         return;
       }
     } else {
       newDates.push(date);
-      setSelectedDates(newDates);
+      setDates(newDates);
     }
   };
 
