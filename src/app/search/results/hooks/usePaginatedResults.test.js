@@ -1,7 +1,14 @@
 import { renderHook, act } from '@testing-library/react';
 import usePaginatedResults from './usePaginatedResults';
 
-const results = Array(72).fill(0).map((_, i) => ({ id: i, entity: { site_id: i % 3 } }));
+const results = Array(72).fill(0).map((_, i) => ({
+  id: i,
+  entity: {
+    site_id: i % 3,
+    file_timestamp: new Date(2021, i % 3, 10).getTime() / 1000,
+    clip_offset_in_file: 0
+  }
+}));
 
 describe('usePaginatedResults', () => {
   it('renders first page', () => {
@@ -67,6 +74,18 @@ describe('usePaginatedResults', () => {
     });
     const { resultPage } = result.current;
     const correctResults = resultPage.every(r => [1, 2].includes(r.entity.site_id));
+    expect(correctResults).toBeTruthy();
+  });
+
+  it('filters dates', () => {
+    const { result } = renderHook(() => usePaginatedResults(results));
+    act(() => {
+      const from = new Date(Date.UTC(2021, 2, 1));
+      const to = new Date(Date.UTC(2021, 2, 28));
+      result.current.setSelectedDates([from, to]);
+    });
+    const { resultPage } = result.current;
+    const correctResults = resultPage.every(r => r.entity.file_timestamp === new Date(2021, 2, 10).getTime() / 1000);
     expect(correctResults).toBeTruthy();
   });
 });
