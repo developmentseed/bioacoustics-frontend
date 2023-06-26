@@ -46,7 +46,7 @@ export default function Results({ isLoading, results }) {
     top: 450,
     left: 0,
     behavior: 'smooth',
-  }), [resultPage]);
+  }), [page]);
 
   if (isLoading) {
     return <Loading />;
