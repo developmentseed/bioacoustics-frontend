@@ -4,6 +4,7 @@ import { RESULTS_DISPLAY_PAGE_SIZE } from '@/settings';
 export default function usePaginatedResults(results) {
   const [ page, setPage ] = useState(1);
   const [ selectedSites, setSelectedSites ] = useState([]);
+  const [ selectedDates, setSelectedDates ] = useState([]);
 
   const filterFunc = (res) => {
     const filters = [];
@@ -27,6 +28,8 @@ export default function usePaginatedResults(results) {
     resultPage,
     numMatches,
     setSelectedSites,
+    selectedDates,
+    setSelectedDates,
     previousPageProps: {
       isDisabled: page === 1,
       onClick: () => setPage(page - 1)

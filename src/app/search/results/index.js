@@ -19,7 +19,7 @@ import { Loading } from '@/components';
 import { TMatch } from '@/types';
 import TableView from './TableView';
 import GridView from './GridView';
-import { SitesFilter } from './components/filters';
+import { SitesFilter, DateFilter } from './components/filters';
 import { usePaginatedResults, useDownload } from './hooks';
 
 const VIEWS = {
@@ -30,7 +30,16 @@ const VIEWS = {
 
 export default function Results({ isLoading, results }) {
   const [view, setView] = useState(VIEWS.grid_lg);
-  const { page, resultPage, numMatches, previousPageProps, nextPageProps, setSelectedSites } = usePaginatedResults(results);
+  const {
+    page,
+    resultPage,
+    numMatches,
+    previousPageProps,
+    nextPageProps,
+    setSelectedSites,
+    selectedDates,
+    setSelectedDates
+  } = usePaginatedResults(results);
   const { selectedResults, toggleSelect, clearSelect, downloadLink } = useDownload(results);
 
   useEffect(() => window.scrollTo({
@@ -58,6 +67,7 @@ export default function Results({ isLoading, results }) {
             <HStack>
               <Text textTransform="uppercase" fontSize="sm">Filters</Text>
               <SitesFilter setSelectedSites={setSelectedSites} />
+              <DateFilter selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
             </HStack>
             <Flex mb="2">
               <Flex alignItems="center">
