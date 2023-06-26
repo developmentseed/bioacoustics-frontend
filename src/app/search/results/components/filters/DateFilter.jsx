@@ -13,6 +13,7 @@ import {
   PopoverContent,
   PopoverBody,
   Portal,
+  Text,
   useDisclosure
 } from '@chakra-ui/react';
 import { MdKeyboardArrowDown } from 'react-icons/md';
@@ -80,7 +81,7 @@ export default function DateFilter({selectedDates, setSelectedDates}) {
         <Button size="sm" variant="outline" rightIcon={<MdKeyboardArrowDown />}>Date</Button>
       </PopoverTrigger>
       <Portal>
-        <PopoverContent>
+        <PopoverContent pt="1">
           <PopoverBody>
             <RangeCalendarPanel
               dayzedHookProps={{
@@ -93,6 +94,7 @@ export default function DateFilter({selectedDates, setSelectedDates}) {
               configs={calendarConfigs}
               selected={selectedDates}
             />
+            <Text fontSize="xs" mt="2">All dates are in UTC</Text>
           </PopoverBody>
         </PopoverContent>
       </Portal>
