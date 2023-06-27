@@ -21,6 +21,7 @@ import TableView from './TableView';
 import GridView from './GridView';
 import { SitesFilter, DateFilter } from './components/filters';
 import { usePaginatedResults, useDownload } from './hooks';
+import TimeFilter from './components/filters/TimeFilter';
 
 const VIEWS = {
   grid_lg: 1,
@@ -38,7 +39,8 @@ export default function Results({ isLoading, results }) {
     nextPageProps,
     setSelectedSites,
     selectedDates,
-    setSelectedDates
+    setSelectedDates,
+    setSelectedTimes,
   } = usePaginatedResults(results);
   const { selectedResults, toggleSelect, clearSelect, downloadLink } = useDownload(results);
 
@@ -68,6 +70,7 @@ export default function Results({ isLoading, results }) {
               <Text textTransform="uppercase" fontSize="sm">Filters</Text>
               <SitesFilter setSelectedSites={setSelectedSites} />
               <DateFilter selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
+              <TimeFilter setSelectedTimes={setSelectedTimes} />
             </HStack>
             <Flex mb="2">
               <Flex alignItems="center">

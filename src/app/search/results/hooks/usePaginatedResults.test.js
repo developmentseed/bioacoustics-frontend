@@ -5,7 +5,7 @@ const results = Array(72).fill(0).map((_, i) => ({
   id: i,
   entity: {
     site_id: i % 3,
-    file_timestamp: new Date(2021, i % 3, 10).getTime() / 1000,
+    file_timestamp: new Date(Date.UTC(2021, i % 3, 10, i % 3, 0)).getTime() / 1000,
     clip_offset_in_file: 0
   }
 }));
@@ -85,7 +85,17 @@ describe('usePaginatedResults', () => {
       result.current.setSelectedDates([from, to]);
     });
     const { resultPage } = result.current;
-    const correctResults = resultPage.every(r => r.entity.file_timestamp === new Date(2021, 2, 10).getTime() / 1000);
+    const correctResults = resultPage.every(r => r.entity.file_timestamp === new Date(Date.UTC(2021, 2, 10, 2, 0)).getTime() / 1000);
+    expect(correctResults).toBeTruthy();
+  });
+
+  it('filters times', () => {
+    const { result } = renderHook(() => usePaginatedResults(results));
+    act(() => {
+      result.current.setSelectedTimes([0, 1]);
+    });
+    const { resultPage } = result.current;
+    const correctResults = resultPage.every(r => new Date(r.entity.file_timestamp * 1000).getUTCHours() <= 1);
     expect(correctResults).toBeTruthy();
   });
 });

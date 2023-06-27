@@ -5,6 +5,7 @@ export default function usePaginatedResults(results) {
   const [ page, setPage ] = useState(1);
   const [ selectedSites, setSelectedSites ] = useState([]);
   const [ selectedDates, setSelectedDates ] = useState([]);
+  const [ selectedTimes, setSelectedTimes ] = useState([0, 24]);
 
   const filterFunc = (res) => {
     const filters = [];
@@ -15,6 +16,11 @@ export default function usePaginatedResults(results) {
       const date = new Date(res.entity.file_timestamp * 1000 + res.entity.clip_offset_in_file);
       filters.push(date >= selectedDates[0]);
       selectedDates[1] && filters.push(date <= selectedDates[1]);
+    }
+    if (selectedTimes[0] !== 0 || selectedTimes[1] !== 24) {
+      const date = new Date(res.entity.file_timestamp * 1000 + res.entity.clip_offset_in_file);
+      const hour = date.getUTCHours();
+      filters.push(selectedTimes[0] <= hour && selectedTimes[1] >= hour);
     }
     
     if (filters.length > 0)
@@ -35,6 +41,8 @@ export default function usePaginatedResults(results) {
     setSelectedSites,
     selectedDates,
     setSelectedDates,
+    selectedTimes,
+    setSelectedTimes,
     previousPageProps: {
       isDisabled: page === 1,
       onClick: () => setPage(page - 1)
