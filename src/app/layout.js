@@ -3,7 +3,7 @@ import Providers from './providers';
 import { Header } from '@/components/page';
 
 export const metadata = {
-  title: 'ECOECHO',
+  title: 'EcoEcho',
   description: 'Run audio similarity search on the Australian Acoustic Observatory media archive',
 };
 
