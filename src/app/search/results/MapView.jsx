@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import T from 'prop-types';
 import { Box } from '@chakra-ui/react';
 import Map, {Source, Layer} from 'react-map-gl';
@@ -34,6 +34,7 @@ const clusterLabelStyle = {
 };
 
 export default function MapView({ results }) {
+  const mapRef = useRef();
   const { sites } = useSites();
 
   const geojson = useMemo(() => {
@@ -75,6 +76,25 @@ export default function MapView({ results }) {
     });
   }, [results, sites]);
 
+  const handleClusterClick = useCallback((e) => {
+    const map = mapRef.current;
+    const features = map.queryRenderedFeatures(e.point, {
+      layers: ['cluster-label'],
+    });
+    if (!features.length > 0) return;
+
+    const clusterId = features[0].properties.cluster_id;
+    map
+      .getSource('results')
+      .getClusterExpansionZoom(clusterId, (err, zoom) => {
+        if (err) return;
+        map.easeTo({
+          center: features[0].geometry.coordinates,
+          zoom: zoom,
+        });
+      });
+  }, []);
+
   return (
     <Box width="500px" height="600px">
       <Map
@@ -85,9 +105,12 @@ export default function MapView({ results }) {
         }}
         mapStyle="mapbox://styles/mapbox/light-v11"
         mapboxAccessToken={MAPBOX_TOKEN}
+        ref={mapRef}
+        interactiveLayerIds={[clusterLabelStyle.id]}
+        onClick={handleClusterClick}
       >
         <Source
-          id="my-data"
+          id="results"
           type="geojson"
           data={geojson}
           cluster={true}
