@@ -38,6 +38,7 @@ export default function usePaginatedResults(results) {
     page,
     resultPage,
     numMatches,
+    selectedSites,
     setSelectedSites,
     selectedDates,
     setSelectedDates,
