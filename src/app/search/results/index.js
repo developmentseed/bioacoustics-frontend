@@ -37,18 +37,24 @@ export default function Results({ isLoading, results }) {
     numMatches,
     previousPageProps,
     nextPageProps,
+    selectedSites,
     setSelectedSites,
     selectedDates,
     setSelectedDates,
+    selectedTimes,
     setSelectedTimes,
   } = usePaginatedResults(results);
   const { selectedResults, toggleSelect, clearSelect, downloadLink } = useDownload(results);
 
+  // Scroll to top of results on page change
   useEffect(() => window.scrollTo({
     top: 450,
     left: 0,
     behavior: 'smooth',
   }), [page]);
+
+  // Clear selected results when the filter changes
+  useEffect(clearSelect, [selectedSites, selectedDates, selectedTimes, clearSelect]);
 
   if (isLoading) {
     return <Loading />;

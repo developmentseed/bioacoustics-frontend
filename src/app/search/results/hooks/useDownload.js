@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 export default function useDownload(results) {
   const [ selectedResults, setSelectedResults ] = useState([]);
@@ -11,7 +11,7 @@ export default function useDownload(results) {
     }
   };
 
-  const clearSelect = () => setSelectedResults([]);
+  const clearSelect = useCallback(() => setSelectedResults([]), []);
 
   const downloadLink = useMemo(() => {
     const resultSet = selectedResults.length > 0
