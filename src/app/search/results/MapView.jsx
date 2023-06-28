@@ -26,7 +26,7 @@ const clusterLabelStyle = {
   layout: {
     'text-field': [
       'format',
-      ['get', 'clusterNumResults'],
+      ['get', 'point_count'],
       { 'text-size': 12, 'text-color': '#fff', 'font-scale': 0.6 },
     ],
     'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
