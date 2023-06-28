@@ -122,6 +122,7 @@ export default function Results({ isLoading, results }) {
                     results={resultPage}
                     selectedResults={selectedResults}
                     toggleSelect={toggleSelect}
+                    narrow={showMap}
                   />
                 )}
                 {[VIEWS.grid_sm, VIEWS.grid_lg].includes(view) && (

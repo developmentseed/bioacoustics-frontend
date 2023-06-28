@@ -96,7 +96,7 @@ export default function MapView({ results }) {
   }, []);
 
   return (
-    <Box width="500px" height="600px">
+    <Box flexBasis="500px" height="600px">
       <Map
         initialViewState={{
           longitude: 134.396315,
