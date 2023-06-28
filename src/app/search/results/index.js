@@ -133,7 +133,7 @@ export default function Results({ isLoading, results }) {
                   />
                 )}
               </Box>
-              {showMap && <MapView width="400px" />}
+              {showMap && <MapView results={resultPage} />}
             </Flex>
             <Flex my="5">
               <Button {...previousPageProps} variant="outline">Previous</Button>
