@@ -20,7 +20,7 @@ import {
   useDisclosure
 } from '@chakra-ui/react';
 import { MdMap } from 'react-icons/md';
-import Map, { Source, Layer} from 'react-map-gl';
+import Map, { Source, Layer, Popup } from 'react-map-gl';
 
 import { MAPBOX_TOKEN } from '@/settings';
 import { useSites } from '../../../context/sites';
@@ -44,19 +44,21 @@ const markerStyle = {
 export default function SitesFilter({ selectedSites, setSelectedSites }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [siteNameFilter, setSiteNameFilter] = useState('');
+  const [hoveredSite, setHoveredSite] = useState();
   const mapRef = useRef();
   const { sites } = useSites();
 
   const geojson = useMemo(() => {
     return ({
       type: 'FeatureCollection',
-      features: sites.map(({ id, custom_latitude, custom_longitude }) => {
+      features: sites.map(({ id, name, custom_latitude, custom_longitude }) => {
         return ({
           type: 'Feature',
           id,
           geometry: { type: 'Point', coordinates: [custom_longitude, custom_latitude] },
           properties: {
             id,
+            name,
             isSelected: selectedSites.includes(id)
           }
         });
@@ -106,6 +108,26 @@ export default function SitesFilter({ selectedSites, setSelectedSites }) {
     }
   }, [toggleSiteSelect]);
 
+  const handleMarkerHover = (e) => {
+    const map = mapRef.current;
+    const features = map.queryRenderedFeatures(e.point, {
+      layers: [markerStyle.id],
+    });
+
+    if (features.length === 0) {
+      setHoveredSite();
+      return;
+    }
+
+    const { name, cluster_id } = features[0].properties;
+    const [ longitude, latitude ] = features[0].geometry.coordinates;
+    if (!cluster_id) {
+      setHoveredSite({ name, longitude, latitude });
+    } else {
+      setHoveredSite();
+    }
+  };
+
   return (
     <Popover placement="bottom-start">
       <PopoverTrigger>
@@ -151,6 +173,7 @@ export default function SitesFilter({ selectedSites, setSelectedSites }) {
                       ref={mapRef}
                       interactiveLayerIds={[markerStyle.id]}
                       onClick={handleMarkerClick}
+                      onMouseMove={handleMarkerHover}
                     >
                       <Source
                         id="sites"
@@ -163,6 +186,16 @@ export default function SitesFilter({ selectedSites, setSelectedSites }) {
                       >
                         <Layer {...markerStyle} />
                       </Source>
+                      {hoveredSite && (
+                        <Popup
+                          anchor="bottom"
+                          longitude={Number(hoveredSite.longitude)}
+                          latitude={Number(hoveredSite.latitude)}
+                          closeButton={false}
+                        >
+                          { hoveredSite.name }
+                        </Popup>
+                      )}
                     </Map>
                   </Box>
                 </ModalBody>
