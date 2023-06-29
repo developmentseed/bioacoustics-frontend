@@ -39,6 +39,7 @@ export default function Results({ isLoading, results }) {
     numMatches,
     previousPageProps,
     nextPageProps,
+    selectedSites,
     setSelectedSites,
     selectedDates,
     setSelectedDates,
@@ -70,7 +71,7 @@ export default function Results({ isLoading, results }) {
           <>
             <HStack>
               <Text textTransform="uppercase" fontSize="sm">Filters</Text>
-              <SitesFilter setSelectedSites={setSelectedSites} />
+              <SitesFilter selectedSites={selectedSites} setSelectedSites={setSelectedSites} />
               <DateFilter selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
               <TimeFilter setSelectedTimes={setSelectedTimes} />
             </HStack>
