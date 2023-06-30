@@ -17,6 +17,7 @@ import {
   PopoverContent,
   PopoverBody,
   Portal,
+  Text,
   VStack,
   useDisclosure
 } from '@chakra-ui/react';
@@ -76,6 +77,22 @@ export default function SitesFilter({ selectedSites, setSelectedSites }) {
                     <Button variant="outline" leftIcon={<MdDraw />} size="xs" onClick={() => setIsDrawing(true)}>Draw</Button>
                     <Button variant="outline" leftIcon={<MdClose />} size="xs" onClick={onClose}>Close</Button>
                   </Flex>
+                  {selectedSites.length > 0 && (
+                    <Flex mb="3">
+                      <Text as="span" fontSize="sm" mr="3">{selectedSites.length} selected</Text>
+                      <Button
+                        onClick={() => setSelectedSites([])}
+                        variant="link"
+                        textTransform="uppercase"
+                        letterSpacing="1px"
+                        fontWeight="normal"
+                        size="sm"
+                        leftIcon={<MdClose />}
+                      >
+                        Clear
+                      </Button>
+                    </Flex>
+                  )}
                   <Box height="500px" bgColor="neutral.100">
                     <SitesFilterMap
                       selectedSites={selectedSites}
