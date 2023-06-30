@@ -30,6 +30,7 @@ export default function SitesFilter({ selectedSites, setSelectedSites }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [siteNameFilter, setSiteNameFilter] = useState('');
   const [isDrawing, setIsDrawing] = useState();
+  const [filterArea, setFilterArea] = useState();
   const { sites } = useSites();
 
   const handleSiteSelect = useCallback((checked) => {
@@ -99,6 +100,8 @@ export default function SitesFilter({ selectedSites, setSelectedSites }) {
                       setSelectedSites={setSelectedSites}
                       isDrawing={isDrawing}
                       setIsDrawing={setIsDrawing}
+                      filterArea={filterArea}
+                      setFilterArea={setFilterArea}
                     />
                   </Box>
                 </ModalBody>

@@ -8,9 +8,9 @@ import { MAPBOX_TOKEN } from '@/settings';
 import { useSites } from '../../../context/sites';
 
 function DrawControl(props) {
-  const { isEnabled, selectedSites, onComplete } = props;
+  const { isEnabled, selectedSites, onComplete, filterArea } = props;
 
-  const { changeMode, deleteAll, modes } = useControl(
+  const { add, changeMode, deleteAll, modes } = useControl(
     () => new MapboxDraw(props),
     ({ map }) => {
       map.on('draw.create', onComplete);
@@ -24,6 +24,10 @@ function DrawControl(props) {
       position: props.position
     }
   );
+
+  useEffect(() => {
+    if (filterArea) add(filterArea);
+  }, [add, filterArea]);
 
   useEffect(() => {
     if (isEnabled) {
@@ -45,7 +49,8 @@ DrawControl.propTypes = {
   isEnabled: T.bool,
   selectedSites: T.arrayOf(T.number).isRequired,
   position: T.string,
-  onComplete: T.func.isRequired
+  onComplete: T.func.isRequired,
+  filterArea: T.object,
 };
 
 const markerStyle = {
@@ -65,7 +70,7 @@ const markerStyle = {
 };
 
 
-export default function SitesFilterMap({ selectedSites, setSelectedSites, isDrawing, setIsDrawing }) {
+export default function SitesFilterMap({ selectedSites, setSelectedSites, isDrawing, setIsDrawing, filterArea, setFilterArea}) {
   const { sites } = useSites();
   const mapRef = useRef();
   const [hoveredSite, setHoveredSite] = useState();
@@ -143,9 +148,10 @@ export default function SitesFilterMap({ selectedSites, setSelectedSites, isDraw
 
   const handleDrawChange = useCallback(({ features }) => {
     setIsDrawing(false);
+    setFilterArea(features[0]);
     const sitesInArea = pointsWithinPolygon(geojson, features[0]);
     setSelectedSites(sitesInArea.features.map(({ id }) => id));
-  }, [geojson, setIsDrawing, setSelectedSites]);
+  }, [geojson, setFilterArea, setIsDrawing, setSelectedSites]);
 
   return (
     <Map
@@ -188,6 +194,7 @@ export default function SitesFilterMap({ selectedSites, setSelectedSites, isDraw
         selectedSites={selectedSites}
         isEnabled={isDrawing}
         onComplete={handleDrawChange}
+        filterArea={filterArea}
       />
     </Map>
   );
@@ -197,5 +204,7 @@ SitesFilterMap.propTypes = {
   selectedSites: T.arrayOf(T.number).isRequired,
   setSelectedSites: T.func.isRequired,
   isDrawing: T.bool,
-  setIsDrawing: T.func.isRequired
+  setIsDrawing: T.func.isRequired,
+  filterArea: T.object,
+  setFilterArea: T.func.isRequired
 };
