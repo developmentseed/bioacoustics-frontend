@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, useMemo } from 'react';
+import { useCallback, useRef, useState, useMemo, useEffect } from 'react';
 import T from 'prop-types';
 import {
   Box,
@@ -20,8 +20,10 @@ import {
   VStack,
   useDisclosure
 } from '@chakra-ui/react';
-import { MdClose, MdKeyboardArrowDown, MdMap } from 'react-icons/md';
-import Map, { Source, Layer, Popup } from 'react-map-gl';
+import { MdClose, MdKeyboardArrowDown, MdMap, MdDraw } from 'react-icons/md';
+import Map, { Source, Layer, Popup, useControl } from 'react-map-gl';
+import MapboxDraw from '@mapbox/mapbox-gl-draw';
+import pointsWithinPolygon from '@turf/points-within-polygon';
 
 import { MAPBOX_TOKEN } from '@/settings';
 import { useSites } from '../../../context/sites';
@@ -42,11 +44,53 @@ const markerStyle = {
   }
 };
 
+function DrawControl(props) {
+  const { isEnabled, selectedSites, onComplete } = props;
+
+  const { changeMode, deleteAll, modes } = useControl(
+    () => new MapboxDraw(props),
+    ({ map }) => {
+      map.on('draw.create', onComplete);
+      map.on('draw.update', onComplete);
+    },
+    ({ map }) => {
+      map.off('draw.create', onComplete);
+      map.off('draw.update', onComplete);
+    },
+    {
+      position: props.position
+    }
+  );
+
+  useEffect(() => {
+    if (isEnabled) {
+      deleteAll();
+      changeMode(modes.DRAW_POLYGON);
+    }
+  }, [changeMode, deleteAll, isEnabled, modes]);
+
+  useEffect(() => {
+    if (selectedSites.length === 0) {
+      deleteAll();
+    }
+  }, [deleteAll, selectedSites]);
+
+  return null;
+}
+
+DrawControl.propTypes = {
+  isEnabled: T.bool,
+  selectedSites: T.arrayOf(T.number).isRequired,
+  position: T.string,
+  onComplete: T.func.isRequired
+};
+
 export default function SitesFilter({ selectedSites, setSelectedSites }) {
+  const mapRef = useRef();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [siteNameFilter, setSiteNameFilter] = useState('');
   const [hoveredSite, setHoveredSite] = useState();
-  const mapRef = useRef();
+  const [isDrawing, setIsDrawing] = useState();
   const { sites } = useSites();
 
   const geojson = useMemo(() => {
@@ -129,6 +173,12 @@ export default function SitesFilter({ selectedSites, setSelectedSites }) {
     }
   };
 
+  const handleDrawChange = useCallback(({ features }) => {
+    setIsDrawing(false);
+    const sitesInArea = pointsWithinPolygon(geojson, features[0]);
+    setSelectedSites(sitesInArea.features.map(({ id }) => id));
+  }, [geojson, setSelectedSites]);
+
   return (
     <Popover placement="bottom-start">
       <PopoverTrigger>
@@ -160,8 +210,9 @@ export default function SitesFilter({ selectedSites, setSelectedSites }) {
               <ModalOverlay />
               <ModalContent>
                 <ModalBody py="7">
-                  <Flex mb="3">
+                  <Flex mb="3" gap="2">
                     <Heading as="h3" size="md" color="primary.500" flex="1">Select sites</Heading>
+                    <Button variant="outline" leftIcon={<MdDraw />} size="xs" onClick={() => setIsDrawing(true)}>Draw</Button>
                     <Button variant="outline" leftIcon={<MdClose />} size="xs" onClick={onClose}>Close</Button>
                   </Flex>
                   <Box height="500px" bgColor="neutral.100">
@@ -199,6 +250,17 @@ export default function SitesFilter({ selectedSites, setSelectedSites }) {
                           { hoveredSite.name }
                         </Popup>
                       )}
+                      <DrawControl
+                        position="top-left"
+                        displayControlsDefault={false}
+                        selectedSites={selectedSites}
+                        isEnabled={isDrawing}
+                        onComplete={handleDrawChange}
+                        // controls={{
+                        //   polygon: true,
+                        //   trash: true
+                        // }}
+                      />
                     </Map>
                   </Box>
                 </ModalBody>
