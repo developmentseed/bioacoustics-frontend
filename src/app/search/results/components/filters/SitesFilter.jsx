@@ -1,11 +1,11 @@
 import { useCallback, useRef, useState, useMemo } from 'react';
 import T from 'prop-types';
-import { MdKeyboardArrowDown } from 'react-icons/md';
 import {
   Box,
   Button,
   Checkbox,
   CheckboxGroup,
+  Flex,
   Input,
   Heading,
   Modal,
@@ -20,7 +20,7 @@ import {
   VStack,
   useDisclosure
 } from '@chakra-ui/react';
-import { MdMap } from 'react-icons/md';
+import { MdClose, MdKeyboardArrowDown, MdMap } from 'react-icons/md';
 import Map, { Source, Layer, Popup } from 'react-map-gl';
 
 import { MAPBOX_TOKEN } from '@/settings';
@@ -160,9 +160,10 @@ export default function SitesFilter({ selectedSites, setSelectedSites }) {
               <ModalOverlay />
               <ModalContent>
                 <ModalBody py="7">
-                  <Box mb="3">
-                    <Heading as="h3" size="md" color="primary.500">Select sites</Heading>
-                  </Box>
+                  <Flex mb="3">
+                    <Heading as="h3" size="md" color="primary.500" flex="1">Select sites</Heading>
+                    <Button variant="outline" leftIcon={<MdClose />} size="xs" onClick={onClose}>Close</Button>
+                  </Flex>
                   <Box height="500px" bgColor="neutral.100">
                     <Map
                       initialViewState={{
