@@ -11,6 +11,7 @@ import {
   Modal,
   ModalContent,
   ModalBody,
+  ModalOverlay,
   Popover,
   PopoverTrigger,
   PopoverContent,
@@ -156,6 +157,7 @@ export default function SitesFilter({ selectedSites, setSelectedSites }) {
             </Box>
             <Button leftIcon={<MdMap />} onClick={onOpen} variant="outline" size="sm">Select on map</Button>
             <Modal isOpen={isOpen} onClose={onClose} size="xl">
+              <ModalOverlay />
               <ModalContent>
                 <ModalBody py="7">
                   <Box mb="3">
