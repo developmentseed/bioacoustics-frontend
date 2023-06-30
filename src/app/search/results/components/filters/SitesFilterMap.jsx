@@ -128,6 +128,8 @@ export default function SitesFilterMap({ selectedSites, setSelectedSites, isDraw
 
   const handleMarkerHover = (e) => {
     const map = mapRef.current;
+    if (!map.getLayer(markerStyle.id)) return;
+
     const features = map.queryRenderedFeatures(e.point, {
       layers: [markerStyle.id],
     });
