@@ -12,7 +12,7 @@ import {
   Spacer,
   Text,
 } from '@chakra-ui/react';
-import { MdMenu, MdGridView, MdGridOn, MdClose } from 'react-icons/md';
+import { MdMenu, MdGridView, MdGridOn, MdClose, MdMap } from 'react-icons/md';
 
 import { RESULTS_DISPLAY_PAGE_SIZE } from '@/settings';
 import { Loading } from '@/components';
@@ -22,6 +22,7 @@ import GridView from './GridView';
 import { SitesFilter, DateFilter } from './components/filters';
 import { usePaginatedResults, useDownload } from './hooks';
 import TimeFilter from './components/filters/TimeFilter';
+import MapView from './MapView';
 
 const VIEWS = {
   grid_lg: 1,
@@ -30,6 +31,7 @@ const VIEWS = {
 };
 
 export default function Results({ isLoading, results }) {
+  const [showMap, setShowMap] = useState(false);
   const [view, setView] = useState(VIEWS.grid_lg);
   const {
     page,
@@ -89,7 +91,7 @@ export default function Results({ isLoading, results }) {
                 )}
               </Flex>
               <Spacer />
-              <Box>
+              <Flex gap="2">
                 <ButtonGroup isAttached variant="outline">
                   <IconButton
                     variant={view === VIEWS.grid_lg ? 'primary': 'outline'}
@@ -116,23 +118,30 @@ export default function Results({ isLoading, results }) {
                     onClick={() => setView(VIEWS.table)}
                   />
                 </ButtonGroup>
-              </Box>
+                <Button leftIcon={<MdMap />} size="xs" variant="outline" onClick={() => setShowMap(!showMap)}>{showMap ? 'Hide map' : 'Show map'}</Button>
+              </Flex>
             </Flex>
-            {view === VIEWS.table && (
-              <TableView
-                results={resultPage}
-                selectedResults={selectedResults}
-                toggleSelect={toggleSelect}
-              />
-            )}
-            {[VIEWS.grid_sm, VIEWS.grid_lg].includes(view) && (
-              <GridView
-                results={resultPage}
-                large={view === VIEWS.grid_lg}
-                selectedResults={selectedResults}
-                toggleSelect={toggleSelect}
-              />
-            )}
+            <Flex gap="5">
+              <Box flex="1">
+                {view === VIEWS.table && (
+                  <TableView
+                    results={resultPage}
+                    selectedResults={selectedResults}
+                    toggleSelect={toggleSelect}
+                    narrow={showMap}
+                  />
+                )}
+                {[VIEWS.grid_sm, VIEWS.grid_lg].includes(view) && (
+                  <GridView
+                    results={resultPage}
+                    large={view === VIEWS.grid_lg}
+                    selectedResults={selectedResults}
+                    toggleSelect={toggleSelect}
+                  />
+                )}
+              </Box>
+              {showMap && <MapView results={resultPage} />}
+            </Flex>
             <Flex my="5">
               <Button {...previousPageProps} variant="outline">Previous</Button>
               <Spacer />

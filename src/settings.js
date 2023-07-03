@@ -5,6 +5,7 @@ const MAX_AUDIO_LENGTH = 300; // seconds
 const RESULTS_MAX = 16384;
 const RESULTS_DISPLAY_PAGE_SIZE = 25;
 const SEARCH_API = 'https://api.bioacoustics.ds.io/api/v1';
+const MAPBOX_TOKEN = 'pk.eyJ1IjoiZGV2c2VlZCIsImEiOiJjbGpmOG5wOG8yNXVsM29wbTZkdWh2dnczIn0.hbIHh4NVESSlh6JKH3CMlw';
 
 export {
   ACCEPTED_AUDIO_TYPES,
@@ -13,5 +14,6 @@ export {
   MAX_AUDIO_LENGTH,
   RESULTS_MAX,
   RESULTS_DISPLAY_PAGE_SIZE,
-  SEARCH_API
+  SEARCH_API,
+  MAPBOX_TOKEN,
 };
