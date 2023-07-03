@@ -62,9 +62,16 @@ const markerStyle = {
       'case',
       ['==', ['get', 'isSelected'], true],
       '#037447',
+      ['==', ['get', 'hasSelected'], true],
+      '#037447',
       '#fff',
     ],
-    'circle-stroke-color': '#7EC440',
+    'circle-stroke-color': [
+      'case',
+      ['==', ['get', 'cluster'], true],
+      '#9c9c9c',
+      '#7EC440'
+    ],
     'circle-stroke-width': 2
   }
 };
@@ -139,7 +146,7 @@ export default function SitesFilterMap({ selectedSites, setSelectedSites, isDraw
       map.getCanvas().style.cursor = isDrawing ? 'crosshair' : 'grab';
       return;
     }
-
+console.log(features[0]);
     const { name, cluster_id } = features[0].properties;
     const [ longitude, latitude ] = features[0].geometry.coordinates;
     if (!cluster_id) {
@@ -178,7 +185,9 @@ export default function SitesFilterMap({ selectedSites, setSelectedSites, isDraw
         cluster={true}
         clusterMaxZoom={14}
         clusterRadius={30}
-        clusterProperties={{ clusterNumResults: ['+', ['get', 'numResults']] }}
+        clusterProperties={{
+          hasSelected: ['any', ['get', 'isSelected'], 'accumulated']
+        }}
       >
         <Layer {...markerStyle} />
       </Source>
