@@ -136,6 +136,7 @@ export default function SitesFilterMap({ selectedSites, setSelectedSites, isDraw
 
     if (features.length === 0) {
       setHoveredSite();
+      map.getCanvas().style.cursor = isDrawing ? 'crosshair' : 'grab';
       return;
     }
 
@@ -146,6 +147,7 @@ export default function SitesFilterMap({ selectedSites, setSelectedSites, isDraw
     } else {
       setHoveredSite();
     }
+    map.getCanvas().style.cursor = 'pointer';
   };
 
   const handleDrawChange = useCallback(({ features }) => {
