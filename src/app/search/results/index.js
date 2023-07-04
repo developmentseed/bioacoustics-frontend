@@ -80,67 +80,77 @@ export default function Results({ isLoading, results }) {
               <DateFilter selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
               <TimeFilter setSelectedTimes={setSelectedTimes} />
             </HStack>
-            <Flex mb="2">
-              <Flex alignItems="center">
-                <Text as="span">View <b>{resultStart} - {resultEnd}</b> of { numMatches } results</Text>
-                {selectedResults.length > 0 && (
-                  <>
-                    <Text as="span" mx="3" pl="3" borderLeft="1px solid" borderColor="neutral.100">{selectedResults.length} selected</Text>
-                    <Button onClick={clearSelect} variant="link" textTransform="uppercase" letterSpacing="1px" fontWeight="normal" size="sm" leftIcon={<MdClose />}>Clear</Button>
-                  </>
-                )}
+            {numMatches > 0 && (
+              <Flex mb="2">
+                <Flex alignItems="center">
+                  <Text as="span">View <b>{resultStart} - {resultEnd}</b> of { numMatches } results</Text>
+                  {selectedResults.length > 0 && (
+                    <>
+                      <Text as="span" mx="3" pl="3" borderLeft="1px solid" borderColor="neutral.100">{selectedResults.length} selected</Text>
+                      <Button onClick={clearSelect} variant="link" textTransform="uppercase" letterSpacing="1px" fontWeight="normal" size="sm" leftIcon={<MdClose />}>Clear</Button>
+                    </>
+                  )}
+                </Flex>
+                <Spacer />
+                <Flex gap="2">
+                  <ButtonGroup isAttached variant="outline">
+                    <IconButton
+                      variant={view === VIEWS.grid_lg ? 'primary': 'outline'}
+                      icon={<MdGridView />}
+                      type="button"
+                      size="xs"
+                      aria-label="View results in large grid"
+                      onClick={() => setView(VIEWS.grid_lg)}
+                    />
+                    <IconButton
+                      variant={view === VIEWS.grid_sm ? 'primary': 'outline'}
+                      icon={<MdGridOn />}
+                      type="button"
+                      size="xs"
+                      aria-label="View results in small grid"
+                      onClick={() => setView(VIEWS.grid_sm)}
+                    />
+                    <IconButton
+                      variant={view === VIEWS.table ? 'primary': 'outline'}
+                      icon={<MdMenu />}
+                      type="button"
+                      size="xs"
+                      aria-label="View results in table"
+                      onClick={() => setView(VIEWS.table)}
+                    />
+                  </ButtonGroup>
+                  <Button leftIcon={<MdMap />} size="xs" variant="outline" onClick={() => setShowMap(!showMap)}>{showMap ? 'Hide map' : 'Show map'}</Button>
+                </Flex>
               </Flex>
-              <Spacer />
-              <Flex gap="2">
-                <ButtonGroup isAttached variant="outline">
-                  <IconButton
-                    variant={view === VIEWS.grid_lg ? 'primary': 'outline'}
-                    icon={<MdGridView />}
-                    type="button"
-                    size="xs"
-                    aria-label="View results in large grid"
-                    onClick={() => setView(VIEWS.grid_lg)}
-                  />
-                  <IconButton
-                    variant={view === VIEWS.grid_sm ? 'primary': 'outline'}
-                    icon={<MdGridOn />}
-                    type="button"
-                    size="xs"
-                    aria-label="View results in small grid"
-                    onClick={() => setView(VIEWS.grid_sm)}
-                  />
-                  <IconButton
-                    variant={view === VIEWS.table ? 'primary': 'outline'}
-                    icon={<MdMenu />}
-                    type="button"
-                    size="xs"
-                    aria-label="View results in table"
-                    onClick={() => setView(VIEWS.table)}
-                  />
-                </ButtonGroup>
-                <Button leftIcon={<MdMap />} size="xs" variant="outline" onClick={() => setShowMap(!showMap)}>{showMap ? 'Hide map' : 'Show map'}</Button>
-              </Flex>
-            </Flex>
+            )}
             <Flex gap="5">
-              <Box flex="1">
-                {view === VIEWS.table && (
-                  <TableView
-                    results={resultPage}
-                    selectedResults={selectedResults}
-                    toggleSelect={toggleSelect}
-                    narrow={showMap}
-                  />
-                )}
-                {[VIEWS.grid_sm, VIEWS.grid_lg].includes(view) && (
-                  <GridView
-                    results={resultPage}
-                    large={view === VIEWS.grid_lg}
-                    selectedResults={selectedResults}
-                    toggleSelect={toggleSelect}
-                  />
-                )}
-              </Box>
-              {showMap && <MapView results={resultPage} />}
+              {numMatches > 0 ? (
+                <>
+                  <Box flex="1">
+                    {view === VIEWS.table && (
+                      <TableView
+                        results={resultPage}
+                        selectedResults={selectedResults}
+                        toggleSelect={toggleSelect}
+                        narrow={showMap}
+                      />
+                    )}
+                    {[VIEWS.grid_sm, VIEWS.grid_lg].includes(view) && (
+                      <GridView
+                        results={resultPage}
+                        large={view === VIEWS.grid_lg}
+                        selectedResults={selectedResults}
+                        toggleSelect={toggleSelect}
+                      />
+                    )}
+                  </Box>
+                  {showMap && <MapView results={resultPage} />}
+                </>
+              ) : (
+                <Box fontWeight="bold">
+                  No results match the selected filters. 
+                </Box>
+              )}
             </Flex>
             <Flex my="5">
               <Button {...previousPageProps} variant="outline">Previous</Button>
