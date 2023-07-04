@@ -146,7 +146,7 @@ export default function SitesFilterMap({ selectedSites, setSelectedSites, isDraw
       map.getCanvas().style.cursor = isDrawing ? 'crosshair' : 'grab';
       return;
     }
-console.log(features[0]);
+
     const { name, cluster_id } = features[0].properties;
     const [ longitude, latitude ] = features[0].geometry.coordinates;
     if (!cluster_id) {
