@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RESULTS_DISPLAY_PAGE_SIZE } from '@/settings';
 
 export default function usePaginatedResults(results) {
@@ -6,6 +6,9 @@ export default function usePaginatedResults(results) {
   const [ selectedSites, setSelectedSites ] = useState([]);
   const [ selectedDates, setSelectedDates ] = useState([]);
   const [ selectedTimes, setSelectedTimes ] = useState([0, 24]);
+
+  // Reset page when new search results are received
+  useEffect(() => setPage(1), [results]);
 
   const filterFunc = (res) => {
     const filters = [];
