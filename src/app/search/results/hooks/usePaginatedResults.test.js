@@ -98,4 +98,15 @@ describe('usePaginatedResults', () => {
     const correctResults = resultPage.every(r => new Date(r.entity.file_timestamp * 1000).getUTCHours() <= 1);
     expect(correctResults).toBeTruthy();
   });
+
+  it('disables pagination buttons when there are now matches', () => {
+    const { result } = renderHook(() => usePaginatedResults(results));
+    act(() => {
+      result.current.setSelectedTimes([12, 13]);
+    });
+    const { resultPage, previousPageProps, nextPageProps } = result.current;
+    expect(resultPage.length).toEqual(0);
+    expect(previousPageProps.isDisabled).toBeTruthy();
+    expect(nextPageProps.isDisabled).toBeTruthy();
+  });
 });

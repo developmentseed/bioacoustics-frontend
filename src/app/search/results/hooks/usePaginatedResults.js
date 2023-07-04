@@ -52,7 +52,7 @@ export default function usePaginatedResults(results) {
       onClick: () => setPage(page - 1)
     },
     nextPageProps: {
-      isDisabled: page === Math.ceil(numMatches / RESULTS_DISPLAY_PAGE_SIZE),
+      isDisabled: numMatches === 0 || page === Math.ceil(numMatches / RESULTS_DISPLAY_PAGE_SIZE),
       onClick: () => setPage(page + 1)
     }
   };
