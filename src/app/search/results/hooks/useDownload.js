@@ -18,7 +18,7 @@ export default function useDownload(results) {
       ? results.filter((result) => selectedResults.includes(result.entity.audio_url))
       : results;
     const csvResults = resultSet.map(
-        ({ entity }) => [
+        ({ distance, entity }) => [
           entity.filename,
           entity.file_seq_id,
           new Date(entity.file_timestamp * 1000).toISOString(),
@@ -26,12 +26,13 @@ export default function useDownload(results) {
           entity.subsite_name,
           entity.site_id,
           entity.clip_offset_in_file,
-          entity.audio_url
+          entity.audio_url,
+          distance
         ]
       )
       .map(line => `${line.join(',')}\n`);
 
-    const content = `Filename,FileId,Datetime,Site,Subsite,SiteId,Offset,AudioLink\n${csvResults.join('')}`;
+    const content = `Filename,FileId,Datetime,Site,Subsite,SiteId,Offset,AudioLink,Distance\n${csvResults.join('')}`;
     const blob = new Blob([content], { type: 'text/csv' });
     return window.URL.createObjectURL(blob);
   }, [results, selectedResults]);
