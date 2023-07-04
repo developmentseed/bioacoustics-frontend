@@ -7,8 +7,10 @@ export default function usePaginatedResults(results) {
   const [ selectedDates, setSelectedDates ] = useState([]);
   const [ selectedTimes, setSelectedTimes ] = useState([0, 24]);
 
-  // Reset page when new search results are received
-  useEffect(() => setPage(1), [results]);
+  // Reset page when the filters were changed
+  useEffect(() => {
+    setPage(1);
+  }, [selectedSites, selectedDates, selectedTimes]);
 
   const filterFunc = (res) => {
     const filters = [];

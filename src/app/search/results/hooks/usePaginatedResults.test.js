@@ -109,4 +109,17 @@ describe('usePaginatedResults', () => {
     expect(previousPageProps.isDisabled).toBeTruthy();
     expect(nextPageProps.isDisabled).toBeTruthy();
   });
+
+  it('resets page when the filters are changed', () => {
+    const { result } = renderHook(() => usePaginatedResults(results));
+    act(() => {
+      result.current.nextPageProps.onClick();
+    });
+    expect(result.current.page).toEqual(2);
+
+    act(() => {
+      result.current.setSelectedTimes([0, 1]);
+    });
+    expect(result.current.page).toEqual(1);
+  });
 });
