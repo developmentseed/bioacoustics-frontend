@@ -13,7 +13,7 @@ describe('Results', () => {
     fetch.mockResponseOnce(JSON.stringify({
       data: [
         { id: 1, name: 'Site A' },
-        { id: 2, name: 'Site B'} 
+        { id: 2, name: 'Site B' }
       ]
     }));
     window.URL.createObjectURL = () => 'https://localhost/123-456';
@@ -25,6 +25,7 @@ describe('Results', () => {
         <Results isLoading={true} results={[]} />
       </SitesProvider>
     );
+
     expect(screen.queryByTestId('loading')).toBeInTheDocument();
   });
 
@@ -37,6 +38,7 @@ describe('Results', () => {
         />
       </SitesProvider>
     );
+
     expect(screen.queryByTestId('results-table')).not.toBeInTheDocument();
     expect(screen.queryByTestId('results-grid')).toBeInTheDocument();
   });
@@ -50,6 +52,7 @@ describe('Results', () => {
         />
       </SitesProvider>
     );
+
     expect(screen.queryByTestId('results-table')).not.toBeInTheDocument();
     expect(screen.queryByTestId('results-grid')).toBeInTheDocument();
 
@@ -67,6 +70,7 @@ describe('Results', () => {
         />
       </SitesProvider>
     );
+
     expect(screen.queryByTestId('loading')).not.toBeInTheDocument();
     expect(screen.queryByTestId('results-table')).not.toBeInTheDocument();
 
