@@ -1,11 +1,11 @@
 import bufferToWave from './bufferToWave';
-import formatDate from './formatDate';
+import formatDateTime from './formatDateTime';
 import formatTime from './formatTime';
 import getDuration from './getDuration';
 
 export {
   bufferToWave,
-  formatDate,
+  formatDateTime,
   formatTime,
   getDuration
 };

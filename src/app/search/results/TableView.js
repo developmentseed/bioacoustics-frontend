@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { MdOpenInNew } from 'react-icons/md';
 import { TMatch } from '@/types';
-import { formatDate } from '@/utils';
+import { formatDateTime } from '@/utils';
 import { sitenameDisplay, } from './utils';
 import AudioPlayer from './AudioPlayer';
 
@@ -34,8 +34,8 @@ function ResultRow({ result, toggleSelect, isSelected, narrow }) {
       </Td>
       <Td>{ distance.toFixed(4) }</Td>
       <Td wordBreak="break-all" whiteSpace="normal" width={narrow ? '300px' : 'auto'}>{ sitenameDisplay(result) }</Td>
-      {!narrow && <Td>{ formatDate(file_timestamp) }</Td>}
-      <Td>{ formatDate(file_timestamp + clip_offset_in_file) }</Td>
+      {!narrow && <Td>{ formatDateTime(file_timestamp) }</Td>}
+      <Td>{ formatDateTime(file_timestamp + clip_offset_in_file) }</Td>
       <Td>
         <IconButton as={Link} variant="link" href={`https://data.acousticobservatory.org/listen/${file_seq_id}`} target="_blank" icon={<MdOpenInNew />} size="sm" title="Full Recording" display="inline" />
       </Td>

@@ -4,7 +4,7 @@ import { Box, Button, Card, CardBody, Checkbox, Grid, GridItem, IconButton, Imag
 import { MdOpenInNew,  MdPlayArrow, MdPause } from 'react-icons/md';
 
 import { TMatch } from '@/types';
-import { formatDate } from '@/utils';
+import { formatDateTime } from '@/utils';
 import { sitenameDisplay } from './utils';
 import useAudioPlayer from '../hooks/useAudioPLayer';
 
@@ -75,9 +75,9 @@ function ResultCard({ result, large, isSelected, toggleSelect }) {
             <GridItem fontWeight="bold" color="neutral.400">Site:</GridItem>
             <GridItem>{ sitenameDisplay(result) }</GridItem>
             <GridItem fontWeight="bold" color="neutral.400">Recorded:</GridItem>
-            <GridItem>{ formatDate(file_timestamp) }</GridItem>
+            <GridItem>{ formatDateTime(file_timestamp) }</GridItem>
             <GridItem fontWeight="bold" color="neutral.400">Result:</GridItem>
-            <GridItem>{ formatDate(file_timestamp + clip_offset_in_file) }</GridItem>
+            <GridItem>{ formatDateTime(file_timestamp + clip_offset_in_file) }</GridItem>
           </Grid>
         )}
         <GridItem alignSelf="end" px={2}>
