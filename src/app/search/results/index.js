@@ -9,6 +9,8 @@ import {
   Heading,
   HStack,
   IconButton,
+  NumberInput,
+  NumberInputField,
   Spacer,
   Text,
 } from '@chakra-ui/react';
@@ -36,8 +38,10 @@ export default function Results({ isLoading, results }) {
     page,
     resultPage,
     numMatches,
+    firstPageProps,
     previousPageProps,
     nextPageProps,
+    lastPageProps,
     selectedSites,
     setSelectedSites,
     selectedDates,
@@ -161,10 +165,17 @@ export default function Results({ isLoading, results }) {
                 </Box>
               )}
             </Flex>
-            <Flex my="5">
-              <Button {...previousPageProps} variant="outline">Previous</Button>
+            <Flex my="5" gap="5" alignItems="center">
               <Spacer />
-              <Button {...nextPageProps} variant="outline">Next</Button>
+              <ButtonGroup isAttached variant="outline" size="sm">
+                <Button {...firstPageProps}>First page</Button>
+                <Button {...previousPageProps}>Previous</Button>
+              </ButtonGroup>
+              <ButtonGroup isAttached variant="outline" size="sm">
+                <Button {...nextPageProps}>Next</Button>
+                <Button {...lastPageProps}>Last page</Button>
+              </ButtonGroup>
+              <Spacer />
             </Flex>
           </>
         ) : (

@@ -49,8 +49,11 @@ export default function usePaginatedResults(results) {
   const numMatches = filteredResults.length;
   const resultPage = filteredResults.slice(RESULTS_DISPLAY_PAGE_SIZE * (page - 1), RESULTS_DISPLAY_PAGE_SIZE * page);
 
+  const numPages = Math.ceil(numMatches / RESULTS_DISPLAY_PAGE_SIZE) || 1;
+
   return {
     page,
+    numPages,
     resultPage,
     numMatches,
     selectedSites,
@@ -59,17 +62,25 @@ export default function usePaginatedResults(results) {
     setSelectedDates,
     selectedTimes,
     setSelectedTimes,
+    firstPageProps: {
+      isDisabled: page === 1,
+      onClick: () => setPage(1)
+    },
     previousPageProps: {
       isDisabled: page === 1,
       onClick: () => setPage(page - 1)
     },
     nextPageProps: {
-      isDisabled: numMatches === 0 || page === Math.ceil(numMatches / RESULTS_DISPLAY_PAGE_SIZE),
+      isDisabled: page === numPages,
       onClick: () => setPage(page + 1)
     },
     topMatchPerRecordingProps: {
       isChecked: topMatchPerRecording,
       onChange: e => setTopMatchPerRecording(e.target.checked)
+    },
+    lastPageProps: {
+      isDisabled: page === numPages,
+      onClick: () => setPage(numPages)
     }
   };
 }

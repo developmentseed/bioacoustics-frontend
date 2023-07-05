@@ -14,12 +14,14 @@ const results = Array(72).fill(0).map((_, i) => ({
 describe('usePaginatedResults', () => {
   it('renders first page', () => {
     const {result} = renderHook(() => usePaginatedResults(results));
-    const { resultPage, previousPageProps, nextPageProps } = result.current;
+    const { resultPage, previousPageProps, firstPageProps, nextPageProps, lastPageProps } = result.current;
     expect(resultPage.length).toEqual(25);
     expect(resultPage[0].id).toEqual(0);
     expect(resultPage[24].id).toEqual(24);
     expect(previousPageProps.isDisabled).toBeTruthy();
+    expect(firstPageProps.isDisabled).toBeTruthy();
     expect(nextPageProps.isDisabled).toBeFalsy();
+    expect(lastPageProps.isDisabled).toBeFalsy();
   });
 
   it('renders middle page', async () => {
@@ -28,13 +30,15 @@ describe('usePaginatedResults', () => {
       result.current.nextPageProps.onClick();
     });
 
-    const { page, resultPage, previousPageProps, nextPageProps } = result.current;
+    const { page, resultPage, previousPageProps, firstPageProps, nextPageProps, lastPageProps } = result.current;
     expect(page).toEqual(2);
     expect(resultPage.length).toEqual(25);
     expect(resultPage[0].id).toEqual(25);
     expect(resultPage[24].id).toEqual(49);
     expect(previousPageProps.isDisabled).toBeFalsy();
+    expect(firstPageProps.isDisabled).toBeFalsy();
     expect(nextPageProps.isDisabled).toBeFalsy();
+    expect(lastPageProps.isDisabled).toBeFalsy();
 
     act(() => {
       result.current.previousPageProps.onClick();
@@ -53,19 +57,44 @@ describe('usePaginatedResults', () => {
       result.current.nextPageProps.onClick();
     });
 
-    const { page, resultPage, previousPageProps, nextPageProps } = result.current;
+    const { page, resultPage, previousPageProps, firstPageProps, nextPageProps, lastPageProps } = result.current;
     expect(page).toEqual(3);
     expect(resultPage.length).toEqual(22);
     expect(resultPage[0].id).toEqual(50);
     expect(resultPage[21].id).toEqual(71);
     expect(previousPageProps.isDisabled).toBeFalsy();
+    expect(firstPageProps.isDisabled).toBeFalsy();
     expect(nextPageProps.isDisabled).toBeTruthy();
+    expect(lastPageProps.isDisabled).toBeTruthy();
 
     act(() => {
       result.current.previousPageProps.onClick();
     });
 
     expect(result.current.page).toEqual(2);
+  });
+
+  it('jumps to first page', () => {
+    const { result } = renderHook(() => usePaginatedResults(results));
+    act(() => {
+      result.current.nextPageProps.onClick();
+    });
+
+    expect(result.current.page).toEqual(2);
+    act(() => {
+      result.current.firstPageProps.onClick();
+    });
+    expect(result.current.page).toEqual(1);
+  });
+
+  it('jumps to last page', () => {
+    const { result } = renderHook(() => usePaginatedResults(results));
+
+    expect(result.current.page).toEqual(1);
+    act(() => {
+      result.current.lastPageProps.onClick();
+    });
+    expect(result.current.page).toEqual(3);
   });
 
   it('filters sites', () => {
