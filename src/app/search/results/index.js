@@ -83,6 +83,7 @@ export default function Results({ isLoading, results }) {
               selectedSites={selectedSites}
               setSelectedSites={setSelectedSites}
               selectedDates={selectedDates}
+              setSelectedDates={setSelectedDates}
               setSelectedTimes={setSelectedTimes}
             />
             {numMatches > 0 && (
