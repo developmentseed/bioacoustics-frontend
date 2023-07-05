@@ -1,5 +1,5 @@
 import T from 'prop-types';
-import { Box, Tag, TagLabel, TagCloseButton } from '@chakra-ui/react';
+import { Tag, TagLabel, TagCloseButton, HStack } from '@chakra-ui/react';
 
 import { formatDate } from '@/utils';
 import formatHour from './formatHour';
@@ -32,7 +32,7 @@ export default function Chips ({
   setSelectedTimes
 }) {
   return (
-    <Box>
+    <HStack gap="1">
       { selectedSites.length > 0 && (
         <Chip onClear={() => setSelectedSites([])}>Sites ({selectedSites.length})</Chip>
       )}
@@ -46,7 +46,7 @@ export default function Chips ({
           {formatHour(selectedTimes[0])} - {formatHour(selectedTimes[1])} UTC
         </Chip>
       )}
-    </Box>
+    </HStack>
   );
 }
 
