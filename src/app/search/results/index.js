@@ -77,13 +77,14 @@ export default function Results({ isLoading, results }) {
               <Text textTransform="uppercase" fontSize="sm">Filters</Text>
               <SitesFilter selectedSites={selectedSites} setSelectedSites={setSelectedSites} />
               <DateFilter selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
-              <TimeFilter setSelectedTimes={setSelectedTimes} />
+              <TimeFilter selectedTimes={selectedTimes} setSelectedTimes={setSelectedTimes} />
             </HStack>
             <Chips
               selectedSites={selectedSites}
               setSelectedSites={setSelectedSites}
               selectedDates={selectedDates}
               setSelectedDates={setSelectedDates}
+              selectedTimes={selectedTimes}
               setSelectedTimes={setSelectedTimes}
             />
             {numMatches > 0 && (

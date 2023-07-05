@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import T from 'prop-types';
 import {
   Button,
@@ -16,19 +16,15 @@ import {
 } from '@chakra-ui/react';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 
-const formatTime = (hour) => {
-  if (hour === 24) {
-    return '00:00';
-  }
-  if (hour < 10) {
-    return `0${hour}:00`;
-  }
-  return `${hour}:00`;
-};
+import formatHour from './formatHour';
 
-export default function TimeFilter({ setSelectedTimes }) {
+export default function TimeFilter({ selectedTimes, setSelectedTimes }) {
   const [intermediateTime, setIntermediateTime] = useState([0, 24]);
   const [showTooltip, setShowTooltip] = useState(false);
+
+  useEffect(() => {
+    setIntermediateTime(selectedTimes);
+  }, [selectedTimes]);
 
   return (
     <Popover placement="bottom-start">
@@ -56,7 +52,7 @@ export default function TimeFilter({ setSelectedTimes }) {
                 color="neutral.500"
                 placement="top"
                 isOpen={showTooltip}
-                label={formatTime(intermediateTime[0])}
+                label={formatHour(intermediateTime[0])}
               >
                 <RangeSliderThumb index={0} />
               </Tooltip>
@@ -66,7 +62,7 @@ export default function TimeFilter({ setSelectedTimes }) {
                 color="neutral.500"
                 placement="top"
                 isOpen={showTooltip}
-                label={formatTime(intermediateTime[1])}
+                label={formatHour(intermediateTime[1])}
               >
                 <RangeSliderThumb index={1} />
               </Tooltip>
@@ -80,5 +76,6 @@ export default function TimeFilter({ setSelectedTimes }) {
 }
 
 TimeFilter.propTypes = {
+  selectedTimes: T.arrayOf(T.number).isRequired,
   setSelectedTimes: T.func.isRequired
 };
