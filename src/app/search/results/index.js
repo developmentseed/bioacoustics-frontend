@@ -19,9 +19,8 @@ import { Loading } from '@/components';
 import { TMatch } from '@/types';
 import TableView from './TableView';
 import GridView from './GridView';
-import { SitesFilter, DateFilter } from './components/filters';
+import { SitesFilter, DateFilter, TimeFilter, Chips } from './components/filters';
 import { usePaginatedResults, useDownload } from './hooks';
-import TimeFilter from './components/filters/TimeFilter';
 import MapView from './MapView';
 
 const VIEWS = {
@@ -80,6 +79,12 @@ export default function Results({ isLoading, results }) {
               <DateFilter selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
               <TimeFilter setSelectedTimes={setSelectedTimes} />
             </HStack>
+            <Chips
+              selectedSites={selectedSites}
+              setSelectedSites={setSelectedSites}
+              selectedDates={selectedDates}
+              setSelectedTimes={setSelectedTimes}
+            />
             {numMatches > 0 && (
               <Flex mb="2">
                 <Flex alignItems="center">
