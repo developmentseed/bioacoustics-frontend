@@ -1,4 +1,4 @@
-export default function formatDate(timestamp) {
-  const dateFormat = new Intl.DateTimeFormat('en-US', { dateStyle: 'short', timeStyle: 'long', timeZone: 'UTC' });
-  return dateFormat.format(timestamp * 1000);
+export default function formatDate(date) {
+  const dateFormat = new Intl.DateTimeFormat('en-GB', { dateStyle: 'short', timeZone: 'UTC' });
+  return dateFormat.format(date.getTime());
 }

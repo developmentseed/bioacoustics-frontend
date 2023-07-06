@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { within } from '@testing-library/dom';
 
 import TableView from './TableView';
-import { formatDate } from '@/utils';
+import { formatDateTime } from '@/utils';
 
 import { results } from './fixtures';
 
@@ -20,6 +20,6 @@ describe('TableView', () => {
     const cells = within(firstRow).getAllByRole('cell');
     expect(cells[2].textContent).toEqual(`${results[0].distance}`);
     expect(cells[3].textContent).toEqual(`${results[0].entity.site_name} (${results[0].entity.subsite_name})`);
-    expect(cells[4].textContent).toEqual(formatDate(results[0].entity.file_timestamp));
+    expect(cells[4].textContent).toEqual(formatDateTime(results[0].entity.file_timestamp));
   });
 });
