@@ -161,4 +161,74 @@ describe('usePaginatedResults', () => {
     });
     expect(result.current.page).toEqual(1);
   });
+
+  it('sets value on ENTER', async () => {
+    const { result } = renderHook(() => usePaginatedResults(results));
+    expect(result.current.page).toEqual(1);
+
+    act(() => {
+      result.current.pageInputProps.onChange(2);
+    });
+    expect(result.current.pageInputProps.value).toEqual(2);
+    expect(result.current.page).toEqual(1);
+
+    act(() => {
+      result.current.pageInputProps.onKeyUp({ code: 'Enter', target: { value: 2 }});
+    });
+
+    expect(result.current.pageInputProps.value).toEqual(2);
+    expect(result.current.page).toEqual(2);
+  });
+
+  it('does not set value on invalid page (> numpages)', async () => {
+    const { result } = renderHook(() => usePaginatedResults(results));
+    expect(result.current.page).toEqual(1);
+
+    act(() => {
+      result.current.pageInputProps.onChange(5);
+    });
+    expect(result.current.pageInputProps.value).toEqual(5);
+    expect(result.current.pageInputProps.isInvalid).toEqual(true);
+    expect(result.current.page).toEqual(1);
+
+    act(() => {
+      result.current.pageInputProps.onKeyUp({ code: 'Enter', target: { value: 5 }});
+    });
+
+    expect(result.current.page).toEqual(1);
+  });
+
+  it('does not set value on invalid page (< 1)', async () => {
+    const { result } = renderHook(() => usePaginatedResults(results));
+    expect(result.current.page).toEqual(1);
+
+    act(() => {
+      result.current.pageInputProps.onChange(0);
+    });
+    expect(result.current.pageInputProps.value).toEqual(0);
+    expect(result.current.pageInputProps.isInvalid).toEqual(true);
+    expect(result.current.page).toEqual(1);
+
+    act(() => {
+      result.current.pageInputProps.onKeyUp({ code: 'Enter', target: { value: 0 }});
+    });
+
+    expect(result.current.page).toEqual(1);
+  });
+
+  it('reset page input on blur', async () => {
+    const { result } = renderHook(() => usePaginatedResults(results));
+    expect(result.current.page).toEqual(1);
+
+    act(() => {
+      result.current.pageInputProps.onChange(2);
+    });
+    expect(result.current.pageInputProps.value).toEqual(2);
+
+    act(() => {
+      result.current.pageInputProps.onBlur();
+    });
+
+    expect(result.current.pageInputProps.value).toEqual(1);
+  });
 });

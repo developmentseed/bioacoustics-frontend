@@ -3,6 +3,7 @@ import { RESULTS_DISPLAY_PAGE_SIZE } from '@/settings';
 
 export default function usePaginatedResults(results) {
   const [ page, setPage ] = useState(1);
+  const [ pageInputValue, setPageInputValue ] = useState(1);
   const [ selectedSites, setSelectedSites ] = useState([]);
   const [ selectedDates, setSelectedDates ] = useState([]);
   const [ selectedTimes, setSelectedTimes ] = useState([0, 24]);
@@ -81,6 +82,20 @@ export default function usePaginatedResults(results) {
     lastPageProps: {
       isDisabled: page === numPages,
       onClick: () => setPage(numPages)
+    },
+    pageInputProps: {
+      value: pageInputValue,
+      min: 1,
+      max: numPages,
+      isInvalid: pageInputValue < 1 || pageInputValue > numPages,
+      onChange: setPageInputValue,
+      onKeyUp: (e) => {
+        const { value } = e.target;
+        if (e.code === 'Enter' && value >= 1 && value <= numPages ) {
+          setPage(value);
+        }
+      },
+      onBlur: () => setPageInputValue(page)
     }
   };
 }

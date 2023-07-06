@@ -36,12 +36,14 @@ export default function Results({ isLoading, results }) {
   const [view, setView] = useState(VIEWS.grid_lg);
   const {
     page,
+    numPages,
     resultPage,
     numMatches,
     firstPageProps,
     previousPageProps,
     nextPageProps,
     lastPageProps,
+    pageInputProps,
     selectedSites,
     setSelectedSites,
     selectedDates,
@@ -171,6 +173,12 @@ export default function Results({ isLoading, results }) {
                 <Button {...firstPageProps}>First page</Button>
                 <Button {...previousPageProps}>Previous</Button>
               </ButtonGroup>
+              <Flex fontSize="sm" gap="1" alignItems="center">Page 
+                <NumberInput {...pageInputProps} w="12" size="sm" clampValueOnBlur={false} bgColor={pageInputProps.isInvalid && 'red.100'}>
+                  <NumberInputField px="0" textAlign="center" />
+                </NumberInput>
+                of {numPages}
+              </Flex>
               <ButtonGroup isAttached variant="outline" size="sm">
                 <Button {...nextPageProps}>Next</Button>
                 <Button {...lastPageProps}>Last page</Button>
