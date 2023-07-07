@@ -7,9 +7,10 @@ export function SitesProvider({ children }) {
   const [ sites, setSites ] = useState([]);
 
   useEffect(() => {
-    fetch('https://api.bioacoustics.ds.io/api/v1/a2o/sites/?direction=asc&items=341&order_by=name')
+    fetch('https://api.bioacoustics.ds.io/api/v1/a2o/sites?direction=asc&items=341&order_by=name')
       .then(r => r.json())
-      .then(r => setSites(r.data));
+      .then(r => r.data.filter(({ custom_latitude, custom_longitude }) => custom_latitude && custom_longitude))
+      .then(setSites);
   }, []);
 
   const contextValue = useMemo(() =>({ sites }), [sites]);
