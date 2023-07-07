@@ -6,12 +6,14 @@ export default function usePaginatedResults(results) {
   const [ selectedSites, setSelectedSites ] = useState([]);
   const [ selectedDates, setSelectedDates ] = useState([]);
   const [ selectedTimes, setSelectedTimes ] = useState([0, 24]);
+  const [ topMatchPerRecording, setTopMatchPerRecording ] = useState(false);
 
   // Reset page when the filters were changed
   useEffect(() => {
     setPage(1);
   }, [selectedSites, selectedDates, selectedTimes]);
 
+  const recordingsInResults = [];
   const filterFunc = (res) => {
     const filters = [];
     if (selectedSites.length > 0) {
@@ -26,6 +28,14 @@ export default function usePaginatedResults(results) {
       const date = new Date(res.entity.file_timestamp * 1000 + res.entity.clip_offset_in_file);
       const hour = date.getUTCHours();
       filters.push(selectedTimes[0] <= hour && selectedTimes[1] >= hour);
+    }
+    if (topMatchPerRecording) {
+      if (!recordingsInResults.includes(res.entity.filename)) {
+        recordingsInResults.push(res.entity.filename);
+        filters.push(true);
+      } else {
+        filters.push(false);
+      }
     }
     
     if (filters.length > 0)
@@ -56,6 +66,10 @@ export default function usePaginatedResults(results) {
     nextPageProps: {
       isDisabled: numMatches === 0 || page === Math.ceil(numMatches / RESULTS_DISPLAY_PAGE_SIZE),
       onClick: () => setPage(page + 1)
+    },
+    topMatchPerRecordingProps: {
+      isChecked: topMatchPerRecording,
+      onChange: e => setTopMatchPerRecording(e.target.checked)
     }
   };
 }
