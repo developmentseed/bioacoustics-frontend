@@ -6,7 +6,8 @@ const results = Array(72).fill(0).map((_, i) => ({
   entity: {
     site_id: i % 3,
     file_timestamp: new Date(Date.UTC(2021, i % 3, 10, i % 3, 0)).getTime() / 1000,
-    clip_offset_in_file: 0
+    clip_offset_in_file: 0,
+    filename: `audio_${i % 3}.mp3`
   }
 }));
 
@@ -97,6 +98,15 @@ describe('usePaginatedResults', () => {
     const { resultPage } = result.current;
     const correctResults = resultPage.every(r => new Date(r.entity.file_timestamp * 1000).getUTCHours() <= 1);
     expect(correctResults).toBeTruthy();
+  });
+
+  it('filters top result per recording', () => {
+    const { result } = renderHook(() => usePaginatedResults(results));
+    act(() => {
+      result.current.topMatchPerRecordingProps.onChange({ target : { checked: true }});
+    });
+    const { resultPage } = result.current;
+    expect(resultPage.length).toEqual(3);
   });
 
   it('disables pagination buttons when there are now matches', () => {

@@ -19,7 +19,7 @@ import { Loading } from '@/components';
 import { TMatch } from '@/types';
 import TableView from './TableView';
 import GridView from './GridView';
-import { SitesFilter, DateFilter, TimeFilter, Chips } from './components/filters';
+import { SitesFilter, DateFilter, TimeFilter, Chips, TopResultCheckbox } from './components/filters';
 import { usePaginatedResults, useDownload } from './hooks';
 import MapView from './MapView';
 
@@ -44,6 +44,7 @@ export default function Results({ isLoading, results }) {
     setSelectedDates,
     selectedTimes,
     setSelectedTimes,
+    topMatchPerRecordingProps,
   } = usePaginatedResults(results);
   const { selectedResults, toggleSelect, clearSelect, downloadLink } = useDownload(results);
 
@@ -78,6 +79,7 @@ export default function Results({ isLoading, results }) {
               <SitesFilter selectedSites={selectedSites} setSelectedSites={setSelectedSites} />
               <DateFilter selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
               <TimeFilter selectedTimes={selectedTimes} setSelectedTimes={setSelectedTimes} />
+              <TopResultCheckbox {...topMatchPerRecordingProps} />
             </HStack>
             <Chips
               selectedSites={selectedSites}
