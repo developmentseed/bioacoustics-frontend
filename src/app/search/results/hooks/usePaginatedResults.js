@@ -15,6 +15,11 @@ export default function usePaginatedResults(results) {
   }, [selectedSites, selectedDates, selectedTimes]);
 
   const recordingsInResults = [];
+  // Update the input value when the page
+  useEffect(() => {
+    setPageInputValue(page);
+  }, [page]);
+
   const filterFunc = (res) => {
     const filters = [];
     if (selectedSites.length > 0) {

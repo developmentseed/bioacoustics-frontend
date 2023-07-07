@@ -231,4 +231,15 @@ describe('usePaginatedResults', () => {
 
     expect(result.current.pageInputProps.value).toEqual(1);
   });
+
+  it('updates the input value on page change', () => {
+    const { result } = renderHook(() => usePaginatedResults(results));
+    expect(result.current.page).toEqual(1);
+
+    act(() => {
+      result.current.nextPageProps.onClick();
+    });
+    expect(result.current.page).toEqual(2);
+    expect(result.current.pageInputProps.value).toEqual(2);
+  });
 });
