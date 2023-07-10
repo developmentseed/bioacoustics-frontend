@@ -28,7 +28,8 @@ export default function Upload() {
     isSubmitting,
     submitButtonProps,
     setClip,
-    clipStart
+    clipStart,
+    clipLength
   } = useSearchForm();
 
   return (
@@ -45,7 +46,7 @@ export default function Upload() {
               {!file ? (
                 <AudioSelectForm handleFileSelect={setFile} />
               ) : (
-                <AudioClipper file={file} isClipConfirmed={!!clipStart} setClip={setClip} />
+                <AudioClipper file={file} clipStart={clipStart} clipLength={clipLength} setClip={setClip} />
               )}
               {file && (duration <= MAX_AUDIO_CLIP_LENGTH || clipStart) && (
                 <Box textAlign="right" mt="2">
