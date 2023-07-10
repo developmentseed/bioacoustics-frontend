@@ -117,6 +117,7 @@ export default function useSearchForm() {
     results,
     isSubmitting,
     clipStart,
+    clipLength,
     setClip,
     submitButtonProps: {
       onClick: handleFormSubmit,

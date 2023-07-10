@@ -61,12 +61,13 @@ ToolbarButton.propTypes = {
   leftIcon: T.node,
 };
 
-export default function AudioClipper({ file, isClipConfirmed, setClip }) {
+export default function AudioClipper({ file, setClip, clipStart, clipLength }) {
   const waveformId = useId();
   const spectrogramId = useId();
 
   const audioUrl = useMemo(() => URL.createObjectURL(file), [file]);
-  const { isPlaying, currentTime, duration, playButtonProps, scrubberProps } = useAudioPlayer(audioUrl);
+  const { isPlaying, currentTime, duration, playButtonProps, scrubberProps } = useAudioPlayer(audioUrl, clipStart, clipLength);
+  const isClipConfirmed = !!clipStart;
 
   const {
     zoom,
@@ -337,5 +338,6 @@ export default function AudioClipper({ file, isClipConfirmed, setClip }) {
 AudioClipper.propTypes = {
   file: TFile,
   setClip: T.func.isRequired,
-  isClipConfirmed: T.bool.isRequired,
+  clipStart: T.number,
+  clipLength: T.number
 };
