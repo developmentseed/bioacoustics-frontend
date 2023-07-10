@@ -12,7 +12,11 @@ export default function useSearchForm() {
   const [ isSubmitting, setIsSubmitting ] = useState(false);
 
   // Reset the results when a new file is selected
-  useEffect(() => setResults([]), [file]);
+  useEffect(() => {
+    setResults([]);
+    setClipStart();
+    setClipLength();
+  }, [file]);
 
   /**
    * Read duration from file whenever a new file was selected
