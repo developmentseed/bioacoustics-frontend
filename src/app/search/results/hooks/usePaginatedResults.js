@@ -1,10 +1,15 @@
 import { useEffect, useState } from 'react';
+import { LngLat } from 'mapbox-gl';
+
 import { RESULTS_DISPLAY_PAGE_SIZE } from '@/settings';
+import { useSites } from '../../context/sites';
 
 export default function usePaginatedResults(results) {
+  const { sites } = useSites();
   const [ page, setPage ] = useState(1);
   const [ pageInputValue, setPageInputValue ] = useState(1);
   const [ selectedSites, setSelectedSites ] = useState([]);
+  const [ bboxFilter, setBboxFilter] = useState();
   const [ selectedDates, setSelectedDates ] = useState([]);
   const [ selectedTimes, setSelectedTimes ] = useState([0, 24]);
   const [ topMatchPerRecording, setTopMatchPerRecording ] = useState(false);
@@ -15,7 +20,7 @@ export default function usePaginatedResults(results) {
   }, [selectedSites, selectedDates, selectedTimes]);
 
   const recordingsInResults = [];
-  // Update the input value when the page
+  // Update the input value when the page changes
   useEffect(() => {
     setPageInputValue(page);
   }, [page]);
@@ -24,6 +29,16 @@ export default function usePaginatedResults(results) {
     const filters = [];
     if (selectedSites.length > 0) {
       filters.push(selectedSites.includes(res.entity.site_id));
+    }
+    if (bboxFilter) {
+      const site = sites.find(({ id }) => id === res.entity.site_id);
+      if (site) {
+        const { custom_longitude, custom_latitude } = site;
+        const siteLocation = new LngLat(custom_longitude, custom_latitude);
+        filters.push(bboxFilter.contains(siteLocation));
+      } else {
+        filters.push(false);
+      }
     }
     if (selectedDates.length > 0) {
       const date = new Date(res.entity.file_timestamp * 1000 + res.entity.clip_offset_in_file);
@@ -68,6 +83,7 @@ export default function usePaginatedResults(results) {
     setSelectedDates,
     selectedTimes,
     setSelectedTimes,
+    setBboxFilter,
     firstPageProps: {
       isDisabled: page === 1,
       onClick: () => setPage(1)

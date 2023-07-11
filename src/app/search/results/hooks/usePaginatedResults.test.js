@@ -1,4 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
+import { SitesProvider } from '../../context/sites';
 import usePaginatedResults from './usePaginatedResults';
 
 const results = Array(72).fill(0).map((_, i) => ({
@@ -11,9 +12,23 @@ const results = Array(72).fill(0).map((_, i) => ({
   }
 }));
 
+const wrapper = ({ children }) => (
+  <SitesProvider value="some context">{children}</SitesProvider>
+);
+
 describe('usePaginatedResults', () => {
+  beforeEach(() => {
+    fetch.resetMocks();
+    fetch.mockResponseOnce(JSON.stringify({
+      data: [
+        { id: 1, name: 'Site A' },
+        { id: 2, name: 'Site B' }
+      ]
+    }));
+  });
+
   it('renders first page', () => {
-    const {result} = renderHook(() => usePaginatedResults(results));
+    const {result} = renderHook(() => usePaginatedResults(results), { wrapper });
     const { resultPage, previousPageProps, firstPageProps, nextPageProps, lastPageProps } = result.current;
     expect(resultPage.length).toEqual(25);
     expect(resultPage[0].id).toEqual(0);
@@ -25,7 +40,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('renders middle page', async () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     act(() => {
       result.current.nextPageProps.onClick();
     });
@@ -48,7 +63,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('renders last page', () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     act(() => {
       result.current.nextPageProps.onClick();
     });
@@ -75,7 +90,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('jumps to first page', () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     act(() => {
       result.current.nextPageProps.onClick();
     });
@@ -88,7 +103,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('jumps to last page', () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
 
     expect(result.current.page).toEqual(1);
     act(() => {
@@ -98,7 +113,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('filters sites', () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     act(() => {
       result.current.setSelectedSites([1, 2]);
     });
@@ -108,7 +123,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('filters dates', () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     act(() => {
       const from = new Date(Date.UTC(2021, 2, 1));
       const to = new Date(Date.UTC(2021, 2, 28));
@@ -120,7 +135,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('filters times', () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     act(() => {
       result.current.setSelectedTimes([0, 1]);
     });
@@ -130,7 +145,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('filters top result per recording', () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     act(() => {
       result.current.topMatchPerRecordingProps.onChange({ target : { checked: true }});
     });
@@ -139,7 +154,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('disables pagination buttons when there are now matches', () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     act(() => {
       result.current.setSelectedTimes([12, 13]);
     });
@@ -150,7 +165,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('resets page when the filters are changed', () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     act(() => {
       result.current.nextPageProps.onClick();
     });
@@ -163,7 +178,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('sets value on ENTER', async () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     expect(result.current.page).toEqual(1);
 
     act(() => {
@@ -181,7 +196,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('does not set value on invalid page (> numpages)', async () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     expect(result.current.page).toEqual(1);
 
     act(() => {
@@ -199,7 +214,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('does not set value on invalid page (< 1)', async () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     expect(result.current.page).toEqual(1);
 
     act(() => {
@@ -217,7 +232,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('reset page input on blur', async () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     expect(result.current.page).toEqual(1);
 
     act(() => {
@@ -233,7 +248,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('updates the input value on page change', () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     expect(result.current.page).toEqual(1);
 
     act(() => {

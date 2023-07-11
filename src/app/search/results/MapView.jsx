@@ -1,7 +1,7 @@
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import T from 'prop-types';
-import { Box } from '@chakra-ui/react';
-import Map, {Source, Layer} from 'react-map-gl';
+import { Box, Checkbox } from '@chakra-ui/react';
+import Map, { Source, Layer }  from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { MAPBOX_TOKEN } from '@/settings';
@@ -33,35 +33,42 @@ const clusterLabelStyle = {
   }
 };
 
-export default function MapView({ results }) {
+export default function MapView({ results, setBboxFilter }) {
   const mapRef = useRef();
   const { sites } = useSites();
+  const [ filterByMapBbox, setFilterByMapBbox ] = useState(false);
 
   const geojson = useMemo(() => {
     const resultSites = results.reduce((accSites, result) => {
       const { site_id } = result.entity;
-      let site;
 
       if (Object.keys(accSites).includes(site_id)) {
-        site = {
-          ...accSites[site_id],
-          numResults: accSites[site_id].numResults + 1
-        };
-      } else {
-        const { id, custom_longitude, custom_latitude } = sites.find(({ id }) => id === site_id);
-        site = {
-          id,
-          lat: custom_latitude,
-          lng: custom_longitude,
-          numResults: 1
+        return {
+          ...accSites,
+          [site_id]: {
+            ...accSites[site_id],
+            numResults: accSites[site_id].numResults + 1
+          }
         };
       }
 
-      return {
-        ...accSites,
-        [site_id]: site
-      };
-    });
+      const site = sites.find(({ id }) => id === site_id);
+
+      if (site) {
+        const { id, custom_longitude, custom_latitude } = site;
+        return {
+          ...accSites,
+          [site_id]: {
+            id,
+            lat: custom_latitude,
+            lng: custom_longitude,
+            numResults: 1
+          }
+        };
+      }
+
+      return accSites;
+    }, []);
 
     return ({
       type: 'FeatureCollection',
@@ -95,8 +102,21 @@ export default function MapView({ results }) {
       });
   }, []);
 
+  useEffect(() => {
+    if (!filterByMapBbox) {
+      setBboxFilter();
+    } else {
+      setBboxFilter(mapRef.current.getBounds());
+    }
+  }, [filterByMapBbox, setBboxFilter]);
+
+  const handleMoveEnd = () => {
+    if (!filterByMapBbox) return;
+    setBboxFilter(mapRef.current.getBounds());
+  };
+
   return (
-    <Box flexBasis="500px" height="600px">
+    <Box flexBasis="500px" height="600px" position="sticky" top="5">
       <Map
         initialViewState={{
           longitude: 134.396315,
@@ -108,6 +128,7 @@ export default function MapView({ results }) {
         ref={mapRef}
         interactiveLayerIds={[clusterLabelStyle.id]}
         onClick={handleClusterClick}
+        onMoveEnd={handleMoveEnd}
       >
         <Source
           id="results"
@@ -122,10 +143,32 @@ export default function MapView({ results }) {
           <Layer {...clusterLabelStyle} />
         </Source>
       </Map>
+      <Box
+        position="absolute"
+        right="3"
+        top="3"
+        bgColor="white"
+        border="1px solid"
+        borderColor="primary.400"
+        borderRadius="3px"
+        px="2"
+        py="1"
+        fontSize="sm"
+      >
+        <Checkbox
+          size="sm"
+          color="primary.400"
+          isChecked={filterByMapBbox}
+          onChange={(e) => setFilterByMapBbox(e.target.checked)}
+        >
+          Search as I move the map
+        </Checkbox>
+      </Box>
     </Box>
   );
 }
 
 MapView.propTypes = {
-  results: T.arrayOf(TMatch).isRequired
+  results: T.arrayOf(TMatch).isRequired,
+  setBboxFilter: T.func.isRequired,
 };
