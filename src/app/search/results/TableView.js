@@ -1,5 +1,6 @@
 import T from 'prop-types';
 import {
+  Box,
   Checkbox,
   Table,
   Thead,
@@ -11,7 +12,7 @@ import {
   IconButton,
   Link,
 } from '@chakra-ui/react';
-import { MdOpenInNew } from 'react-icons/md';
+import { MdOpenInNew, MdSearch } from 'react-icons/md';
 import { TMatch } from '@/types';
 import { formatDateTime } from '@/utils';
 import { sitenameDisplay, } from './utils';
@@ -37,7 +38,10 @@ function ResultRow({ result, toggleSelect, isSelected, narrow }) {
       {!narrow && <Td>{ formatDateTime(file_timestamp) }</Td>}
       <Td>{ formatDateTime(file_timestamp + clip_offset_in_file) }</Td>
       <Td>
-        <IconButton as={Link} variant="link" href={`https://data.acousticobservatory.org/listen/${file_seq_id}`} target="_blank" icon={<MdOpenInNew />} size="sm" title="Full Recording" display="inline" />
+        <Box display="flex" gap="1">
+          <IconButton as={Link} variant="link" href={`https://data.acousticobservatory.org/listen/${file_seq_id}`} target="_blank" icon={<MdOpenInNew />} size="sm" title="Full Recording" display="inline" />
+          <IconButton as={Link} variant="link" href={`/search?audio=${audio_url}`} target="_blank" icon={<MdSearch />} size="sm" title="Use in new search" display="inline" />
+        </Box>
       </Td>
     </Tr>
   );
