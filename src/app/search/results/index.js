@@ -51,6 +51,7 @@ export default function Results({ isLoading, results }) {
     selectedTimes,
     setSelectedTimes,
     topMatchPerRecordingProps,
+    setBboxFilter,
   } = usePaginatedResults(results);
   const { selectedResults, toggleSelect, clearSelect, downloadLink } = useDownload(results);
 
@@ -159,7 +160,7 @@ export default function Results({ isLoading, results }) {
                       />
                     )}
                   </Box>
-                  {showMap && <MapView results={resultPage} />}
+                  {showMap && <MapView results={resultPage} setBboxFilter={setBboxFilter} />}
                 </>
               ) : (
                 <Box fontWeight="bold">
