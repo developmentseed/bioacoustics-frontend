@@ -62,7 +62,7 @@ export default function MapView({ results, setBboxFilter }) {
         ...accSites,
         [site_id]: site
       };
-    });
+    }, []);
 
     return ({
       type: 'FeatureCollection',
@@ -110,7 +110,7 @@ export default function MapView({ results, setBboxFilter }) {
   };
 
   return (
-    <Box flexBasis="500px" height="600px" position="relative">
+    <Box flexBasis="500px" height="600px" position="sticky" top="5">
       <Map
         initialViewState={{
           longitude: 134.396315,

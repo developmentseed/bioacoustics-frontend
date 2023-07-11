@@ -140,33 +140,31 @@ export default function Results({ isLoading, results }) {
               </Flex>
             )}
             <Flex gap="5">
+              <Box flex="1">
               {numMatches > 0 ? (
                 <>
-                  <Box flex="1">
-                    {view === VIEWS.table && (
-                      <TableView
-                        results={resultPage}
-                        selectedResults={selectedResults}
-                        toggleSelect={toggleSelect}
-                        narrow={showMap}
-                      />
-                    )}
-                    {[VIEWS.grid_sm, VIEWS.grid_lg].includes(view) && (
-                      <GridView
-                        results={resultPage}
-                        large={view === VIEWS.grid_lg}
-                        selectedResults={selectedResults}
-                        toggleSelect={toggleSelect}
-                      />
-                    )}
-                  </Box>
-                  {showMap && <MapView results={resultPage} setBboxFilter={setBboxFilter} />}
+                  {view === VIEWS.table && (
+                    <TableView
+                      results={resultPage}
+                      selectedResults={selectedResults}
+                      toggleSelect={toggleSelect}
+                      narrow={showMap}
+                    />
+                  )}
+                  {[VIEWS.grid_sm, VIEWS.grid_lg].includes(view) && (
+                    <GridView
+                      results={resultPage}
+                      large={view === VIEWS.grid_lg}
+                      selectedResults={selectedResults}
+                      toggleSelect={toggleSelect}
+                    />
+                  )}
                 </>
               ) : (
-                <Box fontWeight="bold">
-                  No results match the selected filters. 
-                </Box>
+                  <Text fontWeight="bold">No results match the selected filters.</Text>
               )}
+              </Box>
+              {showMap && <MapView results={resultPage} setBboxFilter={setBboxFilter} />}
             </Flex>
             <Flex my="5" gap="5" alignItems="center">
               <Spacer />
