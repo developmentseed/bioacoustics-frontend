@@ -41,27 +41,33 @@ export default function MapView({ results, setBboxFilter }) {
   const geojson = useMemo(() => {
     const resultSites = results.reduce((accSites, result) => {
       const { site_id } = result.entity;
-      let site;
 
       if (Object.keys(accSites).includes(site_id)) {
-        site = {
-          ...accSites[site_id],
-          numResults: accSites[site_id].numResults + 1
-        };
-      } else {
-        const { id, custom_longitude, custom_latitude } = sites.find(({ id }) => id === site_id);
-        site = {
-          id,
-          lat: custom_latitude,
-          lng: custom_longitude,
-          numResults: 1
+        return {
+          ...accSites,
+          [site_id]: {
+            ...accSites[site_id],
+            numResults: accSites[site_id].numResults + 1
+          }
         };
       }
 
-      return {
-        ...accSites,
-        [site_id]: site
-      };
+      const site = sites.find(({ id }) => id === site_id);
+
+      if (site) {
+        const { id, custom_longitude, custom_latitude } = site;
+        return {
+          ...accSites,
+          [site_id]: {
+            id,
+            lat: custom_latitude,
+            lng: custom_longitude,
+            numResults: 1
+          }
+        };
+      }
+
+      return accSites;
     }, []);
 
     return ({
