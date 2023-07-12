@@ -13,13 +13,16 @@ import {
   Link,
 } from '@chakra-ui/react';
 import { MdOpenInNew, MdSearch } from 'react-icons/md';
+
 import { TMatch } from '@/types';
 import { formatDateTime } from '@/utils';
+import { SEARCH_API } from '@/settings';
 import { sitenameDisplay, } from './utils';
 import AudioPlayer from './AudioPlayer';
 
 function ResultRow({ result, toggleSelect, isSelected, narrow }) {
   const { distance, entity: { file_timestamp, clip_offset_in_file, file_seq_id, audio_url } } = result;
+  const downloadAudioUrl = `${SEARCH_API}/a2o/audio_recordings/download/flac/${file_seq_id}?${audio_url.split('?')[1]}`;
 
   return (
     <Tr>
@@ -40,7 +43,7 @@ function ResultRow({ result, toggleSelect, isSelected, narrow }) {
       <Td>
         <Box display="flex" gap="1">
           <IconButton as={Link} variant="link" href={`https://data.acousticobservatory.org/listen/${file_seq_id}`} target="_blank" icon={<MdOpenInNew />} size="sm" title="Full Recording" display="inline" />
-          <IconButton as={Link} variant="link" href={`/search?audio=${audio_url}`} target="_blank" icon={<MdSearch />} size="sm" title="Use in new search" display="inline" />
+          <IconButton as={Link} variant="link" href={`/search?q=${encodeURIComponent(downloadAudioUrl)}`} target="_blank" icon={<MdSearch />} size="sm" title="Use in new search" display="inline" />
         </Box>
       </Td>
     </Tr>

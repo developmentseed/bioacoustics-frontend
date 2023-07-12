@@ -1,5 +1,7 @@
 'use client';
+import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { useSearchParams } from 'next/navigation';
 import { Box, Button, Container, Heading, Text } from '@chakra-ui/react';
 
 import { Loading } from '@/components';
@@ -12,14 +14,14 @@ import AudioResetForm from './AudioResetForm';
 
 import { SitesProvider } from './context/sites';
 const AudioClipper = dynamic(() => import('./AudioClipper'), {
-  loading: () => <Loading size="xl" />,
+  loading: () => <Loading size="md" />,
 });
 const Results = dynamic(() => import('./results'), {
-  loading: () => <Loading size="xl" />,
+  loading: () => <Loading size="md" />,
   ssr: false
 });
 
-export default function Upload() { 
+export default function Upload() {
   const {
     duration,
     file,
@@ -31,6 +33,32 @@ export default function Upload() {
     clipStart,
     clipLength
   } = useSearchForm();
+
+  const [ isInitializing, setIsInitializing ] = useState(true);
+  const searchParams = useSearchParams();
+  const audioUrl = searchParams.get('q');
+
+  useEffect(() => {
+    if (!audioUrl) {
+      setIsInitializing(false);
+      return;
+    }
+
+    fetch(audioUrl)
+      .then((response) => response.blob())
+      .then((blob) => setFile(new File([blob], audioUrl)))
+      .finally(() => setIsInitializing(false));
+  }, [audioUrl, setFile]);
+
+  useEffect(() => {
+    if (audioUrl && duration && results.length === 0 && !submitButtonProps.isDisabled) {
+      submitButtonProps.onClick();
+    }
+  }, [audioUrl, duration, submitButtonProps, results]);
+
+  if (isInitializing) {
+    return <Loading size="md" />;
+  }
 
   return (
     <SitesProvider>

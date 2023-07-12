@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { MAX_AUDIO_CLIP_LENGTH, RESULTS_MAX, SEARCH_API } from '@/settings';
 import { bufferToWave, getDuration } from '@/utils';
 
@@ -16,6 +16,7 @@ export default function useSearchForm() {
     setResults([]);
     setClipStart();
     setClipLength();
+    setDuration();
   }, [file]);
 
   /**
@@ -42,7 +43,7 @@ export default function useSearchForm() {
    * Returns the audio to upload either padded to 5 seconds
    * or clipped to 5 seconds
    */
-  const prepareAudioForUpload = (file) => {
+  const prepareAudioForUpload = useCallback((file) => {
     const start = duration > MAX_AUDIO_CLIP_LENGTH ? clipStart : 0;
     const length = duration > MAX_AUDIO_CLIP_LENGTH ? clipLength : MAX_AUDIO_CLIP_LENGTH;
     
@@ -71,7 +72,7 @@ export default function useSearchForm() {
       };
       reader.readAsArrayBuffer(file);
     });
-  };
+  }, [clipLength, clipStart, duration]);
 
   const fetchResults = (embeddingPayload) => {
     const formData  = new FormData();
@@ -85,9 +86,9 @@ export default function useSearchForm() {
       .then(r => r.json());
   };
 
-  const fetchEmbedding = (audioUpload) => {
+  const fetchEmbedding = (audioUpload, name) => {
     const formData = new FormData();
-    formData.append('audio_file', audioUpload, file.name);
+    formData.append('audio_file', audioUpload, name);
 
     return fetch(`${SEARCH_API}/embed/`, {
       method: 'POST',
@@ -100,19 +101,22 @@ export default function useSearchForm() {
   /**
    * Submit the form
    */
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleFormSubmit = useCallback(async () => {
     setIsSubmitting(true);
     setResults([]);
 
     const audioUpload = await prepareAudioForUpload(file);
-    const embedding = await fetchEmbedding(audioUpload);
+    const embedding = await fetchEmbedding(audioUpload, file.name);
 
-    fetchResults(embedding)
+    return fetchResults(embedding)
       .then(setResults)
       .finally(() => setIsSubmitting(false));
-  };
+  }, [file, prepareAudioForUpload]);
+
+  const submitButtonProps = useMemo(() => ({
+    onClick: handleFormSubmit,
+    isDisabled: disableSubmit
+  }), [disableSubmit, handleFormSubmit]);
 
   return {
     duration,
@@ -123,9 +127,6 @@ export default function useSearchForm() {
     clipStart,
     clipLength,
     setClip,
-    submitButtonProps: {
-      onClick: handleFormSubmit,
-      isDisabled: disableSubmit
-    }
+    submitButtonProps
   };
 }

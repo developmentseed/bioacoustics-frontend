@@ -17,17 +17,24 @@ import { MdChevronLeft } from 'react-icons/md';
 import { ACCEPTED_AUDIO_TYPES } from '@/settings';
 import { Error } from '@/components';
 import useUploadValidation from './hooks/useUploadValidation';
+import { useRouter } from 'next/navigation';
 
 export default function AudioResetForm({ setFile }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { error, handleFileChange } = useUploadValidation(setFile);
+  const router = useRouter();
+
+  const handleChange = (e) => {
+    handleFileChange(e);
+    router.replace('/search');
+  };
 
   const handleReset = () => {
     onClose();
     const inputEl = document.createElement('input');
     inputEl.setAttribute('type', 'file');
     inputEl.setAttribute('accept', ACCEPTED_AUDIO_TYPES.join(','));
-    inputEl.addEventListener('change', handleFileChange);
+    inputEl.addEventListener('change', handleChange);
     inputEl.click();
   };
 
