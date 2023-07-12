@@ -1,5 +1,4 @@
 import { renderHook, act } from '@testing-library/react';
-import { SitesProvider } from '../../context/sites';
 import usePaginatedResults from './usePaginatedResults';
 
 const results = Array(72).fill(0).map((_, i) => ({
@@ -11,10 +10,6 @@ const results = Array(72).fill(0).map((_, i) => ({
     filename: `audio_${i % 3}.mp3`
   }
 }));
-
-const wrapper = ({ children }) => (
-  <SitesProvider value="some context">{children}</SitesProvider>
-);
 
 describe('usePaginatedResults', () => {
   beforeEach(() => {
@@ -28,7 +23,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('renders first page', () => {
-    const {result} = renderHook(() => usePaginatedResults(results), { wrapper });
+    const {result} = renderHook(() => usePaginatedResults(results));
     const { resultPage, previousPageProps, firstPageProps, nextPageProps, lastPageProps } = result.current;
     expect(resultPage.length).toEqual(25);
     expect(resultPage[0].id).toEqual(0);
@@ -40,7 +35,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('renders middle page', async () => {
-    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
+    const { result } = renderHook(() => usePaginatedResults(results));
     act(() => {
       result.current.nextPageProps.onClick();
     });
@@ -63,7 +58,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('renders last page', () => {
-    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
+    const { result } = renderHook(() => usePaginatedResults(results));
     act(() => {
       result.current.nextPageProps.onClick();
     });
@@ -90,7 +85,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('jumps to first page', () => {
-    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
+    const { result } = renderHook(() => usePaginatedResults(results));
     act(() => {
       result.current.nextPageProps.onClick();
     });
@@ -103,7 +98,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('jumps to last page', () => {
-    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
+    const { result } = renderHook(() => usePaginatedResults(results));
 
     expect(result.current.page).toEqual(1);
     act(() => {
@@ -112,52 +107,8 @@ describe('usePaginatedResults', () => {
     expect(result.current.page).toEqual(3);
   });
 
-  it('filters sites', () => {
-    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
-    act(() => {
-      result.current.setSelectedSites([1, 2]);
-    });
-    const { resultPage } = result.current;
-    const correctResults = resultPage.every(r => [1, 2].includes(r.entity.site_id));
-    expect(correctResults).toBeTruthy();
-  });
-
-  it('filters dates', () => {
-    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
-    act(() => {
-      const from = new Date(Date.UTC(2021, 2, 1));
-      const to = new Date(Date.UTC(2021, 2, 28));
-      result.current.setSelectedDates([from, to]);
-    });
-    const { resultPage } = result.current;
-    const correctResults = resultPage.every(r => r.entity.file_timestamp === new Date(Date.UTC(2021, 2, 10, 2, 0)).getTime() / 1000);
-    expect(correctResults).toBeTruthy();
-  });
-
-  it('filters times', () => {
-    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
-    act(() => {
-      result.current.setSelectedTimes([0, 1]);
-    });
-    const { resultPage } = result.current;
-    const correctResults = resultPage.every(r => new Date(r.entity.file_timestamp * 1000).getUTCHours() <= 1);
-    expect(correctResults).toBeTruthy();
-  });
-
-  it('filters top result per recording', () => {
-    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
-    act(() => {
-      result.current.topMatchPerRecordingProps.onChange({ target : { checked: true }});
-    });
-    const { resultPage } = result.current;
-    expect(resultPage.length).toEqual(3);
-  });
-
-  it('disables pagination buttons when there are now matches', () => {
-    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
-    act(() => {
-      result.current.setSelectedTimes([12, 13]);
-    });
+  it('disables pagination buttons when there are no matches', () => {
+    const { result } = renderHook(() => usePaginatedResults([]));
     const { resultPage, previousPageProps, nextPageProps } = result.current;
     expect(resultPage.length).toEqual(0);
     expect(previousPageProps.isDisabled).toBeTruthy();
@@ -165,20 +116,29 @@ describe('usePaginatedResults', () => {
   });
 
   it('resets page when the filters are changed', () => {
-    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
+    const { result, rerender } = renderHook(
+      (r) => usePaginatedResults(r),
+      { initialProps: results }
+    );
     act(() => {
       result.current.nextPageProps.onClick();
     });
     expect(result.current.page).toEqual(2);
 
-    act(() => {
-      result.current.setSelectedTimes([0, 1]);
-    });
+    rerender([{
+      id: 1,
+      entity: {
+        site_id: 1,
+        file_timestamp: new Date(Date.UTC(2021, 1, 10, 1, 0)).getTime() / 1000,
+        clip_offset_in_file: 0,
+        filename: 'audio_1.mp3'
+      }
+    }]);
     expect(result.current.page).toEqual(1);
   });
 
   it('sets value on ENTER', async () => {
-    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
+    const { result } = renderHook(() => usePaginatedResults(results));
     expect(result.current.page).toEqual(1);
 
     act(() => {
@@ -196,7 +156,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('does not set value on invalid page (> numpages)', async () => {
-    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
+    const { result } = renderHook(() => usePaginatedResults(results));
     expect(result.current.page).toEqual(1);
 
     act(() => {
@@ -214,7 +174,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('does not set value on invalid page (< 1)', async () => {
-    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
+    const { result } = renderHook(() => usePaginatedResults(results));
     expect(result.current.page).toEqual(1);
 
     act(() => {
@@ -232,7 +192,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('reset page input on blur', async () => {
-    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
+    const { result } = renderHook(() => usePaginatedResults(results));
     expect(result.current.page).toEqual(1);
 
     act(() => {
@@ -248,7 +208,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('updates the input value on page change', () => {
-    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
+    const { result } = renderHook(() => usePaginatedResults(results));
     expect(result.current.page).toEqual(1);
 
     act(() => {

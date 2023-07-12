@@ -22,7 +22,7 @@ import { TMatch } from '@/types';
 import TableView from './TableView';
 import GridView from './GridView';
 import { SitesFilter, DateFilter, TimeFilter, Chips, TopResultCheckbox } from './components/filters';
-import { usePaginatedResults, useDownload } from './hooks';
+import { usePaginatedResults, useDownload, useFilteredResults } from './hooks';
 import MapView from './MapView';
 
 const VIEWS = {
@@ -35,15 +35,8 @@ export default function Results({ isLoading, results }) {
   const [showMap, setShowMap] = useState(false);
   const [view, setView] = useState(VIEWS.grid_lg);
   const {
-    page,
-    numPages,
-    resultPage,
+    filteredResults,
     numMatches,
-    firstPageProps,
-    previousPageProps,
-    nextPageProps,
-    lastPageProps,
-    pageInputProps,
     selectedSites,
     setSelectedSites,
     selectedDates,
@@ -51,8 +44,18 @@ export default function Results({ isLoading, results }) {
     selectedTimes,
     setSelectedTimes,
     topMatchPerRecordingProps,
-    setBboxFilter,
-  } = usePaginatedResults(results);
+    setBboxFilter
+  } = useFilteredResults(results);
+  const {
+    page,
+    numPages,
+    resultPage,
+    firstPageProps,
+    previousPageProps,
+    nextPageProps,
+    lastPageProps,
+    pageInputProps
+  } = usePaginatedResults(filteredResults);
   const { selectedResults, toggleSelect, clearSelect, downloadLink } = useDownload(results);
 
   // Scroll to top of results on page change
