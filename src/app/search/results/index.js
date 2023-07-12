@@ -56,7 +56,7 @@ export default function Results({ isLoading, results }) {
     lastPageProps,
     pageInputProps
   } = usePaginatedResults(filteredResults);
-  const { selectedResults, toggleSelect, clearSelect, downloadLink } = useDownload(results);
+  const { selectedResults, toggleSelect, clearSelect, downloadLink } = useDownload(filteredResults);
 
   // Scroll to top of results on page change
   useEffect(() => window.scrollTo({
