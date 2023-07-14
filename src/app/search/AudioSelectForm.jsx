@@ -4,16 +4,14 @@ import { Box, Button, Flex, Text } from '@chakra-ui/react';
 
 import { ACCEPTED_AUDIO_TYPES } from '@/settings';
 import { Error } from '@/components';
-import useUploadValidation from './hooks/useUploadValidation';
 
-export default function AudioSelectForm({ handleFileSelect }) {
+export default function AudioSelectForm({ error, handleFileSelect }) {
   const inputRef = useRef();
   const [ name, setName ] = useState();
-  const { error, handleFileChange: validate } = useUploadValidation(handleFileSelect);
 
   const handleFileChange = async (e) => {
     setName(e.target.files[0].name);
-    validate(e);
+    handleFileSelect(e);
   };
 
   return (
@@ -63,5 +61,6 @@ export default function AudioSelectForm({ handleFileSelect }) {
 }
 
 AudioSelectForm.propTypes = {
+  error: T.node,
   handleFileSelect: T.func.isRequired
 };

@@ -1,8 +1,26 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
-import { MAX_AUDIO_CLIP_LENGTH, RESULTS_MAX, SEARCH_API } from '@/settings';
+import {
+  MAX_AUDIO_CLIP_LENGTH,
+  MAX_AUDIO_LENGTH,
+  MAX_AUDIO_SIZE,
+  RESULTS_MAX,
+  SEARCH_API
+} from '@/settings';
 import { bufferToWave, getDuration } from '@/utils';
+
+const validate = async (file) => {
+  const duration = await getDuration(file);
+  const errors = [];
+  if (duration > MAX_AUDIO_LENGTH) {
+    errors.push('The audio length exceeds the limit of 5 minutes. Upload a shorter recording.');
+  }
+  if (file.size > MAX_AUDIO_SIZE) {
+    errors.push('The file size exceeds the limit of 1GB. Upload a smaller file.');
+  }
+  return errors;
+};
 
 export default function useSearchForm() {
   const [ file, setFile ] = useState();
@@ -10,6 +28,7 @@ export default function useSearchForm() {
   const [ clipStart, setClipStart ] = useState();
   const [ clipLength, setClipLength ] = useState();
 
+  const [ error, setError ] = useState();
   const [ results, setResults ] = useState([]);
   const [ isSubmitting, setIsSubmitting ] = useState(false);
 
@@ -109,6 +128,19 @@ export default function useSearchForm() {
   }), [disableSubmit, handleFormSubmit]);
 
   /**
+   * Event handler for file-select changes
+   */
+  const handleFileSelect = async (e) => {
+    const file = e.target.files[0];
+    const errors = await validate(file);
+    if (errors.length > 0) {
+      setError(<><b>{file.name}</b>&nbsp;{errors.join(' ')}</>);
+    } else {
+      setFile(file);
+    }
+  };
+
+  /**
    * Download the file referenced in query param `q` and initialise the form
    */
   useEffect(() => {
@@ -121,6 +153,7 @@ export default function useSearchForm() {
     fetch(audioUrl)
       .then((response) => response.blob())
       .then((blob) => setFile(new File([blob], audioUrl)))
+      .catch(() => setError(`Unable to download the recording from ${audioUrl}`))
       .finally(() => setIsInitializing(false));
   }, [audioUrl, setFile]);
 
@@ -134,37 +167,33 @@ export default function useSearchForm() {
     }
   }, [audioUrl, duration, submitButtonProps, autoSearch]);
 
-  // Reset the results when a new file is selected
+  // Reset the state when a new file is selected
   useEffect(() => {
-    if (file && file.name !== audioUrl) {
-      router.replace('/search');
-    }
     setResults([]);
     setClipStart();
     setClipLength();
-  }, [audioUrl, file, router]);
-
-  /**
-   * Read duration from file whenever a new file was selected
-   */
-  useEffect(() => {
+    setError();
     if (file) {
       getDuration(file).then(setDuration);
+      if (file.name !== audioUrl) {
+        router.replace('/search');
+      }
     } else { 
       setDuration();
     }
-  }, [file]);
+  }, [audioUrl, file, router]);
 
   return {
     isInitializing,
     duration,
     file,
-    setFile,
     results,
     isSubmitting,
     clipStart,
     clipLength,
     setClip,
-    submitButtonProps
+    submitButtonProps,
+    handleFileSelect,
+    error
   };
 }
