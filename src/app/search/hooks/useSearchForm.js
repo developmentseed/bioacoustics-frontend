@@ -1,6 +1,26 @@
-import { useState, useEffect } from 'react';
-import { MAX_AUDIO_CLIP_LENGTH, RESULTS_MAX, SEARCH_API } from '@/settings';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+
+import {
+  MAX_AUDIO_CLIP_LENGTH,
+  MAX_AUDIO_LENGTH,
+  MAX_AUDIO_SIZE,
+  RESULTS_MAX,
+  SEARCH_API
+} from '@/settings';
 import { bufferToWave, getDuration } from '@/utils';
+
+const validate = async (file) => {
+  const duration = await getDuration(file);
+  const errors = [];
+  if (duration > MAX_AUDIO_LENGTH) {
+    errors.push('The audio length exceeds the limit of 5 minutes. Upload a shorter recording.');
+  }
+  if (file.size > MAX_AUDIO_SIZE) {
+    errors.push('The file size exceeds the limit of 1GB. Upload a smaller file.');
+  }
+  return errors;
+};
 
 export default function useSearchForm() {
   const [ file, setFile ] = useState();
@@ -8,26 +28,16 @@ export default function useSearchForm() {
   const [ clipStart, setClipStart ] = useState();
   const [ clipLength, setClipLength ] = useState();
 
+  const [ error, setError ] = useState();
   const [ results, setResults ] = useState([]);
   const [ isSubmitting, setIsSubmitting ] = useState(false);
 
-  // Reset the results when a new file is selected
-  useEffect(() => {
-    setResults([]);
-    setClipStart();
-    setClipLength();
-  }, [file]);
+  const [ isInitializing, setIsInitializing ] = useState(true);
+  const [ autoSearch, setAutoSearch ] = useState(true);
+  const searchParams = useSearchParams();
+  const audioUrl = searchParams.get('q');
+  const router = useRouter();
 
-  /**
-   * Read duration from file whenever a new file was selected
-   */
-  useEffect(() => {
-    if (file) {
-      getDuration(file).then(setDuration);
-    } else { 
-      setDuration();
-    }
-  }, [file]);
   const disableSubmit = isSubmitting || (duration > MAX_AUDIO_CLIP_LENGTH && !clipStart);
 
   /**
@@ -42,7 +52,7 @@ export default function useSearchForm() {
    * Returns the audio to upload either padded to 5 seconds
    * or clipped to 5 seconds
    */
-  const prepareAudioForUpload = (file) => {
+  const prepareAudioForUpload = useCallback((file) => {
     const start = duration > MAX_AUDIO_CLIP_LENGTH ? clipStart : 0;
     const length = duration > MAX_AUDIO_CLIP_LENGTH ? clipLength : MAX_AUDIO_CLIP_LENGTH;
     
@@ -71,7 +81,7 @@ export default function useSearchForm() {
       };
       reader.readAsArrayBuffer(file);
     });
-  };
+  }, [clipLength, clipStart, duration]);
 
   const fetchResults = (embeddingPayload) => {
     const formData  = new FormData();
@@ -85,9 +95,9 @@ export default function useSearchForm() {
       .then(r => r.json());
   };
 
-  const fetchEmbedding = (audioUpload) => {
+  const fetchEmbedding = (audioUpload, name) => {
     const formData = new FormData();
-    formData.append('audio_file', audioUpload, file.name);
+    formData.append('audio_file', audioUpload, name);
 
     return fetch(`${SEARCH_API}/embed/`, {
       method: 'POST',
@@ -100,32 +110,90 @@ export default function useSearchForm() {
   /**
    * Submit the form
    */
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleFormSubmit = useCallback(async () => {
     setIsSubmitting(true);
     setResults([]);
 
     const audioUpload = await prepareAudioForUpload(file);
-    const embedding = await fetchEmbedding(audioUpload);
+    const embedding = await fetchEmbedding(audioUpload, file.name);
 
-    fetchResults(embedding)
+    return fetchResults(embedding)
       .then(setResults)
       .finally(() => setIsSubmitting(false));
+  }, [file, prepareAudioForUpload]);
+
+  const submitButtonProps = useMemo(() => ({
+    onClick: handleFormSubmit,
+    isDisabled: disableSubmit
+  }), [disableSubmit, handleFormSubmit]);
+
+  /**
+   * Event handler for file-select changes
+   */
+  const handleFileSelect = async (e) => {
+    const file = e.target.files[0];
+    const errors = await validate(file);
+    if (errors.length > 0) {
+      setError(<><b>{file.name}</b>&nbsp;{errors.join(' ')}</>);
+    } else {
+      setFile(file);
+    }
   };
 
+  /**
+   * Download the file referenced in query param `q` and initialise the form
+   */
+  useEffect(() => {
+    if (!audioUrl) {
+      setIsInitializing(false);
+      setAutoSearch(false);
+      return;
+    }
+
+    fetch(audioUrl)
+      .then((response) => response.blob())
+      .then((blob) => setFile(new File([blob], audioUrl)))
+      .catch(() => setError(`Unable to download the recording from ${audioUrl}`))
+      .finally(() => setIsInitializing(false));
+  }, [audioUrl, setFile]);
+
+  /**
+   * Automatically submit the form once it's initialised
+   */
+  useEffect(() => {
+    if (audioUrl && duration && autoSearch && !submitButtonProps.isDisabled) {
+      submitButtonProps.onClick();
+      setAutoSearch(false);
+    }
+  }, [audioUrl, duration, submitButtonProps, autoSearch]);
+
+  // Reset the state when a new file is selected
+  useEffect(() => {
+    setResults([]);
+    setClipStart();
+    setClipLength();
+    setError();
+    if (file) {
+      getDuration(file).then(setDuration);
+      if (file.name !== audioUrl) {
+        router.replace('/search');
+      }
+    } else { 
+      setDuration();
+    }
+  }, [audioUrl, file, router]);
+
   return {
+    isInitializing,
     duration,
     file,
-    setFile,
     results,
     isSubmitting,
     clipStart,
     clipLength,
     setClip,
-    submitButtonProps: {
-      onClick: handleFormSubmit,
-      isDisabled: disableSubmit
-    }
+    submitButtonProps,
+    handleFileSelect,
+    error
   };
 }

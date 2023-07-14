@@ -12,25 +12,31 @@ import AudioResetForm from './AudioResetForm';
 
 import { SitesProvider } from './context/sites';
 const AudioClipper = dynamic(() => import('./AudioClipper'), {
-  loading: () => <Loading size="xl" />,
+  loading: () => <Loading size="md" />,
 });
 const Results = dynamic(() => import('./results'), {
-  loading: () => <Loading size="xl" />,
+  loading: () => <Loading size="md" />,
   ssr: false
 });
 
-export default function Upload() { 
+export default function Upload() {
   const {
+    isInitializing,
     duration,
     file,
-    setFile,
     results,
     isSubmitting,
     submitButtonProps,
     setClip,
     clipStart,
-    clipLength
+    clipLength,
+    handleFileSelect,
+    error
   } = useSearchForm();
+
+  if (isInitializing) {
+    return <Loading size="md" />;
+  }
 
   return (
     <SitesProvider>
@@ -40,14 +46,15 @@ export default function Upload() {
             <Heading as="h1" size="md" mb="2">
               Audio Similarity Search
             </Heading>
-            {file && <AudioResetForm setFile={setFile} />}
+            {file && <AudioResetForm setFile={handleFileSelect} error={error} />}
             {!file && <Text fontSize="sm" mb="2">Upload audio to search for similar sounds</Text>}
             <form>
               {!file ? (
-                <AudioSelectForm handleFileSelect={setFile} />
+                <AudioSelectForm handleFileSelect={handleFileSelect} error={error} />
               ) : (
                 <AudioClipper file={file} clipStart={clipStart} clipLength={clipLength} setClip={setClip} />
               )}
+
               {file && (duration <= MAX_AUDIO_CLIP_LENGTH || clipStart) && (
                 <Box textAlign="right" mt="2">
                   <Button

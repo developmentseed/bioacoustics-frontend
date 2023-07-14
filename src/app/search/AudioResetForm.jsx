@@ -16,18 +16,16 @@ import { MdChevronLeft } from 'react-icons/md';
 
 import { ACCEPTED_AUDIO_TYPES } from '@/settings';
 import { Error } from '@/components';
-import useUploadValidation from './hooks/useUploadValidation';
 
-export default function AudioResetForm({ setFile }) {
+export default function AudioResetForm({ error, setFile }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { error, handleFileChange } = useUploadValidation(setFile);
 
   const handleReset = () => {
     onClose();
     const inputEl = document.createElement('input');
     inputEl.setAttribute('type', 'file');
     inputEl.setAttribute('accept', ACCEPTED_AUDIO_TYPES.join(','));
-    inputEl.addEventListener('change', handleFileChange);
+    inputEl.addEventListener('change', setFile);
     inputEl.click();
   };
 
@@ -62,5 +60,6 @@ export default function AudioResetForm({ setFile }) {
 }
 
 AudioResetForm.propTypes = {
+  error: T.node,
   setFile: T.func.isRequired
 };

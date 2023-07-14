@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import T from 'prop-types';
 import { Box, Button, Card, CardBody, Checkbox, Grid, GridItem, IconButton, Image, Link, Skeleton } from '@chakra-ui/react';
-import { MdOpenInNew,  MdPlayArrow, MdPause } from 'react-icons/md';
+import { MdOpenInNew,  MdPlayArrow, MdPause, MdSearch } from 'react-icons/md';
 
 import { TMatch } from '@/types';
 import { formatDateTime } from '@/utils';
+import { SEARCH_API } from '@/settings';
 import { sitenameDisplay } from './utils';
 import useAudioPlayer from '../hooks/useAudioPLayer';
 
@@ -13,6 +14,7 @@ function ResultCard({ result, large, isSelected, toggleSelect }) {
   const { entity: { file_seq_id, filename, file_timestamp, image_url, audio_url, clip_offset_in_file }} = result;
   const gridConfig = `min-content ${large ? 'min-content' : ''} 1fr`;
   const fullAudioUrl = `https://data.acousticobservatory.org/listen/${file_seq_id}`;
+  const downloadAudioUrl = `${SEARCH_API}/a2o/audio_recordings/download/flac/${file_seq_id}?${audio_url.split('?')[1]}`;
 
   const { isPlaying, currentTime, duration, playButtonProps } = useAudioPlayer(audio_url);
   const buttonLabel = isPlaying ? 'Pause' : 'Play';
@@ -24,7 +26,7 @@ function ResultCard({ result, large, isSelected, toggleSelect }) {
         <Checkbox
           aria-label="Click to select the result"
           isChecked={isSelected}
-          onChange={() => toggleSelect(result.entity.audio_url)}
+          onChange={() => toggleSelect(audio_url)}
           position="absolute"
           left={2}
           top={2}
@@ -80,11 +82,17 @@ function ResultCard({ result, large, isSelected, toggleSelect }) {
             <GridItem>{ formatDateTime(file_timestamp + clip_offset_in_file) }</GridItem>
           </Grid>
         )}
-        <GridItem alignSelf="end" px={2}>
+        <GridItem alignSelf="end" px={2} display="flex" pb="1">
           {large ? (
-            <Button as={Link} variant="link" href={fullAudioUrl} target="_blank" rightIcon={<MdOpenInNew />} size="xs">Full Recording</Button>
+            <>
+              <Button as={Link} variant="link" href={fullAudioUrl} target="_blank" rightIcon={<MdOpenInNew />} size="xs">Full Recording</Button>
+              <Button as={Link} variant="link" href={`/search?q=${encodeURIComponent(downloadAudioUrl)}`} target="_blank" rightIcon={<MdSearch />} size="xs">Use in new search</Button>
+            </>
           ): (
-            <IconButton as={Link} variant="link" href={fullAudioUrl} target="_blank" icon={<MdOpenInNew />} size="xs" title="Full Recording" display="inline" />
+            <>
+              <IconButton as={Link} variant="link" href={fullAudioUrl} target="_blank" icon={<MdOpenInNew />} size="xs" title="Full Recording" display="inline" />
+              <IconButton as={Link} variant="link" href={`/search?q=${encodeURIComponent(downloadAudioUrl)}`} target="_blank" icon={<MdSearch />} size="xs" title="Use in new search" display="inline" />
+            </>
           )}
         </GridItem>
       </CardBody>
