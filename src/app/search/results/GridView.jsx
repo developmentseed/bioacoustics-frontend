@@ -82,7 +82,7 @@ function ResultCard({ result, large, isSelected, toggleSelect }) {
             <GridItem>{ formatDateTime(file_timestamp + clip_offset_in_file) }</GridItem>
           </Grid>
         )}
-        <GridItem alignSelf="end" px={2} display="flex" gap="2" pb="1">
+        <GridItem alignSelf="end" px={2} display="flex" pb="1">
           {large ? (
             <>
               <Button as={Link} variant="link" href={fullAudioUrl} target="_blank" rightIcon={<MdOpenInNew />} size="xs">Full Recording</Button>
