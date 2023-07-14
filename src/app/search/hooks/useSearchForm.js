@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+
 import { MAX_AUDIO_CLIP_LENGTH, RESULTS_MAX, SEARCH_API } from '@/settings';
 import { bufferToWave, getDuration } from '@/utils';
 
@@ -11,24 +13,12 @@ export default function useSearchForm() {
   const [ results, setResults ] = useState([]);
   const [ isSubmitting, setIsSubmitting ] = useState(false);
 
-  // Reset the results when a new file is selected
-  useEffect(() => {
-    setResults([]);
-    setClipStart();
-    setClipLength();
-    setDuration();
-  }, [file]);
+  const [ isInitializing, setIsInitializing ] = useState(true);
+  const [ autoSearch, setAutoSearch ] = useState(true);
+  const searchParams = useSearchParams();
+  const audioUrl = searchParams.get('q');
+  const router = useRouter();
 
-  /**
-   * Read duration from file whenever a new file was selected
-   */
-  useEffect(() => {
-    if (file) {
-      getDuration(file).then(setDuration);
-    } else { 
-      setDuration();
-    }
-  }, [file]);
   const disableSubmit = isSubmitting || (duration > MAX_AUDIO_CLIP_LENGTH && !clipStart);
 
   /**
@@ -118,7 +108,55 @@ export default function useSearchForm() {
     isDisabled: disableSubmit
   }), [disableSubmit, handleFormSubmit]);
 
+  /**
+   * Download the file referenced in query param `q` and initialise the form
+   */
+  useEffect(() => {
+    if (!audioUrl) {
+      setIsInitializing(false);
+      setAutoSearch(false);
+      return;
+    }
+
+    fetch(audioUrl)
+      .then((response) => response.blob())
+      .then((blob) => setFile(new File([blob], audioUrl)))
+      .finally(() => setIsInitializing(false));
+  }, [audioUrl, setFile]);
+
+  /**
+   * Automatically submit the form once it's initialised
+   */
+  useEffect(() => {
+    if (audioUrl && duration && autoSearch && !submitButtonProps.isDisabled) {
+      submitButtonProps.onClick();
+      setAutoSearch(false);
+    }
+  }, [audioUrl, duration, submitButtonProps, autoSearch]);
+
+  // Reset the results when a new file is selected
+  useEffect(() => {
+    if (file && file.name !== audioUrl) {
+      router.replace('/search');
+    }
+    setResults([]);
+    setClipStart();
+    setClipLength();
+  }, [audioUrl, file, router]);
+
+  /**
+   * Read duration from file whenever a new file was selected
+   */
+  useEffect(() => {
+    if (file) {
+      getDuration(file).then(setDuration);
+    } else { 
+      setDuration();
+    }
+  }, [file]);
+
   return {
+    isInitializing,
     duration,
     file,
     setFile,
