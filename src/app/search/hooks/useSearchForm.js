@@ -6,20 +6,31 @@ import {
   MAX_AUDIO_LENGTH,
   MAX_AUDIO_SIZE,
   RESULTS_MAX,
-  SEARCH_API
+  SEARCH_API,
+  ACCEPTED_AUDIO_TYPES
 } from '@/settings';
 import { bufferToWave, getDuration } from '@/utils';
 
-const validate = async (file) => {
-  const duration = await getDuration(file);
-  const errors = [];
-  if (duration > MAX_AUDIO_LENGTH) {
-    errors.push('The audio length exceeds the limit of 5 minutes. Upload a shorter recording.');
+const validate = async (files) => {
+  if (files.length > 1) {
+    return 'Upload only one file at a time.';
   }
+
+  const file = files[0];
+  if (!ACCEPTED_AUDIO_TYPES.includes(file.type)) {
+    return 'The uploaded file is not accepted. Upload an *.mp3, *.wav, *.flac, or *.m4a.';
+  }
+
   if (file.size > MAX_AUDIO_SIZE) {
-    errors.push('The file size exceeds the limit of 1GB. Upload a smaller file.');
+    return 'The file size exceeds the limit of 1GB. Upload a smaller file.';
   }
-  return errors;
+
+  const duration = await getDuration(file);
+  if (duration > MAX_AUDIO_LENGTH) {
+    return 'The audio length exceeds the limit of 5 minutes. Upload a shorter recording.';
+  }
+
+  return;
 };
 
 export default function useSearchForm() {
@@ -130,13 +141,17 @@ export default function useSearchForm() {
   /**
    * Event handler for file-select changes
    */
-  const handleFileSelect = async (e) => {
-    const file = e.target.files[0];
-    const errors = await validate(file);
-    if (errors.length > 0) {
-      setError(<><b>{file.name}</b>&nbsp;{errors.join(' ')}</>);
+  const handleFileSelect = async (files) => {
+    const error = await validate(files);
+
+    if (error) {
+      if (files.length > 1) {
+        setError(error);
+      } else {
+        setError(<><b>{files[0].name}</b>&nbsp;{error}</>);
+      }
     } else {
-      setFile(file);
+      setFile(files[0]);
     }
   };
 
