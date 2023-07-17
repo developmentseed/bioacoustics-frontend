@@ -54,7 +54,7 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
     wavesurferRef.current = wavesurfer;
   }, [file, waveformId, spectrogramId, wavesurferRef]);
 
-  const updatePlayPosition = useCallback(() => {
+  useEffect(() => {
     const width = spectrogramRef.current.clientWidth;
 
     const relativeWindowSize = 1 / zoom; // The relative size of the display window. At zoom level 2 it covers .5 of the whole track.
@@ -64,15 +64,13 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
     const spectrogramSize = width * zoom; // The size of the whole spectrogram in pixels, ie. zoom level 2 it's twice as big as the displayed spectrogram.
     const spectrogramWindowLeft = relativeWindowLeft * spectrogramSize; // The position of the left edge of the display window on the whole spectrogram.
     const audioPlaybackPosition = spectrogramSize * relativeTime; // The position of the audio playback on the whole spectrogram
-    const displayPosition = audioPlaybackPosition - spectrogramWindowLeft; // The posotion of the audio playback relative to the left border of the spectrogram window.
+    const displayPosition = audioPlaybackPosition - spectrogramWindowLeft; // The position of the audio playback relative to the left border of the spectrogram window.
 
     setPlayPosition(displayPosition);
 
     const displayPlayPosition = relativeTime >= relativeWindowLeft && relativeTime <= relativeWindowLeft + relativeWindowSize;
     setPlayPositionDisplay(displayPlayPosition ? 'block' : 'none');
-  }, [currentTime, duration, zoom]);
-
-  useEffect(updatePlayPosition, [updatePlayPosition, currentTime, duration, zoom]);
+  }, [spectrogramCenter, currentTime, duration, zoom]);
 
   // Rerenders the spectrogram whenever the zoom level has changed
   useEffect(() => {
@@ -127,9 +125,8 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
     if (newPosition >= limit && newPosition <= 1 - limit) {
       wavesurferRef.current.seekAndCenter(newPosition);
       setCenter(newPosition);
-      updatePlayPosition();
     }
-  }, [zoom, setCenter, updatePlayPosition]);
+  }, [zoom, setCenter]);
 
   // Event handler for mouse-up events over the spectrogram
   // Deactivates panning by removing the mouse-move handler
