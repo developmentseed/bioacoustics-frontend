@@ -20,15 +20,22 @@ export default function useAudioPlayer(audioUrl, clipStart, clipLength) {
     const el = document.createElement('audio');
     el.setAttribute('src', audioUrl);
     el.setAttribute('preload', 'metadata');
-    el.addEventListener('loadedmetadata', () => {
-      setDuration(el.duration);
-    });
 
-    el.addEventListener('ended', () => {
+    const handleLoadedMedia = () => setDuration(el.duration);
+    const handlePlayend = () => {
       setIsPlaying(false);
       clearInterval(intervalRef.current);
-    });
+    };
+
+    el.addEventListener('loadedmetadata', handleLoadedMedia);
+    el.addEventListener('ended', handlePlayend);
     setAudioElement(el);
+
+    return () => {
+      el.removeEventListener('loadedmetadata', handleLoadedMedia);
+      el.removeEventListener('ended', handlePlayend);
+      el.remove();
+    };
   }, [audioUrl]);
 
   // set the start time when a new clip is set
