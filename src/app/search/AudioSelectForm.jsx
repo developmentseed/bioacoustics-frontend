@@ -3,6 +3,7 @@ import T from 'prop-types';
 import { Box, Button, Flex, Text } from '@chakra-ui/react';
 
 import { Error } from '@/components';
+import AudioRecorder from './AudioRecorder';
 
 export default function AudioSelectForm({ error, handleFileSelect }) {
   const inputRef = useRef();
@@ -77,6 +78,7 @@ export default function AudioSelectForm({ error, handleFileSelect }) {
           >
             Select File
           </Button>
+          <AudioRecorder setFile={handleFileSelect} />
         </Flex>
         {error && <Error>{ error }</Error> }
       </Box>

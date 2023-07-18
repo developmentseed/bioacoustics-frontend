@@ -23,6 +23,7 @@
     "dayzed": "^3.2.3",
     "eslint": "8.39.0",
     "eslint-config-next": "13.4.0",
+    "fix-webm-duration": "^1.0.5",
     "framer-motion": "^10.12.12",
     "mapbox-gl": "^2.15.0",
     "next": "13.4.0",
