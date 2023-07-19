@@ -4,6 +4,7 @@ import { Box, Button, Flex, Text } from '@chakra-ui/react';
 
 import { Error } from '@/components';
 import AudioRecorder from './AudioRecorder';
+import { Link } from '@chakra-ui/react';
 
 export default function AudioSelectForm({ error, handleFileSelect }) {
   const inputRef = useRef();
@@ -80,6 +81,7 @@ export default function AudioSelectForm({ error, handleFileSelect }) {
           </Button>
           <AudioRecorder setFile={handleFileSelect} />
         </Flex>
+        <Box mt="2" fontSize="sm"><Link href="/random" textDecoration="underline">I&apos;m feeling lucky</Link></Box>
         {error && <Error>{ error }</Error> }
       </Box>
     </Box>
