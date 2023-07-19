@@ -3,7 +3,8 @@ const ACCEPTED_AUDIO_TYPES = [
   'audio/wav',
   'audio/flac',
   'audio/x-m4a',
-  'audio/webm'
+  'audio/webm',
+  'audio/mp4'
 ];
 const MAX_AUDIO_CLIP_LENGTH = 5; // seconds
 const MAX_AUDIO_SIZE = 1073741824; // 1GB
