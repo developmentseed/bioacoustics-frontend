@@ -1,5 +1,5 @@
 import { LngLatBounds } from 'mapbox-gl';
-import { DelimitedNumericArrayParam, withDefault } from 'use-query-params';
+import { DelimitedNumericArrayParam, NumberParam, withDefault } from 'use-query-params';
 
 export const NumericArray = withDefault(DelimitedNumericArrayParam, []);
 export const TimeRange = withDefault(DelimitedNumericArrayParam, [0, 24]);
@@ -35,3 +35,5 @@ export const Bbox = {
     return new LngLatBounds(bbox[0], bbox[1]);
   }
 };
+
+export const Page = withDefault(NumberParam, 1);
