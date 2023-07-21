@@ -7,8 +7,8 @@ import { InpageHeader } from '@/components/page';
 import { MAX_AUDIO_CLIP_LENGTH } from '@/settings';
 
 import AudioSelectForm from './AudioSelectForm';
-import useSearchForm from './hooks/useSearchForm';
 import AudioResetForm from './AudioResetForm';
+import useSearchForm from './hooks/useSearchForm';
 
 import { SitesProvider } from './context/sites';
 const AudioClipper = dynamic(() => import('./AudioClipper'), {

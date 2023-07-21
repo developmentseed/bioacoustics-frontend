@@ -27,11 +27,13 @@
     "framer-motion": "^10.12.12",
     "mapbox-gl": "^2.15.0",
     "next": "13.4.0",
+    "next-query-params": "^4.2.3",
     "prop-types": "^15.8.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.8.0",
     "react-map-gl": "^7.0.25",
+    "use-query-params": "^2.2.1",
     "wavesurfer.js": "^6.6.3"
   },
   "devDependencies": {

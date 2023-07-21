@@ -33,10 +33,17 @@ const clusterLabelStyle = {
   }
 };
 
-export default function MapView({ results, setBboxFilter }) {
+export default function MapView({ results, bboxFilter, setBboxFilter }) {
   const mapRef = useRef();
   const { sites } = useSites();
   const [ filterByMapBbox, setFilterByMapBbox ] = useState(false);
+
+  // Set the filterByMapBbox if the page is initialised with the bbox query param
+  useEffect(() => {
+    if (bboxFilter && !filterByMapBbox) {
+      setFilterByMapBbox(true);
+    }
+  }, [filterByMapBbox, bboxFilter]);
 
   const geojson = useMemo(() => {
     const resultSites = results.reduce((accSites, result) => {
@@ -170,5 +177,6 @@ export default function MapView({ results, setBboxFilter }) {
 
 MapView.propTypes = {
   results: T.arrayOf(TMatch).isRequired,
+  bboxFilter: T.object,
   setBboxFilter: T.func.isRequired,
 };
