@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import T from 'prop-types';
 import { Box, Checkbox } from '@chakra-ui/react';
 import Map, { Source, Layer }  from 'react-map-gl';
@@ -34,16 +34,9 @@ const clusterLabelStyle = {
 };
 
 export default function MapView({ results, bboxFilter, setBboxFilter }) {
-  const mapRef = useRef();
+  const [ map, setMap ] = useState();
   const { sites } = useSites();
   const [ filterByMapBbox, setFilterByMapBbox ] = useState(false);
-
-  // Set the filterByMapBbox if the page is initialised with the bbox query param
-  useEffect(() => {
-    if (bboxFilter && !filterByMapBbox) {
-      setFilterByMapBbox(true);
-    }
-  }, [filterByMapBbox, bboxFilter]);
 
   const geojson = useMemo(() => {
     const resultSites = results.reduce((accSites, result) => {
@@ -91,7 +84,6 @@ export default function MapView({ results, bboxFilter, setBboxFilter }) {
   }, [results, sites]);
 
   const handleClusterClick = useCallback((e) => {
-    const map = mapRef.current;
     const features = map.queryRenderedFeatures(e.point, {
       layers: ['cluster-label'],
     });
@@ -107,19 +99,36 @@ export default function MapView({ results, bboxFilter, setBboxFilter }) {
           zoom: zoom,
         });
       });
-  }, []);
+  }, [map]);
 
   useEffect(() => {
+    if (map && bboxFilter) {
+      map.fitBounds(bboxFilter);
+      setFilterByMapBbox(true);
+    }
+  // We only want to run this effect after the map is first initialised
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map]);
+
+  useEffect(() => {
+    // Bail this effect if the map is not initialised. This is avoid resetting
+    // the bboxFilter before the map is loaded with the bbox from the URL.
+    if (!map) return;
+
     if (!filterByMapBbox) {
       setBboxFilter();
     } else {
-      setBboxFilter(mapRef.current.getBounds());
+      setBboxFilter(map.getBounds());
     }
-  }, [filterByMapBbox, setBboxFilter]);
+  }, [filterByMapBbox, map, setBboxFilter]);
 
   const handleMoveEnd = () => {
     if (!filterByMapBbox) return;
-    setBboxFilter(mapRef.current.getBounds());
+    setBboxFilter(map.getBounds());
+  };
+
+  const handleMapLoad = (e) => {
+    setMap(e.target);
   };
 
   return (
@@ -132,10 +141,10 @@ export default function MapView({ results, bboxFilter, setBboxFilter }) {
         }}
         mapStyle="mapbox://styles/mapbox/light-v11"
         mapboxAccessToken={MAPBOX_TOKEN}
-        ref={mapRef}
         interactiveLayerIds={[clusterLabelStyle.id]}
         onClick={handleClusterClick}
         onMoveEnd={handleMoveEnd}
+        onLoad={handleMapLoad}
       >
         <Source
           id="results"
