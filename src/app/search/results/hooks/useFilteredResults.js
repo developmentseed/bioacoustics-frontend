@@ -1,15 +1,16 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { LngLat } from 'mapbox-gl';
 
 import { useSites } from '../../context/sites';
+import { useAppState } from '../../context/appState';
 
 export default function useFilteredResults(results) {
   const { sites } = useSites();
-  const [ selectedSites, setSelectedSites ] = useState([]);
-  const [ bboxFilter, setBboxFilter] = useState();
-  const [ selectedDates, setSelectedDates ] = useState([]);
-  const [ selectedTimes, setSelectedTimes ] = useState([0, 24]);
-  const [ topMatchPerRecording, setTopMatchPerRecording ] = useState(false);
+  const [ selectedSites, setSelectedSites ] = useAppState('selectedSites', []);
+  const [ bboxFilter, setBboxFilter] = useAppState('bboxFilter');
+  const [ selectedDates, setSelectedDates ] = useAppState('selectedDates', []);
+  const [ selectedTimes, setSelectedTimes ] = useAppState('selectedTimes', [0, 24]);
+  const [ topMatchPerRecording, setTopMatchPerRecording ] = useAppState('topMatchPerRecording', false);
 
   const filteredResults = useMemo(
     () => {

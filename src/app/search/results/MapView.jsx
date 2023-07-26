@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import T from 'prop-types';
 import { Box, Checkbox } from '@chakra-ui/react';
 import Map, { Source, Layer }  from 'react-map-gl';
@@ -34,7 +34,7 @@ const clusterLabelStyle = {
 };
 
 export default function MapView({ results, setBboxFilter }) {
-  const mapRef = useRef();
+  const [ map, setMap ] = useState();
   const { sites } = useSites();
   const [ filterByMapBbox, setFilterByMapBbox ] = useState(false);
 
@@ -84,7 +84,6 @@ export default function MapView({ results, setBboxFilter }) {
   }, [results, sites]);
 
   const handleClusterClick = useCallback((e) => {
-    const map = mapRef.current;
     const features = map.queryRenderedFeatures(e.point, {
       layers: ['cluster-label'],
     });
@@ -100,19 +99,27 @@ export default function MapView({ results, setBboxFilter }) {
           zoom: zoom,
         });
       });
-  }, []);
+  }, [map]);
 
   useEffect(() => {
+    // Bail this effect if the map is not initialised. This is avoid resetting
+    // the bboxFilter before the map is loaded with the bbox from the URL.
+    if (!map) return;
+
     if (!filterByMapBbox) {
       setBboxFilter();
     } else {
-      setBboxFilter(mapRef.current.getBounds());
+      setBboxFilter(map.getBounds());
     }
-  }, [filterByMapBbox, setBboxFilter]);
+  }, [filterByMapBbox, map, setBboxFilter]);
 
   const handleMoveEnd = () => {
     if (!filterByMapBbox) return;
-    setBboxFilter(mapRef.current.getBounds());
+    setBboxFilter(map.getBounds());
+  };
+
+  const handleMapLoad = (e) => {
+    setMap(e.target);
   };
 
   return (
@@ -125,10 +132,10 @@ export default function MapView({ results, setBboxFilter }) {
         }}
         mapStyle="mapbox://styles/mapbox/light-v11"
         mapboxAccessToken={MAPBOX_TOKEN}
-        ref={mapRef}
         interactiveLayerIds={[clusterLabelStyle.id]}
         onClick={handleClusterClick}
         onMoveEnd={handleMoveEnd}
+        onLoad={handleMapLoad}
       >
         <Source
           id="results"
