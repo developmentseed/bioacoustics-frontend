@@ -7,18 +7,48 @@ export function AppStateProvider({ children }) {
   const [appState, setAppState]  = useState({});
 
   const setSlice = useCallback((key, value) => {
-    setAppState((previousState) => ({
-      ...previousState,
-      [key]: value
-    }));
+    setAppState((previousState) => {
+      return {
+        ...previousState,
+        [key]: {
+          value,
+          config: previousState[key].config
+        }
+      };
+    });
   }, []);
+  
+  const initSlice = (key, config) => {
+    const { default: defaultValue, ...restConfig } = config;
+    setAppState((previousState) => {
+      return {
+        ...previousState,
+        [key]: {
+          value: defaultValue,
+          config: restConfig
+        }
+      };
+    });
+  };
+
+  const urlEncode = useCallback((keys) => {
+    const queryParams = keys
+      .map(k => {
+        const { value, config } = appState[k];
+        return `${k}=${config.encode(value)}`;
+      })
+      .join('&');
+    return encodeURIComponent(queryParams);
+  }, [appState]);
   
   const contextValue = useMemo(
     () =>({
       appState,
-      setSlice
+      setSlice,
+      urlEncode,
+      initSlice
     }),
-    [appState, setSlice]
+    [appState, urlEncode, setSlice]
   );
 
   return (
@@ -32,19 +62,21 @@ AppStateProvider.propTypes = {
   children: T.node.isRequired
 };
 
-export function useAppState(key, defaultValue) {
-  const { appState, setSlice } = useContext(AppStateContext);
+export function useAppState(key, config) {
+  const { appState, setSlice, initSlice, urlEncode } = useContext(AppStateContext);
 
   useEffect(() => {
-    if (!Object.keys(appState).includes(key)) {
-      setSlice(key, defaultValue);
+    if (key && !Object.keys(appState).includes(key)) {
+      initSlice(key, config);
     }
-  }, [appState, defaultValue, key, setSlice]);
+  }, [appState, config, key, initSlice]);
 
   const setValue = useCallback(
     (value) => setSlice(key, value),
     [key, setSlice]
   );
-  
-  return [appState[key], setValue];
+
+  if (!key) return { urlEncode };
+
+  return [appState[key]?.value, setValue];
 }

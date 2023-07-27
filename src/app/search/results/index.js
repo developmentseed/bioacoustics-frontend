@@ -24,6 +24,7 @@ import GridView from './GridView';
 import { SitesFilter, DateFilter, TimeFilter, Chips, TopResultCheckbox } from './components/filters';
 import { usePaginatedResults, useDownload, useFilteredResults } from './hooks';
 import MapView from './MapView';
+import { ShareButton } from './components';
 
 const VIEWS = {
   grid_lg: 1,
@@ -78,8 +79,9 @@ export default function Results({ isLoading, results }) {
   return (
     <Box py="10" bg="blackAlpha.50" minH="100%" flex="1">
       <Container maxW="container.xl" display="flex" flexDirection="column" gap={4}>
-        <Flex>
+        <Flex gap="2">
           <Heading as="h2" size="base" flex="1">Results</Heading>
+          <ShareButton />
           {results.length > 0 && <Button variant="primary" size="sm" as="a" href={downloadLink}>Download</Button>}
         </Flex>
         {results.length > 0 ? (

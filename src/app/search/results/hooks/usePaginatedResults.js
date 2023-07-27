@@ -3,8 +3,18 @@ import { useEffect, useState } from 'react';
 import { RESULTS_DISPLAY_PAGE_SIZE } from '@/settings';
 import { useAppState } from '../../context/appState';
 
+const pageConfig = {
+  default: 1,
+  encode: (value) => {
+    return value.toString();
+  },
+  decode: (value) => {
+    return parseInt(value);
+  }
+};
+
 export default function usePaginatedResults(results) {
-  const [ page, setPage ] = useAppState('page', 1);
+  const [ page, setPage ] = useAppState('page', pageConfig);
   const [ pageInputValue, setPageInputValue ] = useState(page);
 
   // Reset page when the filters were changed
