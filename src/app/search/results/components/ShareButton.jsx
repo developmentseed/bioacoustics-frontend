@@ -15,7 +15,7 @@ export default function ShareButton() {
 
   const handleShare = () => {
     const { protocol, host } = window.location;
-    const shareUrl = `${protocol}//${host}/?${appState.urlEncode(keys)}`;
+    const shareUrl = `${protocol}//${host}/search?${appState.urlEncode(keys)}`;
     navigator.clipboard.writeText(shareUrl);
 
   };

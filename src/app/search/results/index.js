@@ -45,6 +45,7 @@ export default function Results({ isLoading, results }) {
     selectedTimes,
     setSelectedTimes,
     topMatchPerRecordingProps,
+    bboxFilter,
     setBboxFilter
   } = useFilteredResults(results);
   const {
@@ -68,6 +69,13 @@ export default function Results({ isLoading, results }) {
 
   // Clear selected results when the filter changes
   useEffect(clearSelect, [selectedSites, selectedDates, selectedTimes, clearSelect]);
+
+  // Show the map if the page is initialised with the bbox query param
+  useEffect(() => {
+    if (bboxFilter && !showMap) {
+      setShowMap(true);
+    }
+  }, [showMap, bboxFilter]);
 
   if (isLoading) {
     return <Loading />;
@@ -169,7 +177,7 @@ export default function Results({ isLoading, results }) {
                   <Text fontWeight="bold">No results match the selected filters.</Text>
               )}
               </Box>
-              {showMap && <MapView results={resultPage} setBboxFilter={setBboxFilter} />}
+              {showMap && <MapView results={resultPage} bboxFilter={bboxFilter} setBboxFilter={setBboxFilter} />}
             </Flex>
             <Flex my="5" gap="5" alignItems="center">
               <Spacer />

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { RESULTS_DISPLAY_PAGE_SIZE } from '@/settings';
 import { useAppState } from '../../context/appState';
+import { usePrevious } from '@chakra-ui/react';
 
 const pageConfig = {
   default: 1,
@@ -16,11 +17,14 @@ const pageConfig = {
 export default function usePaginatedResults(results) {
   const [ page, setPage ] = useAppState('page', pageConfig);
   const [ pageInputValue, setPageInputValue ] = useState(page);
+  const previousResults = usePrevious(results);
 
   // Reset page when the filters were changed
   useEffect(() => {
-    setPage(1);
-  }, [results, setPage]);
+    if (previousResults && previousResults.length !== 0) {
+      setPage(1);
+    }
+  }, [previousResults, setPage]);
 
   // Update the input value when the page changes
   useEffect(() => {

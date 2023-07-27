@@ -10,7 +10,7 @@ const selectedSitesConfig = {
     return value.join(',');
   },
   decode: (value) => {
-    return value.split('').map(parseInt);
+    return value.split(',').map(v => parseInt(v));
   }
 };
 
@@ -51,7 +51,7 @@ const selectedTimesConfig = {
     return value.join(',');
   },
   decode: (value) => {
-    return value.split('').map(parseInt);
+    return value.split(',').map(v => parseInt(v));
   }
 };
 const topMatchPerRecordingConfig = {
@@ -129,6 +129,7 @@ export default function useFilteredResults(results) {
     setSelectedDates,
     selectedTimes,
     setSelectedTimes,
+    bboxFilter,
     setBboxFilter,
     topMatchPerRecordingProps: {
       isChecked: topMatchPerRecording,

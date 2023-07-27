@@ -33,7 +33,7 @@ const clusterLabelStyle = {
   }
 };
 
-export default function MapView({ results, setBboxFilter }) {
+export default function MapView({ results, bboxFilter, setBboxFilter }) {
   const [ map, setMap ] = useState();
   const { sites } = useSites();
   const [ filterByMapBbox, setFilterByMapBbox ] = useState(false);
@@ -99,6 +99,15 @@ export default function MapView({ results, setBboxFilter }) {
           zoom: zoom,
         });
       });
+  }, [map]);
+
+  useEffect(() => {
+    if (map && bboxFilter) {
+      map.fitBounds(bboxFilter);
+      setFilterByMapBbox(true);
+    }
+  // We only want to run this effect after the map is first initialised
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map]);
 
   useEffect(() => {
@@ -178,4 +187,5 @@ export default function MapView({ results, setBboxFilter }) {
 MapView.propTypes = {
   results: T.arrayOf(TMatch).isRequired,
   setBboxFilter: T.func.isRequired,
+  bboxFilter: T.object
 };

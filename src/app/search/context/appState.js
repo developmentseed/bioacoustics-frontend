@@ -1,10 +1,12 @@
 import { createContext, useContext, useState, useMemo, useCallback, useEffect } from 'react';
 import T from 'prop-types';
+import { useSearchParams } from 'next/navigation';
 
 export const AppStateContext = createContext(null);
 
 export function AppStateProvider({ children }) {
   const [appState, setAppState]  = useState({});
+  const searchParams = useSearchParams();
 
   const setSlice = useCallback((key, value) => {
     setAppState((previousState) => {
@@ -18,27 +20,34 @@ export function AppStateProvider({ children }) {
     });
   }, []);
   
-  const initSlice = (key, config) => {
+  const initSlice = useCallback((key, config) => {
     const { default: defaultValue, ...restConfig } = config;
+    const queryValue = searchParams.get(key);
+    const value = queryValue ? restConfig.decode(queryValue) : defaultValue;
+
     setAppState((previousState) => {
       return {
         ...previousState,
         [key]: {
-          value: defaultValue,
+          value,
           config: restConfig
         }
       };
     });
-  };
+  }, [searchParams]);
 
   const urlEncode = useCallback((keys) => {
-    const queryParams = keys
+    return keys
       .map(k => {
         const { value, config } = appState[k];
-        return `${k}=${config.encode(value)}`;
+        const encodedVal = config.encode(value);
+        if (encodedVal !== null && encodedVal !== undefined) {
+          return `${k}=${encodeURIComponent(encodedVal)}`;
+        }
+        return '';
       })
+      .filter(value => !!value)
       .join('&');
-    return encodeURIComponent(queryParams);
   }, [appState]);
   
   const contextValue = useMemo(
@@ -48,7 +57,7 @@ export function AppStateProvider({ children }) {
       urlEncode,
       initSlice
     }),
-    [appState, urlEncode, setSlice]
+    [appState, setSlice, urlEncode, initSlice]
   );
 
   return (
