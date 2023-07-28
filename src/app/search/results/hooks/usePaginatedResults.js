@@ -1,21 +1,13 @@
 import { useEffect, useState } from 'react';
 
 import { RESULTS_DISPLAY_PAGE_SIZE } from '@/settings';
-import { useAppState } from '../../context/appState';
 import { usePrevious } from '@chakra-ui/react';
 
-const pageConfig = {
-  default: 1,
-  encode: (value) => {
-    return value.toString();
-  },
-  decode: (value) => {
-    return parseInt(value);
-  }
-};
+import { useAppState } from '../../context/appState';
+import { PageConfig } from './stateConfig';
 
 export default function usePaginatedResults(results) {
-  const [ page, setPage ] = useAppState('page', pageConfig);
+  const [ page, setPage ] = useAppState('page', PageConfig);
   const [ pageInputValue, setPageInputValue ] = useState(page);
   const previousResults = usePrevious(results);
 

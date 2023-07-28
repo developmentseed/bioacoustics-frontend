@@ -1,76 +1,23 @@
 import { useMemo } from 'react';
-import { LngLat, LngLatBounds } from 'mapbox-gl';
+import { LngLat } from 'mapbox-gl';
 
 import { useSites } from '../../context/sites';
 import { useAppState } from '../../context/appState';
-
-const selectedSitesConfig = {
-  default: [],
-  encode: (value) => {
-    return value.join(',');
-  },
-  decode: (value) => {
-    return value.split(',').map(v => parseInt(v));
-  }
-};
-
-const bboxFilterConfig = {
-  encode: (value) => {
-    if (!value) {
-      return;
-    }
-    return JSON.stringify(value.toArray());
-  },
-  decode: (value) => {
-    if (!value) {
-      return;
-    }
-    const bbox = JSON.parse(value);
-    return new LngLatBounds(bbox[0], bbox[1]);
-  }
-};
-
-const selectedDatesConfig = {
-  default: [],
-  encode: (value) => {
-    if (value.length === 0) {
-      return null;
-    }
-    return value.map(d => d.toISOString().slice(0,10)).join(',');
-  },
-  decode: (value) => {
-    if (!value) {
-      return [];
-    }
-    return value.split(',').map(d => new Date(d));
-  }
-};
-const selectedTimesConfig = {
-  default: [0, 24],
-  encode: (value) => {
-    return value.join(',');
-  },
-  decode: (value) => {
-    return value.split(',').map(v => parseInt(v));
-  }
-};
-const topMatchPerRecordingConfig = {
-  default: false,
-  encode: (value) => {
-    return value ? '1' : '0';
-  },
-  decode: (value) => {
-    return value === '1';
-  }
-};
+import {
+  SelectedSitesConfig,
+  BboxFilterConfig,
+  SelectedDatesConfig,
+  SelectedTimesConfig,
+  TopMatchPerRecordingConfig
+} from './stateConfig';
 
 export default function useFilteredResults(results) {
   const { sites } = useSites();
-  const [ selectedSites, setSelectedSites ] = useAppState('selectedSites', selectedSitesConfig);
-  const [ bboxFilter, setBboxFilter] = useAppState('bboxFilter', bboxFilterConfig);
-  const [ selectedDates, setSelectedDates ] = useAppState('selectedDates', selectedDatesConfig);
-  const [ selectedTimes, setSelectedTimes ] = useAppState('selectedTimes', selectedTimesConfig);
-  const [ topMatchPerRecording, setTopMatchPerRecording ] = useAppState('topMatchPerRecording', topMatchPerRecordingConfig);
+  const [ selectedSites, setSelectedSites ] = useAppState('selectedSites', SelectedSitesConfig);
+  const [ bboxFilter, setBboxFilter] = useAppState('bboxFilter', BboxFilterConfig);
+  const [ selectedDates, setSelectedDates ] = useAppState('selectedDates', SelectedDatesConfig);
+  const [ selectedTimes, setSelectedTimes ] = useAppState('selectedTimes', SelectedTimesConfig);
+  const [ topMatchPerRecording, setTopMatchPerRecording ] = useAppState('topMatchPerRecording', TopMatchPerRecordingConfig);
 
   const filteredResults = useMemo(
     () => {
