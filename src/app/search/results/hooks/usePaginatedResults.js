@@ -16,7 +16,7 @@ export default function usePaginatedResults(results) {
     if (previousResults && previousResults.length !== 0) {
       setPage(1);
     }
-  }, [previousResults, setPage]);
+  }, [results, previousResults, setPage]);
 
   // Update the input value when the page changes
   useEffect(() => {

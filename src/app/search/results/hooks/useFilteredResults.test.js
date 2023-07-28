@@ -1,5 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { SitesProvider } from '../../context/sites';
+import { AppStateProvider } from '../../context/appState';
 import useFilteredResults from './useFilteredResults';
 
 const results = Array(72).fill(0).map((_, i) => ({
@@ -13,8 +14,19 @@ const results = Array(72).fill(0).map((_, i) => ({
 }));
 
 const wrapper = ({ children }) => (
-  <SitesProvider value="some context">{children}</SitesProvider>
+  <SitesProvider>
+    <AppStateProvider>
+      {children}
+    </AppStateProvider>
+  </SitesProvider>
 );
+
+jest.mock('next/navigation', () => ({
+  ...(jest.requireActual('next/navigation')),
+  useSearchParams: () => ({
+    get: () => undefined
+  })
+}));
 
 describe('useFilteredResults', () => {
   beforeEach(() => {

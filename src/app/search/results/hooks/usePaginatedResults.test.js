@@ -1,6 +1,8 @@
 import { renderHook, act } from '@testing-library/react';
 import usePaginatedResults from './usePaginatedResults';
 
+import { AppStateProvider } from '../../context/appState';
+
 const results = Array(72).fill(0).map((_, i) => ({
   id: i,
   entity: {
@@ -10,6 +12,20 @@ const results = Array(72).fill(0).map((_, i) => ({
     filename: `audio_${i % 3}.mp3`
   }
 }));
+
+jest.mock('next/navigation', () => ({
+  ...(jest.requireActual('next/navigation')),
+  useSearchParams: () => ({
+    get: () => undefined
+  })
+}));
+
+
+const wrapper = ({ children }) => (
+  <AppStateProvider>
+    {children}
+  </AppStateProvider>
+);
 
 describe('usePaginatedResults', () => {
   beforeEach(() => {
@@ -23,7 +39,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('renders first page', () => {
-    const {result} = renderHook(() => usePaginatedResults(results));
+    const {result} = renderHook(() => usePaginatedResults(results), { wrapper });
     const { resultPage, previousPageProps, firstPageProps, nextPageProps, lastPageProps } = result.current;
     expect(resultPage.length).toEqual(25);
     expect(resultPage[0].id).toEqual(0);
@@ -35,7 +51,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('renders middle page', async () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     act(() => {
       result.current.nextPageProps.onClick();
     });
@@ -58,7 +74,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('renders last page', () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     act(() => {
       result.current.nextPageProps.onClick();
     });
@@ -85,7 +101,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('jumps to first page', () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     act(() => {
       result.current.nextPageProps.onClick();
     });
@@ -98,7 +114,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('jumps to last page', () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
 
     expect(result.current.page).toEqual(1);
     act(() => {
@@ -108,7 +124,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('disables pagination buttons when there are no matches', () => {
-    const { result } = renderHook(() => usePaginatedResults([]));
+    const { result } = renderHook(() => usePaginatedResults([]), { wrapper });
     const { resultPage, previousPageProps, nextPageProps } = result.current;
     expect(resultPage.length).toEqual(0);
     expect(previousPageProps.isDisabled).toBeTruthy();
@@ -118,7 +134,7 @@ describe('usePaginatedResults', () => {
   it('resets page when the filters are changed', () => {
     const { result, rerender } = renderHook(
       (r) => usePaginatedResults(r),
-      { initialProps: results }
+      { initialProps: results, wrapper }
     );
     act(() => {
       result.current.nextPageProps.onClick();
@@ -138,7 +154,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('sets value on ENTER', async () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     expect(result.current.page).toEqual(1);
 
     act(() => {
@@ -156,7 +172,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('does not set value on invalid page (> numpages)', async () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     expect(result.current.page).toEqual(1);
 
     act(() => {
@@ -174,7 +190,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('does not set value on invalid page (< 1)', async () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     expect(result.current.page).toEqual(1);
 
     act(() => {
@@ -192,7 +208,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('reset page input on blur', async () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     expect(result.current.page).toEqual(1);
 
     act(() => {
@@ -208,7 +224,7 @@ describe('usePaginatedResults', () => {
   });
 
   it('updates the input value on page change', () => {
-    const { result } = renderHook(() => usePaginatedResults(results));
+    const { result } = renderHook(() => usePaginatedResults(results), { wrapper });
     expect(result.current.page).toEqual(1);
 
     act(() => {

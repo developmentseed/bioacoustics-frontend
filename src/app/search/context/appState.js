@@ -87,5 +87,5 @@ export function useAppState(key, config) {
 
   if (!key) return { urlEncode };
 
-  return [appState[key]?.value, setValue];
+  return [appState[key] ? appState[key].value : config.default, setValue];
 }
