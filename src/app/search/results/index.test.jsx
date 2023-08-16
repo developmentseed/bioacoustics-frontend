@@ -3,8 +3,25 @@ import userEvent from '@testing-library/user-event';
 import fetch from 'jest-fetch-mock';
 
 import { SitesProvider } from '../context/sites';
+import { AppStateProvider } from '../context/appState';
+
 import Results from './';
 import { results } from './fixtures';
+
+const wrapper = ({ children }) => (
+  <SitesProvider>
+    <AppStateProvider>
+      {children}
+    </AppStateProvider>
+  </SitesProvider>
+);
+
+jest.mock('next/navigation', () => ({
+  ...(jest.requireActual('next/navigation')),
+  useSearchParams: () => ({
+    get: () => undefined
+  })
+}));
 
 describe('Results', () => {
   beforeEach(() => {
@@ -20,38 +37,20 @@ describe('Results', () => {
   });
 
   it('renders the loading spinner', () => {
-    render(
-      <SitesProvider>
-        <Results isLoading={true} results={[]} />
-      </SitesProvider>
-    );
+    render(<Results isLoading={true} results={[]} />, { wrapper });
 
     expect(screen.queryByTestId('loading')).toBeInTheDocument();
   });
 
   it('renders the small results grid', async () => {
-    render(
-      <SitesProvider>
-        <Results
-          isLoading={false}
-          results={results}
-        />
-      </SitesProvider>
-    );
+    render(<Results isLoading={false} results={results} />, { wrapper });
 
     expect(screen.queryByTestId('results-table')).not.toBeInTheDocument();
     expect(screen.queryByTestId('results-grid')).toBeInTheDocument();
   });
 
   it('renders the large results grid', async () => {
-    render(
-      <SitesProvider>
-        <Results
-          isLoading={false}
-          results={results}
-        />
-      </SitesProvider>
-    );
+    render(<Results isLoading={false} results={results} />, { wrapper });
 
     expect(screen.queryByTestId('results-table')).not.toBeInTheDocument();
     expect(screen.queryByTestId('results-grid')).toBeInTheDocument();
@@ -62,14 +61,7 @@ describe('Results', () => {
   });
 
   it('renders the results table', async () => {
-    render(
-      <SitesProvider>
-        <Results
-          isLoading={false}
-          results={results}
-        />
-      </SitesProvider>
-    );
+    render(<Results isLoading={false} results={results} />, { wrapper });
 
     expect(screen.queryByTestId('loading')).not.toBeInTheDocument();
     expect(screen.queryByTestId('results-table')).not.toBeInTheDocument();

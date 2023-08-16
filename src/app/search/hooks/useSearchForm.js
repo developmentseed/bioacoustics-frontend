@@ -10,6 +10,22 @@ import {
   ACCEPTED_AUDIO_TYPES
 } from '@/settings';
 import { bufferToWave, getDuration } from '@/utils';
+import { useAppState } from '../context/appState';
+
+const ClipLengthConfig = {
+  encode: (value) => {
+    if (value === undefined) return;
+    return value.toString();
+  },
+  decode: (value) => parseInt(value)
+};
+const ClipStartConfig = {
+  encode: (value) => {
+    if (value === undefined) return;
+    return value.toString();
+  },
+  decode: (value) => parseFloat(value)
+};
 
 const validate = async (files) => {
   if (files.length > 1) {
@@ -36,8 +52,8 @@ const validate = async (files) => {
 export default function useSearchForm() {
   const [ file, setFile ] = useState();
   const [ duration, setDuration ] = useState();
-  const [ clipStart, setClipStart ] = useState();
-  const [ clipLength, setClipLength ] = useState();
+  const [ clipStart, setClipStart ] = useAppState('clipStart', ClipStartConfig);
+  const [ clipLength, setClipLength ] = useAppState('clipLength', ClipLengthConfig);
 
   const [ error, setError ] = useState();
   const [ results, setResults ] = useState([]);
@@ -185,18 +201,18 @@ export default function useSearchForm() {
   // Reset the state when a new file is selected
   useEffect(() => {
     setResults([]);
-    setClipStart();
-    setClipLength();
     setError();
     if (file) {
       getDuration(file).then(setDuration);
       if (file.name !== audioUrl) {
         router.replace('/search');
+        setClipStart();
+        setClipLength();
       }
     } else { 
       setDuration();
     }
-  }, [audioUrl, file, router]);
+  }, [audioUrl, file, router, setClipLength, setClipStart]);
 
   return {
     isInitializing,

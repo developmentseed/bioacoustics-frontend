@@ -1,15 +1,23 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { LngLat } from 'mapbox-gl';
 
 import { useSites } from '../../context/sites';
+import { useAppState } from '../../context/appState';
+import {
+  SelectedSitesConfig,
+  BboxFilterConfig,
+  SelectedDatesConfig,
+  SelectedTimesConfig,
+  TopMatchPerRecordingConfig
+} from './stateConfig';
 
 export default function useFilteredResults(results) {
   const { sites } = useSites();
-  const [ selectedSites, setSelectedSites ] = useState([]);
-  const [ bboxFilter, setBboxFilter] = useState();
-  const [ selectedDates, setSelectedDates ] = useState([]);
-  const [ selectedTimes, setSelectedTimes ] = useState([0, 24]);
-  const [ topMatchPerRecording, setTopMatchPerRecording ] = useState(false);
+  const [ selectedSites, setSelectedSites ] = useAppState('selectedSites', SelectedSitesConfig);
+  const [ bboxFilter, setBboxFilter] = useAppState('bboxFilter', BboxFilterConfig);
+  const [ selectedDates, setSelectedDates ] = useAppState('selectedDates', SelectedDatesConfig);
+  const [ selectedTimes, setSelectedTimes ] = useAppState('selectedTimes', SelectedTimesConfig);
+  const [ topMatchPerRecording, setTopMatchPerRecording ] = useAppState('topMatchPerRecording', TopMatchPerRecordingConfig);
 
   const filteredResults = useMemo(
     () => {
@@ -68,6 +76,7 @@ export default function useFilteredResults(results) {
     setSelectedDates,
     selectedTimes,
     setSelectedTimes,
+    bboxFilter,
     setBboxFilter,
     topMatchPerRecordingProps: {
       isChecked: topMatchPerRecording,

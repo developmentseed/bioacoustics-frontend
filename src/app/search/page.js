@@ -69,7 +69,7 @@ export default function Upload() {
             </form>
           </Container>
         </InpageHeader>
-        <Results results={results} isLoading={isSubmitting} />
+        <Results results={results} isLoading={isSubmitting} file={file} />
       </Box>
     </SitesProvider>
   );

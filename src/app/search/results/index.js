@@ -24,6 +24,7 @@ import GridView from './GridView';
 import { SitesFilter, DateFilter, TimeFilter, Chips, TopResultCheckbox } from './components/filters';
 import { usePaginatedResults, useDownload, useFilteredResults } from './hooks';
 import MapView from './MapView';
+import { ShareButton } from './components';
 
 const VIEWS = {
   grid_lg: 1,
@@ -31,7 +32,7 @@ const VIEWS = {
   table: 3,
 };
 
-export default function Results({ isLoading, results }) {
+export default function Results({ file, isLoading, results }) {
   const [showMap, setShowMap] = useState(false);
   const [view, setView] = useState(VIEWS.grid_lg);
   const {
@@ -44,6 +45,7 @@ export default function Results({ isLoading, results }) {
     selectedTimes,
     setSelectedTimes,
     topMatchPerRecordingProps,
+    bboxFilter,
     setBboxFilter
   } = useFilteredResults(results);
   const {
@@ -68,6 +70,13 @@ export default function Results({ isLoading, results }) {
   // Clear selected results when the filter changes
   useEffect(clearSelect, [selectedSites, selectedDates, selectedTimes, clearSelect]);
 
+  // Show the map if the page is initialised with the bbox query param
+  useEffect(() => {
+    if (bboxFilter && !showMap) {
+      setShowMap(true);
+    }
+  }, [showMap, bboxFilter]);
+
   if (isLoading) {
     return <Loading />;
   }
@@ -78,9 +87,14 @@ export default function Results({ isLoading, results }) {
   return (
     <Box py="10" bg="blackAlpha.50" minH="100%" flex="1">
       <Container maxW="container.xl" display="flex" flexDirection="column" gap={4}>
-        <Flex>
+        <Flex gap="2">
           <Heading as="h2" size="base" flex="1">Results</Heading>
-          {results.length > 0 && <Button variant="primary" size="sm" as="a" href={downloadLink}>Download</Button>}
+          {results.length > 0 && (
+            <>
+              <ShareButton file={file} />
+              <Button variant="primary" size="sm" as="a" href={downloadLink}>Download</Button>
+            </>
+          )}
         </Flex>
         {results.length > 0 ? (
           <>
@@ -167,7 +181,7 @@ export default function Results({ isLoading, results }) {
                   <Text fontWeight="bold">No results match the selected filters.</Text>
               )}
               </Box>
-              {showMap && <MapView results={resultPage} setBboxFilter={setBboxFilter} />}
+              {showMap && <MapView results={resultPage} bboxFilter={bboxFilter} setBboxFilter={setBboxFilter} />}
             </Flex>
             <Flex my="5" gap="5" alignItems="center">
               <Spacer />
@@ -199,4 +213,5 @@ export default function Results({ isLoading, results }) {
 Results.propTypes = {
   isLoading: T.bool,
   results: T.arrayOf(TMatch),
+  file: T.object
 };
