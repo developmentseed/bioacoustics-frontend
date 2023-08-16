@@ -19,7 +19,7 @@ export function AppStateProvider({ children }) {
       };
     });
   }, []);
-  
+
   const initSlice = useCallback((key, config) => {
     const { default: defaultValue, ...restConfig } = config;
     const queryValue = searchParams.get(key);

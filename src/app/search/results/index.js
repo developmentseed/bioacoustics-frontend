@@ -32,7 +32,7 @@ const VIEWS = {
   table: 3,
 };
 
-export default function Results({ isLoading, results }) {
+export default function Results({ file, isLoading, results }) {
   const [showMap, setShowMap] = useState(false);
   const [view, setView] = useState(VIEWS.grid_lg);
   const {
@@ -89,8 +89,12 @@ export default function Results({ isLoading, results }) {
       <Container maxW="container.xl" display="flex" flexDirection="column" gap={4}>
         <Flex gap="2">
           <Heading as="h2" size="base" flex="1">Results</Heading>
-          <ShareButton />
-          {results.length > 0 && <Button variant="primary" size="sm" as="a" href={downloadLink}>Download</Button>}
+          {results.length > 0 && (
+            <>
+              <ShareButton file={file} />
+              <Button variant="primary" size="sm" as="a" href={downloadLink}>Download</Button>
+            </>
+          )}
         </Flex>
         {results.length > 0 ? (
           <>
@@ -209,4 +213,5 @@ export default function Results({ isLoading, results }) {
 Results.propTypes = {
   isLoading: T.bool,
   results: T.arrayOf(TMatch),
+  file: T.object
 };

@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { formatTime } from '@/utils';
 
-export default function useClipper(duration, spectrogramCenter, zoom, spectrogramRef, hasDragged, setClip) {
+export default function useClipper(duration, spectrogramCenter, zoom, spectrogramRef, hasDragged, setClip, savedClipStart, savedClipLength) {
   const [ isClipping, setIsClipping ] = useState(false);
-  const clipLength = 5; // in seconds
+  const clipLength = savedClipLength || 5; // in seconds
   const clipCenterRef = useRef();
   const [ clipCenter, setClipCenter ] = useState();
   const [ clipCenterPx, setClipCenterPx ] = useState();
@@ -20,8 +20,16 @@ export default function useClipper(duration, spectrogramCenter, zoom, spectrogra
       if (!spectrogramRef.current) return;
       return spectrogramRef.current.clientWidth / duration * zoom * clipLength;
     },
-    [duration, spectrogramRef, zoom]
+    [clipLength, duration, spectrogramRef, zoom]
   );
+
+  useEffect(() => {
+    if (savedClipStart !== undefined) {
+      setCenter(savedClipStart + savedClipLength / 2);
+    } else {
+      setCenter();
+    }
+  }, [savedClipLength, savedClipStart, setCenter]);
 
   useEffect(() => {
     if (!spectrogramRef.current) return;
@@ -43,10 +51,6 @@ export default function useClipper(duration, spectrogramCenter, zoom, spectrogra
 
     setClipCenterPx(Math.floor(clipCenterPx - windowLeftPx));
   }, [clipCenter, duration, spectrogramCenter, spectrogramRef, zoom]);
-
-  // Reset the current clip windown when a new file is
-  // selected, using the audio duration as a proxy
-  useEffect(() => setCenter(), [duration, setCenter]);
 
   const handleClipButtonClick = () => {
     setIsClipping(true);
@@ -109,7 +113,7 @@ export default function useClipper(duration, spectrogramCenter, zoom, spectrogra
       setCenter(clipCenterTime);
     }
 
-  }, [clipCenterRef, duration, setCenter, spectrogramCenter, spectrogramRef, zoom]);
+  }, [clipLength, duration, setCenter, spectrogramCenter, spectrogramRef, zoom]);
 
   
   const handleDragMouseUp = useCallback((e) => {

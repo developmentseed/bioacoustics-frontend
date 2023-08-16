@@ -100,7 +100,9 @@ export default function AudioClipper({ file, setClip, clipStart, clipLength }) {
     zoom,
     spectrogramRef,
     hasDragged,
-    setClip
+    setClip,
+    clipStart,
+    clipLength
   );
 
   const { clipLengthError } = useFileValidation(file, duration);
