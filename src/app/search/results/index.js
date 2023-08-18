@@ -22,7 +22,7 @@ import { TMatch } from '@/types';
 import TableView from './TableView';
 import GridView from './GridView';
 import { SitesFilter, DateFilter, TimeFilter, Chips, TopResultCheckbox } from './components/filters';
-import { usePaginatedResults, useDownload, useFilteredResults } from './hooks';
+import { usePaginatedResults, useDownload, useFilteredResults, useCapabilities } from './hooks';
 import MapView from './MapView';
 import { ShareButton } from './components';
 
@@ -35,6 +35,7 @@ const VIEWS = {
 export default function Results({ file, isLoading, results }) {
   const [showMap, setShowMap] = useState(false);
   const [view, setView] = useState(VIEWS.grid_lg);
+  const { canStoreFile } = useCapabilities();
   const {
     filteredResults,
     numMatches,
@@ -91,7 +92,7 @@ export default function Results({ file, isLoading, results }) {
           <Heading as="h2" size="base" flex="1">Results</Heading>
           {results.length > 0 && (
             <>
-              <ShareButton file={file} />
+              {canStoreFile && <ShareButton file={file} />}
               <Button variant="primary" size="sm" as="a" href={downloadLink}>Download</Button>
             </>
           )}

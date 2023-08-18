@@ -27,7 +27,10 @@ describe('Results', () => {
   beforeEach(() => {
     window.scrollTo = () => {};
     fetch.resetMocks();
-    fetch.mockResponseOnce(JSON.stringify({
+    fetch.mockIf('https://api.bioacoustics.ds.io/api/v1/capabilities/', () => (
+      { public_storage: true }
+    ));
+    fetch.mockIf('https://api.bioacoustics.ds.io/api/v1/sites', () => ({
       data: [
         { id: 1, name: 'Site A' },
         { id: 2, name: 'Site B' }
