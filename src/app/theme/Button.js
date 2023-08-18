@@ -7,7 +7,14 @@ const Button = defineStyleConfig({
   variants: {
     primary: {
       bgColor: 'primary.400',
-      color: 'white'
+      color: 'white',
+      _hover: {
+        _disabled: {
+          backgroundColor: 'primary.400',
+          color: 'white',
+          opacity: 0.4
+        }
+      },
     },
     outline: {
       color: 'primary.400',
