@@ -10,5 +10,5 @@ const recordings = [
 
 export default function Random() {
   const index = Math.floor(Math.random() * recordings.length - 1);
-  redirect(`/search?q=${encodeURIComponent(recordings[index])}`);
+  redirect(`/search/?q=${encodeURIComponent(recordings[index])}`);
 }
