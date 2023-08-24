@@ -81,7 +81,7 @@ export default function AudioSelectForm({ error, handleFileSelect }) {
           </Button>
           <AudioRecorder setFile={handleFileSelect} />
         </Flex>
-        <Box mt="2" fontSize="sm"><Link href="/random" textDecoration="underline">I&apos;m feeling lucky</Link></Box>
+        <Box mt="2" fontSize="sm"><Link href="/random/" textDecoration="underline">I&apos;m feeling lucky</Link></Box>
         {error && <Error>{ error }</Error> }
       </Box>
     </Box>
