@@ -78,7 +78,7 @@ export default function DateFilter({selectedDates, setSelectedDates}) {
       variant="datepicker"
     >
       <PopoverTrigger>
-        <Button size="sm" variant="outline" rightIcon={<MdKeyboardArrowDown />}>Date</Button>
+        <Button size="sm" variant="outline" background="white" rightIcon={<MdKeyboardArrowDown />}>Date</Button>
       </PopoverTrigger>
       <Portal>
         <PopoverContent pt="1">

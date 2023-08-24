@@ -45,7 +45,7 @@ export default function SitesFilter({ selectedSites, setSelectedSites }) {
   return (
     <Popover placement="bottom-start">
       <PopoverTrigger>
-        <Button size="sm" variant="outline" rightIcon={<MdKeyboardArrowDown />}>Sites</Button>
+        <Button size="sm" variant="outline" background="white" rightIcon={<MdKeyboardArrowDown />}>Sites</Button>
       </PopoverTrigger>
       <Portal>
         <PopoverContent pt="1">

@@ -127,7 +127,7 @@ export default function Results({ file, isLoading, results }) {
                 </Flex>
                 <Spacer />
                 <Flex gap="2">
-                  <ButtonGroup isAttached variant="outline">
+                  <ButtonGroup isAttached variant="outline" background="white">
                     <IconButton
                       variant={view === VIEWS.grid_lg ? 'primary': 'outline'}
                       icon={<MdGridView />}
@@ -153,7 +153,7 @@ export default function Results({ file, isLoading, results }) {
                       onClick={() => setView(VIEWS.table)}
                     />
                   </ButtonGroup>
-                  <Button leftIcon={<MdMap />} size="xs" variant="outline" onClick={() => setShowMap(!showMap)}>{showMap ? 'Hide map' : 'Show map'}</Button>
+                  <Button leftIcon={<MdMap />} size="xs" variant="outline" background="white" onClick={() => setShowMap(!showMap)}>{showMap ? 'Hide map' : 'Show map'}</Button>
                 </Flex>
               </Flex>
             )}
@@ -186,17 +186,17 @@ export default function Results({ file, isLoading, results }) {
             </Flex>
             <Flex my="5" gap="5" alignItems="center">
               <Spacer />
-              <ButtonGroup isAttached variant="outline" size="sm">
+              <ButtonGroup isAttached variant="outline" size="sm" background="white">
                 <Button {...firstPageProps}>First page</Button>
                 <Button {...previousPageProps}>Previous</Button>
               </ButtonGroup>
               <Flex fontSize="sm" gap="1" alignItems="center">Page 
-                <NumberInput {...pageInputProps} w="12" size="sm" clampValueOnBlur={false} bgColor={pageInputProps.isInvalid && 'red.100'}>
+                <NumberInput {...pageInputProps} w="12" size="sm" clampValueOnBlur={false} bgColor={pageInputProps.isInvalid && 'red.100'} background="white">
                   <NumberInputField px="0" textAlign="center" />
                 </NumberInput>
                 of {numPages}
               </Flex>
-              <ButtonGroup isAttached variant="outline" size="sm">
+              <ButtonGroup isAttached variant="outline" size="sm" background="white">
                 <Button {...nextPageProps}>Next</Button>
                 <Button {...lastPageProps}>Last page</Button>
               </ButtonGroup>

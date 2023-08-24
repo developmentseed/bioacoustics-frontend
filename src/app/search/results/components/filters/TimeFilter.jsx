@@ -29,7 +29,7 @@ export default function TimeFilter({ selectedTimes, setSelectedTimes }) {
   return (
     <Popover placement="bottom-start">
       <PopoverTrigger>
-        <Button size="sm" variant="outline" rightIcon={<MdKeyboardArrowDown />}>Time</Button>
+        <Button size="sm" variant="outline" background="white" rightIcon={<MdKeyboardArrowDown />}>Time</Button>
       </PopoverTrigger>
       <Portal>
         <PopoverContent pt="1">
