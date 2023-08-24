@@ -63,7 +63,7 @@ export default function Results({ file, isLoading, results }) {
 
   // Scroll to top of results on page change
   useEffect(() => window.scrollTo({
-    top: 450,
+    top: 0,
     left: 0,
     behavior: 'smooth',
   }), [page]);
