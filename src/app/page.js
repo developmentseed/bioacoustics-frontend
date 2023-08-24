@@ -92,8 +92,7 @@ export default function Home() {
             <Text mb={6} fontSize="lg">Run audio similarity search on the Australian Acoustic Observatory media archive. ECOECHO uses Machine Learning models developed at Google to find similar audio recordings across space and time. It is intended to augment and enable bioacoustics research.</Text>
             <Button
               as={NextLink}
-              variation="solid"
-              colorScheme="primary"
+              variant="primary"
               href="/search"
             >
               Search
