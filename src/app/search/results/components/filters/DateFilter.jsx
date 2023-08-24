@@ -26,6 +26,26 @@ const calendarConfigs = {
   dayNames: Weekday_Names_Short,
   firstDayOfWeek: 0,
 };
+const propsConfigs = {
+  dayOfMonthBtnProps: {
+    defaultBtnProps: {
+      _hover: {
+        background: 'green.400',
+      }
+    },
+    isInRangeBtnProps: {
+      color: 'primary.400',
+      background: 'green.100',
+    },
+    selectedBtnProps: {
+      background: 'green.200',
+      color: 'primary.400',
+    },
+    todayBtnProps: {
+      background: 'green.400',
+    }
+  },
+};
 
 export default function DateFilter({selectedDates, setSelectedDates}) {
   const { onOpen, onClose, isOpen } = useDisclosure();
@@ -92,6 +112,7 @@ export default function DateFilter({selectedDates, setSelectedDates}) {
                 firstDayOfWeek: calendarConfigs.firstDayOfWeek,
               }}
               configs={calendarConfigs}
+              propsConfigs={propsConfigs}
               selected={selectedDates}
             />
             <Text fontSize="xs" mt="2">All dates are in UTC</Text>
