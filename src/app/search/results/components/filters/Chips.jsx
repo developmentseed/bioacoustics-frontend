@@ -32,7 +32,7 @@ export default function Chips ({
   setSelectedTimes
 }) {
   return (
-    <HStack gap="1">
+    <HStack gap={1} wrap="wrap">
       { selectedSites.length > 0 && (
         <Chip onClear={() => setSelectedSites([])}>Sites ({selectedSites.length})</Chip>
       )}

@@ -7,14 +7,14 @@ import {
   Container,
   Flex,
   Heading,
-  HStack,
   IconButton,
   NumberInput,
   NumberInputField,
   Spacer,
+  Stack,
   Text,
 } from '@chakra-ui/react';
-import { MdMenu, MdGridView, MdGridOn, MdClose, MdMap } from 'react-icons/md';
+import { MdMenu, MdGridView, MdGridOn, MdClose, MdMap, MdChevronLeft, MdKeyboardDoubleArrowLeft, MdChevronRight, MdKeyboardDoubleArrowRight } from 'react-icons/md';
 
 import { RESULTS_DISPLAY_PAGE_SIZE } from '@/settings';
 import { Loading } from '@/components';
@@ -99,13 +99,13 @@ export default function Results({ file, isLoading, results }) {
         </Flex>
         {results.length > 0 ? (
           <>
-            <HStack>
+            <Stack direction={['column', 'row']}>
               <Text textTransform="uppercase" fontSize="sm">Filters</Text>
               <SitesFilter selectedSites={selectedSites} setSelectedSites={setSelectedSites} />
               <DateFilter selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
               <TimeFilter selectedTimes={selectedTimes} setSelectedTimes={setSelectedTimes} />
-              <TopResultCheckbox {...topMatchPerRecordingProps} />
-            </HStack>
+              <TopResultCheckbox mt={[2, 2, 0]} {...topMatchPerRecordingProps} />
+            </Stack>
             <Chips
               selectedSites={selectedSites}
               setSelectedSites={setSelectedSites}
@@ -187,8 +187,10 @@ export default function Results({ file, isLoading, results }) {
             <Flex my="5" gap="5" alignItems="center">
               <Spacer />
               <ButtonGroup isAttached variant="outline" size="sm" background="white">
-                <Button {...firstPageProps}>First page</Button>
-                <Button {...previousPageProps}>Previous</Button>
+                <IconButton display={['inline-flex', 'none']} icon={<MdKeyboardDoubleArrowLeft />} {...firstPageProps}>First page</IconButton>
+                <Button display={['none', 'inline-flex']} {...firstPageProps}>First page</Button>
+                <IconButton display={['inline-flex', 'none']} {...previousPageProps} icon={<MdChevronLeft />} />
+                <Button display={['none', 'inline-flex']} {...previousPageProps}>Previous</Button>
               </ButtonGroup>
               <Flex fontSize="sm" gap="1" alignItems="center">Page 
                 <NumberInput {...pageInputProps} w="12" size="sm" clampValueOnBlur={false} bgColor={pageInputProps.isInvalid && 'red.100'} background="white">
@@ -197,8 +199,10 @@ export default function Results({ file, isLoading, results }) {
                 of {numPages}
               </Flex>
               <ButtonGroup isAttached variant="outline" size="sm" background="white">
-                <Button {...nextPageProps}>Next</Button>
-                <Button {...lastPageProps}>Last page</Button>
+                <IconButton display={['inline-flex', 'none']} icon={<MdChevronRight />} {...nextPageProps} />
+                <Button display={['none', 'inline-flex']} {...nextPageProps}>Next</Button>
+                <IconButton display={['inline-flex', 'none']} icon={<MdKeyboardDoubleArrowRight />} {...lastPageProps} />
+                <Button display={['none', 'inline-flex']} {...lastPageProps}>Last page</Button>
               </ButtonGroup>
               <Spacer />
             </Flex>

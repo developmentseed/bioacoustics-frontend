@@ -230,7 +230,7 @@ export default function AudioClipper({ file, setClip, clipStart, clipLength }) {
       <Text fontSize="xs" m="1" ml="50px" textAlign="center">Time (Seconds)</Text>
       {isClipping && (
         <Center>
-          <HStack mt="2" gap="5" align="center">
+          <HStack mt="2" gap="2" align="center">
             <Button
               type="button"
               variant="ghost"
@@ -258,7 +258,7 @@ export default function AudioClipper({ file, setClip, clipStart, clipLength }) {
           </HStack>
         </Center>
       )}
-      <HStack mt="2" gap="5">
+      <Flex flexDirection={['column', null, 'row']} mt="2" gap={[1, null, 4]} alignItems="center" flexWrap="wrap">
         <HStack gap="2" flex="1">
           <IconButton
             type="button"
@@ -280,7 +280,7 @@ export default function AudioClipper({ file, setClip, clipStart, clipLength }) {
             min={0}
             max={duration}
             step={0.1}
-            minW="300px"
+            minW={['200px', null, '300px']}
             flex="1"
             {...scrubberProps}
           >
@@ -299,11 +299,11 @@ export default function AudioClipper({ file, setClip, clipStart, clipLength }) {
           <TimeBox time={duration} />
         </HStack>
 
-        <ToolbarButton leftIcon={<MdContentCut />} {...clipButtonProps}>
+        <ToolbarButton order={[-1, null, 'initial']} leftIcon={<MdContentCut />} {...clipButtonProps} size="sm">
           Clip
         </ToolbarButton>
 
-        <HStack>
+        <HStack order={[2, null, 'initial']}>
           <Text color="primary.400" fontSize="sm">
             Zoom
           </Text>
@@ -332,7 +332,7 @@ export default function AudioClipper({ file, setClip, clipStart, clipLength }) {
             aria-label="Reset zoom"
           />
         </HStack>
-      </HStack>
+      </Flex>
     </>
   );
 }

@@ -70,7 +70,7 @@ export default function AudioSelectForm({ error, handleFileSelect }) {
           aria-describedby="file-hint"
           style={{ display: 'none' }}
         />
-        <Flex gap="2" justifyContent="center" alignItems={['center', null, 'baseline']} flexDirection={['column', null, 'row']}>
+        <Flex gap="2" justifyContent="center" alignItems={['stretch', null, 'baseline']} flexDirection={['column', null, 'row']}>
           <Button
             type="button"
             variant="primary"
