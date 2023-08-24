@@ -28,6 +28,7 @@ function ResultCard({ result, large, isSelected, toggleSelect }) {
           isChecked={isSelected}
           onChange={() => toggleSelect(audio_url)}
           position="absolute"
+          colorScheme="green"
           left={2}
           top={2}
           zIndex={10}

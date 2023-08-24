@@ -173,7 +173,7 @@ export default function MapView({ results, bboxFilter, setBboxFilter }) {
       >
         <Checkbox
           size="sm"
-          color="primary.400"
+          colorScheme="green"
           isChecked={filterByMapBbox}
           onChange={(e) => setFilterByMapBbox(e.target.checked)}
         >

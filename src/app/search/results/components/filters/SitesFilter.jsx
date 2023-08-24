@@ -63,7 +63,7 @@ export default function SitesFilter({ selectedSites, setSelectedSites }) {
                   {sites
                     .filter(({ name }) => !siteNameFilter || name.toLowerCase().indexOf(siteNameFilter.toLowerCase()) !== -1)
                     .map(({ id, name }) => {
-                      return <Checkbox key={id} value={id}>{name}</Checkbox>;
+                      return <Checkbox key={id} value={id} colorScheme="green">{name}</Checkbox>;
                     })}
                 </VStack>
               </CheckboxGroup>

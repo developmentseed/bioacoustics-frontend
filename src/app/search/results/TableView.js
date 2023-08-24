@@ -31,6 +31,7 @@ function ResultRow({ result, toggleSelect, isSelected, narrow }) {
           aria-label="Click to select the result"
           isChecked={isSelected}
           onChange={() => toggleSelect(result.entity.audio_url)}
+          colorScheme="green"
         />
       </Td>
       <Td>
