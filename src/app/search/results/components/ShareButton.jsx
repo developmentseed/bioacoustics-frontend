@@ -43,7 +43,7 @@ export default function ShareButton({ file }) {
       })
         .then(r => r.json())
         .then(({ bucket_name, filename }) => {
-          const fileUrl = `http://${bucket_name}.storage.googleapis.com/${filename}`;
+          const fileUrl = `https://${bucket_name}.storage.googleapis.com/${filename}`;
           resolve(`${protocol}//${host}/search?q=${fileUrl}&${appState.urlEncode(keys)}`);
         });
 
