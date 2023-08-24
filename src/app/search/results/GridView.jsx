@@ -86,13 +86,13 @@ function ResultCard({ result, large, isSelected, toggleSelect }) {
         <GridItem alignSelf="end" px={2} display="flex" pb="1" justifyContent="space-between">
           {large ? (
             <>
-              <Button as={Link} variant="link" href={fullAudioUrl} target="_blank" rightIcon={<MdOpenInNew />} size="xs">Full Recording</Button>
-              <Button as={Link} variant="link" href={`/search?q=${encodeURIComponent(downloadAudioUrl)}`} target="_blank" rightIcon={<MdSearch />} size="xs">Use in new search</Button>
+              <Button as={Link} variant="link" href={fullAudioUrl} target="_blank" rightIcon={<MdOpenInNew color="primary.400" />} size="xs" color="primary.400">Full Recording</Button>
+              <Button as={Link} variant="link" href={`/search?q=${encodeURIComponent(downloadAudioUrl)}`} target="_blank" rightIcon={<MdSearch color="primary.400" />} size="xs" color="primary.400">Use in new search</Button>
             </>
           ): (
             <>
-              <IconButton as={Link} variant="link" href={fullAudioUrl} target="_blank" icon={<MdOpenInNew />} size="xs" title="Full Recording" display="inline" />
-              <IconButton as={Link} variant="link" href={`/search?q=${encodeURIComponent(downloadAudioUrl)}`} target="_blank" icon={<MdSearch />} size="xs" title="Use in new search" display="inline" />
+              <IconButton as={Link} variant="link" href={fullAudioUrl} target="_blank" icon={<MdOpenInNew />} size="xs" title="Full Recording" display="inline" color="primary.400" />
+              <IconButton as={Link} variant="link" href={`/search?q=${encodeURIComponent(downloadAudioUrl)}`} target="_blank" icon={<MdSearch />} size="xs" title="Use in new search" display="inline" color="primary.400" />
             </>
           )}
         </GridItem>

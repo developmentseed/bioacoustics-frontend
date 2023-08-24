@@ -26,6 +26,10 @@ const Button = defineStyleConfig({
         backgroundColor: 'green.50',
         color: 'primary.300',
       },
+      _active: {
+        backgroundColor: 'green.100',
+        color: 'primary.400',
+      }
     },
     ghost: {
       color: 'primary.400',

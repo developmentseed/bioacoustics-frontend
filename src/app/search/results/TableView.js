@@ -43,8 +43,8 @@ function ResultRow({ result, toggleSelect, isSelected, narrow }) {
       <Td>{ formatDateTime(file_timestamp + clip_offset_in_file) }</Td>
       <Td>
         <Box display="flex" justifyContent="space-between">
-          <IconButton as={Link} variant="link" href={`https://data.acousticobservatory.org/listen/${file_seq_id}`} target="_blank" icon={<MdOpenInNew />} size="sm" title="Full Recording" display="inline" />
-          <IconButton as={Link} variant="link" href={`/search?q=${encodeURIComponent(downloadAudioUrl)}`} target="_blank" icon={<MdSearch />} size="sm" title="Use in new search" display="inline" />
+          <IconButton as={Link} variant="link" href={`https://data.acousticobservatory.org/listen/${file_seq_id}`} target="_blank" icon={<MdOpenInNew />} size="sm" title="Full Recording" display="inline" color="primary.400" />
+          <IconButton as={Link} variant="link" href={`/search?q=${encodeURIComponent(downloadAudioUrl)}`} target="_blank" icon={<MdSearch />} size="sm" title="Use in new search" display="inline" color="primary.400" />
         </Box>
       </Td>
     </Tr>
