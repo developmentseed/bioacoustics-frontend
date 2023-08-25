@@ -109,7 +109,21 @@ export default function AudioClipper({ file, setClip, clipStart, clipLength }) {
 
   return (
     <>
-      <Text fontSize="sm" fontWeight="semibold" mb="2">{file.name}</Text>
+      <Text
+        p={1}
+        border="1px solid"
+        bg="green.50"
+        borderColor="neutral.100"
+        fontSize="xs"
+        mb="4"
+        overflow="scroll"
+        whiteSpace="pre"
+      >
+        <Text as="span" fontWeight="semibold">
+          File:
+        </Text>{' '}
+        {file.name}
+      </Text>
       {(clipLengthError && !isClipConfirmed) && <Error>{clipLengthError}</Error>}
       <Grid templateColumns="50px 1fr">
         <FrequencyLegend width="50px" height={SPECTROGRAM_HEIGHT} />
