@@ -38,7 +38,7 @@ export default function AudioResetForm({ error, setFile }) {
             Are you sure you want to remove the current audio upload?
           </ModalBody>
 
-          <ModalFooter>
+          <ModalFooter flexDirection={['column', 'row']} alignItems={['stretch', 'baseline']}>
             <Button mr="2" variant="ghost" onClick={onClose}>Keep current audio</Button>
             <Button onClick={handleReset} variant="primary">
               Yes, select new audio

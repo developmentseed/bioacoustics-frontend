@@ -53,7 +53,7 @@ export default function AudioSelectForm({ error, handleFileSelect }) {
         ref={dropZoneRef}
         id="dropzone"
       >
-        <Text>Click to select from your device</Text>
+        <Text>Drag and drop audio file here, or click to select from your device</Text>
         <Text
           id="file-hint"
           color="neutral.300"

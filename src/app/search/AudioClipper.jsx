@@ -259,11 +259,13 @@ export default function AudioClipper({ file, setClip, clipStart, clipLength }) {
         </Center>
       )}
       <Flex flexDirection={['column', null, 'row']} mt="2" gap={[1, null, 4]} alignItems="center" flexWrap="wrap">
-        <HStack gap="2" flex="1">
+        <HStack gap={[0, 2]} flex="1">
           <IconButton
             type="button"
             variant="ghost"
             borderRadius="full"
+            size={['sm', 'md']}
+            px="0 !important"
             icon={
               isPlaying ? (
                 <MdPauseCircleOutline fontSize="1.75rem" />
@@ -280,7 +282,7 @@ export default function AudioClipper({ file, setClip, clipStart, clipLength }) {
             min={0}
             max={duration}
             step={0.1}
-            minW={['200px', null, '300px']}
+            minW={['190px', null, '300px']}
             flex="1"
             {...scrubberProps}
           >
