@@ -139,7 +139,7 @@ export default function MapView({ results, bboxFilter, setBboxFilter }) {
           latitude: -25.7302804,
           zoom: 3
         }}
-        mapStyle="mapbox://styles/mapbox/light-v11"
+        mapStyle="mapbox://styles/mapbox/outdoors-v12"
         mapboxAccessToken={MAPBOX_TOKEN}
         interactiveLayerIds={[clusterLabelStyle.id]}
         onClick={handleClusterClick}
