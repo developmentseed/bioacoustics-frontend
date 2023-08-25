@@ -9,14 +9,19 @@ const Button = defineStyleConfig({
       bgColor: 'primary.400',
       color: 'white',
       _disabled: {
-        backgroundColor: 'primary.400',
+        backgroundColor: 'neutral.400',
         color: 'white',
-        opacity: 0.4
+        opacity: 0.4,
       },
       _hover: {
         backgroundColor: 'primary.300',
         color: 'white',
-        opacity: 0.875
+        opacity: 0.875,
+        _disabled: {
+          backgroundColor: 'neutral.400',
+          color: 'white',
+          opacity: 0.4,
+        },
       },
     },
     outline: {
