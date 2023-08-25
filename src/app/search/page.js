@@ -43,7 +43,7 @@ export default function Upload() {
       <Box as="main" minH="100%" display="flex" flexDirection="column">
         <InpageHeader>
           <Container maxW="container.xl">
-            <Heading as="h1" size="md" mb="2">
+            <Heading as="h1" size={['md', 'lg']} mb="2">
               Audio Similarity Search
             </Heading>
             {file && <AudioResetForm setFile={handleFileSelect} error={error} />}
