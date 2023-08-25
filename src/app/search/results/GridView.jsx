@@ -37,9 +37,18 @@ function ResultCard({ result, large, isSelected, toggleSelect }) {
           <IconButton
             type="button"
             variant="primary"
+            color={isPlaying ? 'white' : 'primary.400'}
+            background={isPlaying ? 'primary.400' : 'white'}
             borderRadius="full"
             size="xs"
+            fontSize="1rem"
             icon={buttonIcon}
+            border="2px solid"
+            borderColor="primary.400"
+            _hover={{
+              background: 'primary.400',
+              color: 'white'
+            }}
             aria-label={buttonLabel}
             title={buttonLabel}
             {...playButtonProps}

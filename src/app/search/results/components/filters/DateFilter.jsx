@@ -30,19 +30,20 @@ const propsConfigs = {
   dayOfMonthBtnProps: {
     defaultBtnProps: {
       _hover: {
-        background: 'green.400',
+        background: 'green.300',
       }
     },
     isInRangeBtnProps: {
-      color: 'primary.400',
       background: 'green.100',
+      color: 'green.700',
     },
     selectedBtnProps: {
-      background: 'green.200',
-      color: 'primary.400',
+      background: 'primary.400',
+      color: 'white',
     },
     todayBtnProps: {
-      background: 'green.400',
+      background: 'green.300',
+      color: 'primary.500'
     }
   },
 };
