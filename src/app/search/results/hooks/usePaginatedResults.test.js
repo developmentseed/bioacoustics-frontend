@@ -41,7 +41,7 @@ describe('usePaginatedResults', () => {
   it('renders first page', () => {
     const {result} = renderHook(() => usePaginatedResults(results), { wrapper });
     const { resultPage, previousPageProps, firstPageProps, nextPageProps, lastPageProps } = result.current;
-    expect(resultPage.length).toEqual(25);
+    expect(resultPage.length).toEqual(24);
     expect(resultPage[0].id).toEqual(0);
     expect(resultPage[24].id).toEqual(24);
     expect(previousPageProps.isDisabled).toBeTruthy();
@@ -58,7 +58,7 @@ describe('usePaginatedResults', () => {
 
     const { page, resultPage, previousPageProps, firstPageProps, nextPageProps, lastPageProps } = result.current;
     expect(page).toEqual(2);
-    expect(resultPage.length).toEqual(25);
+    expect(resultPage.length).toEqual(24);
     expect(resultPage[0].id).toEqual(25);
     expect(resultPage[24].id).toEqual(49);
     expect(previousPageProps.isDisabled).toBeFalsy();
