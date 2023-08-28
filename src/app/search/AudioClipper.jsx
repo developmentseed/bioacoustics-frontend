@@ -116,7 +116,7 @@ export default function AudioClipper({ file, setClip, clipStart, clipLength }) {
         borderColor="neutral.100"
         fontSize="xs"
         mb="4"
-        overflow="scroll"
+        overflowX="auto"
         whiteSpace="pre"
       >
         <Text as="span" fontWeight="semibold">
