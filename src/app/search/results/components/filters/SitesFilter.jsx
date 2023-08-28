@@ -45,7 +45,7 @@ export default function SitesFilter({ selectedSites, setSelectedSites }) {
   return (
     <Popover placement="bottom-start">
       <PopoverTrigger>
-        <Button size="sm" variant="outline" rightIcon={<MdKeyboardArrowDown />}>Sites</Button>
+        <Button size="sm" variant="outline" background="white" rightIcon={<MdKeyboardArrowDown />}>Sites</Button>
       </PopoverTrigger>
       <Portal>
         <PopoverContent pt="1">
@@ -63,7 +63,7 @@ export default function SitesFilter({ selectedSites, setSelectedSites }) {
                   {sites
                     .filter(({ name }) => !siteNameFilter || name.toLowerCase().indexOf(siteNameFilter.toLowerCase()) !== -1)
                     .map(({ id, name }) => {
-                      return <Checkbox key={id} value={id}>{name}</Checkbox>;
+                      return <Checkbox key={id} value={id} colorScheme="green" size="sm">{name}</Checkbox>;
                     })}
                 </VStack>
               </CheckboxGroup>

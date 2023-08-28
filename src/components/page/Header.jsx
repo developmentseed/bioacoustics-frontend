@@ -33,7 +33,6 @@ export default function Header() {
         <Box as="nav">
           <HStack as="ul" listStyleType="none" fontSize="sm" fontWeight="bold">
             <NavItem href="/search">Search</NavItem>
-            <NavItem href="/about">About</NavItem>
           </HStack>
         </Box>
       </Container>

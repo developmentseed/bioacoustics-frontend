@@ -132,7 +132,7 @@ export default function MapView({ results, bboxFilter, setBboxFilter }) {
   };
 
   return (
-    <Box flexBasis="500px" height="600px" position="sticky" top="5">
+    <Box flexBasis="500px" height="calc(100vh - 2.5rem)" position="sticky" top="5" borderRadius={4} boxShadow="base">
       <Map
         initialViewState={{
           longitude: 134.396315,
@@ -173,7 +173,7 @@ export default function MapView({ results, bboxFilter, setBboxFilter }) {
       >
         <Checkbox
           size="sm"
-          color="primary.400"
+          colorScheme="green"
           isChecked={filterByMapBbox}
           onChange={(e) => setFilterByMapBbox(e.target.checked)}
         >

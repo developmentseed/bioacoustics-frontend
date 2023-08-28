@@ -3,7 +3,7 @@ import { Checkbox } from '@chakra-ui/react';
 
 export default function TopResultCheckbox({ isChecked, onChange }) {
   return (
-    <Checkbox isChecked={isChecked} onChange={onChange}>Best match per recording only</Checkbox>
+    <Checkbox isChecked={isChecked} onChange={onChange} colorScheme="green" size="sm">Best match per recording only</Checkbox>
   );
 }
 

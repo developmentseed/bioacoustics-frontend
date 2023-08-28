@@ -31,6 +31,7 @@ function ResultRow({ result, toggleSelect, isSelected, narrow }) {
           aria-label="Click to select the result"
           isChecked={isSelected}
           onChange={() => toggleSelect(result.entity.audio_url)}
+          colorScheme="green"
         />
       </Td>
       <Td>
@@ -41,9 +42,9 @@ function ResultRow({ result, toggleSelect, isSelected, narrow }) {
       {!narrow && <Td>{ formatDateTime(file_timestamp) }</Td>}
       <Td>{ formatDateTime(file_timestamp + clip_offset_in_file) }</Td>
       <Td>
-        <Box display="flex">
-          <IconButton as={Link} variant="link" href={`https://data.acousticobservatory.org/listen/${file_seq_id}`} target="_blank" icon={<MdOpenInNew />} size="sm" title="Full Recording" display="inline" />
-          <IconButton as={Link} variant="link" href={`/search?q=${encodeURIComponent(downloadAudioUrl)}`} target="_blank" icon={<MdSearch />} size="sm" title="Use in new search" display="inline" />
+        <Box display="flex" justifyContent="space-between">
+          <IconButton as={Link} variant="link" href={`https://data.acousticobservatory.org/listen/${file_seq_id}`} target="_blank" icon={<MdOpenInNew />} size="sm" title="Full Recording" display="inline" color="primary.400" />
+          <IconButton as={Link} variant="link" href={`/search?q=${encodeURIComponent(downloadAudioUrl)}`} target="_blank" icon={<MdSearch />} size="sm" title="Use in new search" display="inline" color="primary.400" />
         </Box>
       </Td>
     </Tr>

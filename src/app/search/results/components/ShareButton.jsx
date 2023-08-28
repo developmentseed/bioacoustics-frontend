@@ -59,7 +59,7 @@ export default function ShareButton({ file }) {
   };
 
   return (
-    <Button variant="primary" size="sm" onClick={handleShare} isDisabled={isDisabled}>{ buttonLabel }</Button>
+    <Button variant="outline" background="white" size="sm" onClick={handleShare} isDisabled={isDisabled}>{ buttonLabel }</Button>
   );
 }
 
