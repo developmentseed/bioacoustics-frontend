@@ -171,7 +171,7 @@ export default function SitesFilterMap({ selectedSites, setSelectedSites, isDraw
         latitude: -26.7302804,
         zoom: 3
       }}
-      mapStyle="mapbox://styles/mapbox/light-v11"
+      mapStyle="mapbox://styles/mapbox/outdoors-v12"
       mapboxAccessToken={MAPBOX_TOKEN}
       ref={mapRef}
       interactiveLayerIds={[markerStyle.id]}
