@@ -41,9 +41,9 @@ describe('usePaginatedResults', () => {
   it('renders first page', () => {
     const {result} = renderHook(() => usePaginatedResults(results), { wrapper });
     const { resultPage, previousPageProps, firstPageProps, nextPageProps, lastPageProps } = result.current;
-    expect(resultPage.length).toEqual(25);
+    expect(resultPage.length).toEqual(24);
     expect(resultPage[0].id).toEqual(0);
-    expect(resultPage[24].id).toEqual(24);
+    expect(resultPage[23].id).toEqual(23);
     expect(previousPageProps.isDisabled).toBeTruthy();
     expect(firstPageProps.isDisabled).toBeTruthy();
     expect(nextPageProps.isDisabled).toBeFalsy();
@@ -58,9 +58,9 @@ describe('usePaginatedResults', () => {
 
     const { page, resultPage, previousPageProps, firstPageProps, nextPageProps, lastPageProps } = result.current;
     expect(page).toEqual(2);
-    expect(resultPage.length).toEqual(25);
-    expect(resultPage[0].id).toEqual(25);
-    expect(resultPage[24].id).toEqual(49);
+    expect(resultPage.length).toEqual(24);
+    expect(resultPage[0].id).toEqual(24);
+    expect(resultPage[23].id).toEqual(47);
     expect(previousPageProps.isDisabled).toBeFalsy();
     expect(firstPageProps.isDisabled).toBeFalsy();
     expect(nextPageProps.isDisabled).toBeFalsy();
@@ -85,9 +85,9 @@ describe('usePaginatedResults', () => {
 
     const { page, resultPage, previousPageProps, firstPageProps, nextPageProps, lastPageProps } = result.current;
     expect(page).toEqual(3);
-    expect(resultPage.length).toEqual(22);
-    expect(resultPage[0].id).toEqual(50);
-    expect(resultPage[21].id).toEqual(71);
+    expect(resultPage.length).toEqual(24);
+    expect(resultPage[0].id).toEqual(48);
+    expect(resultPage[23].id).toEqual(71);
     expect(previousPageProps.isDisabled).toBeFalsy();
     expect(firstPageProps.isDisabled).toBeFalsy();
     expect(nextPageProps.isDisabled).toBeTruthy();
