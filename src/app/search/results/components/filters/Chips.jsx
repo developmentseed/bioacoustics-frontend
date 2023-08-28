@@ -10,7 +10,8 @@ function Chip({ children, onClear }) {
       size="sm"
       borderRadius="full"
       variant="solid"
-      bgColor="primary.400"
+      bgColor="green.100"
+      color="primary.500"
     >
       <TagLabel>{children}</TagLabel>
       <TagCloseButton onClick={onClear} />
