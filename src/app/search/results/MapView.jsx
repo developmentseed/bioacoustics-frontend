@@ -132,7 +132,7 @@ export default function MapView({ results, bboxFilter, setBboxFilter }) {
   };
 
   return (
-    <Box flexBasis="500px" height={['500px', null, 'calc(100vh - 2.5rem)']} position={['relative', null, 'sticky']} top={['initial', null, 5]} borderRadius={4} boxShadow="base">
+    <Box flexBasis="500px" minH="300px" maxH={['500px', null, 'calc(100vh - 2.5rem)']} position={['relative', null, 'sticky']} top={['initial', null, 5]} borderRadius={4} boxShadow="base">
       <Map
         initialViewState={{
           longitude: 134.396315,
@@ -145,6 +145,7 @@ export default function MapView({ results, bboxFilter, setBboxFilter }) {
         onClick={handleClusterClick}
         onMoveEnd={handleMoveEnd}
         onLoad={handleMapLoad}
+        style={{ position: 'absolute', height: '100%', top: 0, bottom: 0 }}
       >
         <Source
           id="results"

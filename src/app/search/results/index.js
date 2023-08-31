@@ -87,7 +87,7 @@ export default function Results({ file, isLoading, results }) {
 
   return (
     <Box py="10" bg="blackAlpha.50" minH="100%" flex="1">
-      <Container maxW="container.xl" display="flex" flexDirection="column" gap={4}>
+      <Container maxW="container.xl" minH="100%" display="flex" flexDirection="column" gap={4}>
         <Flex gap="2">
           <Heading as="h2" size={['md', 'lg']} flex="1">Results</Heading>
           {results.length > 0 && (
@@ -158,7 +158,7 @@ export default function Results({ file, isLoading, results }) {
                 </Flex>
               </Flex>
             )}
-            <Flex gap="5" direction={['column-reverse', null, 'row']}>
+            <Flex gap="5" direction={['column-reverse', null, 'row']} alignItems="stretch">
               <Box flex="1">
               {numMatches > 0 ? (
                 <>
