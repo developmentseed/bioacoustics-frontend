@@ -63,7 +63,7 @@ export default function Home() {
             textTransform="uppercase"
             color="primary.500"
             size="4xl"
-            fontSize={['2rem', '5rem', '6rem']}
+            fontSize={['2.5rem', '5rem', '6rem']}
             ml={-0.5}
             letterSpacing="4px"
             position="relative"
@@ -72,7 +72,7 @@ export default function Home() {
             <Heading
               as="span"
               size="4xl"
-              fontSize={['2rem', '5rem', '6rem']}
+              fontSize={['2.5rem', '5rem', '6rem']}
               color="primary.200"
               fontWeight="bold"
               letterSpacing="4px"
@@ -89,7 +89,7 @@ export default function Home() {
               animation={`${ripple} 2s infinite linear`}
             />
           </Heading>
-          <Container ml={[0, 0, 0, '6rem']} pl={1}>
+          <Container ml={[0, 0, 0, '6rem']} pl={[0, 1]} p={[0, 2]}>
             <Text mb={6} fontSize="lg">Run audio similarity search on the Australian Acoustic Observatory media archive. ECOECHO uses Machine Learning models developed at Google to find similar audio recordings across space and time. It is intended to augment and enable bioacoustics research.</Text>
             <Button
               as={NextLink}

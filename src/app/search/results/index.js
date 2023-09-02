@@ -7,14 +7,14 @@ import {
   Container,
   Flex,
   Heading,
-  HStack,
   IconButton,
   NumberInput,
   NumberInputField,
   Spacer,
+  Stack,
   Text,
 } from '@chakra-ui/react';
-import { MdMenu, MdGridView, MdGridOn, MdClose, MdMap } from 'react-icons/md';
+import { MdMenu, MdGridView, MdGridOn, MdClose, MdMap, MdChevronLeft, MdKeyboardDoubleArrowLeft, MdChevronRight, MdKeyboardDoubleArrowRight } from 'react-icons/md';
 
 import { RESULTS_DISPLAY_PAGE_SIZE } from '@/settings';
 import { Loading } from '@/components';
@@ -87,7 +87,7 @@ export default function Results({ file, isLoading, results }) {
 
   return (
     <Box py="10" bg="blackAlpha.50" minH="100%" flex="1">
-      <Container maxW="container.xl" display="flex" flexDirection="column" gap={4}>
+      <Container maxW="container.xl" minH="100%" display="flex" flexDirection="column" gap={4}>
         <Flex gap="2">
           <Heading as="h2" size={['md', 'lg']} flex="1">Results</Heading>
           {results.length > 0 && (
@@ -99,13 +99,13 @@ export default function Results({ file, isLoading, results }) {
         </Flex>
         {results.length > 0 ? (
           <>
-            <HStack>
+            <Stack direction={['column', null, 'row']} alignItems={['stretch', null, 'center']}>
               <Text textTransform="uppercase" fontSize="sm">Filters</Text>
               <SitesFilter selectedSites={selectedSites} setSelectedSites={setSelectedSites} />
               <DateFilter selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
               <TimeFilter selectedTimes={selectedTimes} setSelectedTimes={setSelectedTimes} />
-              <TopResultCheckbox {...topMatchPerRecordingProps} />
-            </HStack>
+              <TopResultCheckbox mt={[2, 2, 0]} {...topMatchPerRecordingProps} />
+            </Stack>
             <Chips
               selectedSites={selectedSites}
               setSelectedSites={setSelectedSites}
@@ -115,18 +115,18 @@ export default function Results({ file, isLoading, results }) {
               setSelectedTimes={setSelectedTimes}
             />
             {numMatches > 0 && (
-              <Flex mb="2">
-                <Flex alignItems="center">
-                  <Text as="span">View <b>{resultStart} - {resultEnd}</b> of { numMatches } results</Text>
+              <Flex mb="2" alignItems="center" wrap="wrap">
+                <Flex alignItems="center" wrap="wrap">
+                  <Text fontSize="sm" as="span">View <b>{resultStart} - {resultEnd}</b> of { numMatches } results</Text>
                   {selectedResults.length > 0 && (
-                    <>
-                      <Text as="span" mx="3" pl="3" borderLeft="1px solid" borderColor="neutral.100">{selectedResults.length} selected</Text>
+                    <Flex alignItems="center">
+                      <Text fontSize="sm" as="span" mx="3" pl={[0, 3]} borderLeft={[null, '1px solid']} borderColor={[null, 'neutral.100']}>{selectedResults.length} selected</Text>
                       <Button onClick={clearSelect} variant="link" textTransform="uppercase" letterSpacing="1px" fontWeight="normal" size="sm" leftIcon={<MdClose />}>Clear</Button>
-                    </>
+                    </Flex>
                   )}
                 </Flex>
                 <Spacer />
-                <Flex gap="2">
+                <Flex gap="2" flexBasis={['100%', 'initial']} mt={[2, 0]}>
                   <ButtonGroup isAttached variant="outline" background="white">
                     <IconButton
                       variant={view === VIEWS.grid_lg ? 'primary': 'outline'}
@@ -149,6 +149,7 @@ export default function Results({ file, isLoading, results }) {
                       icon={<MdMenu />}
                       type="button"
                       size="xs"
+                      display={['none', 'inline-flex']}
                       aria-label="View results in table"
                       onClick={() => setView(VIEWS.table)}
                     />
@@ -157,7 +158,7 @@ export default function Results({ file, isLoading, results }) {
                 </Flex>
               </Flex>
             )}
-            <Flex gap="5">
+            <Flex gap="5" direction={['column-reverse', null, 'row']} alignItems="stretch">
               <Box flex="1">
               {numMatches > 0 ? (
                 <>
@@ -184,23 +185,25 @@ export default function Results({ file, isLoading, results }) {
               </Box>
               {showMap && <MapView results={resultPage} bboxFilter={bboxFilter} setBboxFilter={setBboxFilter} />}
             </Flex>
-            <Flex my="5" gap="5" alignItems="center">
-              <Spacer />
+            <Flex my="5" gap="4" alignItems="center" justifyContent="center">
               <ButtonGroup isAttached variant="outline" size="sm" background="white">
-                <Button {...firstPageProps}>First page</Button>
-                <Button {...previousPageProps}>Previous</Button>
+                <IconButton display={['inline-flex', 'none']} icon={<MdKeyboardDoubleArrowLeft />} {...firstPageProps}>First page</IconButton>
+                <Button display={['none', 'inline-flex']} {...firstPageProps}>First page</Button>
+                <IconButton display={['inline-flex', 'none']} {...previousPageProps} icon={<MdChevronLeft />} />
+                <Button display={['none', 'inline-flex']} {...previousPageProps}>Previous</Button>
               </ButtonGroup>
-              <Flex fontSize="sm" gap="1" alignItems="center">Page 
+              <Flex fontSize="sm" gap="1" alignItems="center" whiteSpace="pre">Page 
                 <NumberInput {...pageInputProps} w="12" size="sm" clampValueOnBlur={false} bgColor={pageInputProps.isInvalid && 'red.100'} background="white">
                   <NumberInputField px="0" textAlign="center" />
                 </NumberInput>
                 of {numPages}
               </Flex>
               <ButtonGroup isAttached variant="outline" size="sm" background="white">
-                <Button {...nextPageProps}>Next</Button>
-                <Button {...lastPageProps}>Last page</Button>
+                <IconButton display={['inline-flex', 'none']} icon={<MdChevronRight />} {...nextPageProps} />
+                <Button display={['none', 'inline-flex']} {...nextPageProps}>Next</Button>
+                <IconButton display={['inline-flex', 'none']} icon={<MdKeyboardDoubleArrowRight />} {...lastPageProps} />
+                <Button display={['none', 'inline-flex']} {...lastPageProps}>Last page</Button>
               </ButtonGroup>
-              <Spacer />
             </Flex>
           </>
         ) : (

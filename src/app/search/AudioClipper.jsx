@@ -109,7 +109,21 @@ export default function AudioClipper({ file, setClip, clipStart, clipLength }) {
 
   return (
     <>
-      <Text fontSize="sm" fontWeight="semibold" mb="2">{file.name}</Text>
+      <Text
+        p={1}
+        border="1px solid"
+        bg="green.50"
+        borderColor="neutral.100"
+        fontSize="xs"
+        mb="4"
+        overflowX="auto"
+        whiteSpace="pre"
+      >
+        <Text as="span" fontWeight="semibold">
+          File:
+        </Text>{' '}
+        {file.name}
+      </Text>
       {(clipLengthError && !isClipConfirmed) && <Error>{clipLengthError}</Error>}
       <Grid templateColumns="50px 1fr">
         <FrequencyLegend width="50px" height={SPECTROGRAM_HEIGHT} />
@@ -230,7 +244,7 @@ export default function AudioClipper({ file, setClip, clipStart, clipLength }) {
       <Text fontSize="xs" m="1" ml="50px" textAlign="center">Time (Seconds)</Text>
       {isClipping && (
         <Center>
-          <HStack mt="2" gap="5" align="center">
+          <HStack mt="2" gap="2" align="center">
             <Button
               type="button"
               variant="ghost"
@@ -258,12 +272,14 @@ export default function AudioClipper({ file, setClip, clipStart, clipLength }) {
           </HStack>
         </Center>
       )}
-      <HStack mt="2" gap="5">
-        <HStack gap="2" flex="1">
+      <Flex flexDirection={['column', null, 'row']} mt="2" gap={[1, null, 4]} alignItems="center" flexWrap="wrap">
+        <HStack gap={[0, 2]} flex="1">
           <IconButton
             type="button"
             variant="ghost"
             borderRadius="full"
+            size={['sm', 'md']}
+            px="0 !important"
             icon={
               isPlaying ? (
                 <MdPauseCircleOutline fontSize="1.75rem" />
@@ -280,7 +296,7 @@ export default function AudioClipper({ file, setClip, clipStart, clipLength }) {
             min={0}
             max={duration}
             step={0.1}
-            minW="300px"
+            minW={['190px', null, '300px']}
             flex="1"
             {...scrubberProps}
           >
@@ -299,11 +315,11 @@ export default function AudioClipper({ file, setClip, clipStart, clipLength }) {
           <TimeBox time={duration} />
         </HStack>
 
-        <ToolbarButton leftIcon={<MdContentCut />} {...clipButtonProps}>
+        <ToolbarButton order={[-1, null, 'initial']} leftIcon={<MdContentCut />} {...clipButtonProps} size="sm">
           Clip
         </ToolbarButton>
 
-        <HStack>
+        <HStack order={[2, null, 'initial']}>
           <Text color="primary.400" fontSize="sm">
             Zoom
           </Text>
@@ -332,7 +348,7 @@ export default function AudioClipper({ file, setClip, clipStart, clipLength }) {
             aria-label="Reset zoom"
           />
         </HStack>
-      </HStack>
+      </Flex>
     </>
   );
 }

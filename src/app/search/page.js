@@ -42,7 +42,7 @@ export default function Upload() {
     <SitesProvider>
       <Box as="main" minH="100%" display="flex" flexDirection="column">
         <InpageHeader>
-          <Container maxW="container.xl">
+          <Container maxW="container.xl" overflow="hidden">
             <Heading as="h1" size={['md', 'lg']} mb="2">
               Audio Similarity Search
             </Heading>
@@ -56,7 +56,7 @@ export default function Upload() {
               )}
 
               {file && (duration <= MAX_AUDIO_CLIP_LENGTH || clipStart) && (
-                <Box textAlign="right" mt="2">
+                <Box textAlign="right" mt="2" display="flex" flexDirection="column" alignItems={['stretch', 'end']}>
                   <Button
                     variant="primary"
                     type="submit"
