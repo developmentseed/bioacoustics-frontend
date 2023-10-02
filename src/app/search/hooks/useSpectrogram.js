@@ -24,6 +24,11 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
 
   // Initialises the spectrogram with the audio data
   useEffect(() => {
+    const pixelPerTick = 25;
+    const width = spectrogramRef.current.clientWidth;
+    const numberOfTicks = width / pixelPerTick;
+    const timeInterval = Math.round(duration / numberOfTicks) || 0.5;
+
     var wavesurfer = WaveSurfer.create({
       container: `#${CSS.escape(waveformId)}`,
       scrollParent: true,
@@ -36,7 +41,7 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
         }),
         TimelinePlugin.create({
           container: '#timeline',
-          timeInterval: 0.5,
+          timeInterval,
           primaryLabelInterval: 2,
           secondaryLabelInterval: 10,
         })
@@ -52,7 +57,7 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
     wavesurfer.seekAndCenter(0.5);
     setZoom(1);
     wavesurferRef.current = wavesurfer;
-  }, [file, waveformId, spectrogramId, wavesurferRef]);
+  }, [file, waveformId, spectrogramId, wavesurferRef, duration]);
 
   useEffect(() => {
     const width = spectrogramRef.current.clientWidth;
