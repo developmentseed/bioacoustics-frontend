@@ -114,6 +114,7 @@ export default function useSearchForm() {
     const formData  = new FormData();
     formData.append('embed', embeddingPayload);
     formData.append('limit', RESULTS_MAX);
+    formData.append('metric_type', 'l2');
 
     return fetch(`${SEARCH_API}/search/`, {
       method: 'POST',
