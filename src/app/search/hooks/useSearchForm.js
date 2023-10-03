@@ -50,17 +50,17 @@ const validate = async (files) => {
 };
 
 export default function useSearchForm() {
-  const [ file, setFile ] = useState();
-  const [ duration, setDuration ] = useState();
-  const [ clipStart, setClipStart ] = useAppState('clipStart', ClipStartConfig);
-  const [ clipLength, setClipLength ] = useAppState('clipLength', ClipLengthConfig);
+  const [file, setFile] = useState();
+  const [duration, setDuration] = useState();
+  const [clipStart, setClipStart] = useAppState('clipStart', ClipStartConfig);
+  const [clipLength, setClipLength] = useAppState('clipLength', ClipLengthConfig);
 
-  const [ error, setError ] = useState();
-  const [ results, setResults ] = useState([]);
-  const [ isSubmitting, setIsSubmitting ] = useState(false);
+  const [error, setError] = useState();
+  const [results, setResults] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [ isInitializing, setIsInitializing ] = useState(true);
-  const [ autoSearch, setAutoSearch ] = useState(true);
+  const [isInitializing, setIsInitializing] = useState(true);
+  const [autoSearch, setAutoSearch] = useState(true);
   const searchParams = useSearchParams();
   const audioUrl = searchParams.get('q');
   const router = useRouter();
@@ -82,7 +82,7 @@ export default function useSearchForm() {
   const prepareAudioForUpload = useCallback((file) => {
     const start = duration > MAX_AUDIO_CLIP_LENGTH ? clipStart : 0;
     const length = duration > MAX_AUDIO_CLIP_LENGTH ? clipLength : MAX_AUDIO_CLIP_LENGTH;
-    
+
     return new Promise((resolve) => {
       const reader = new FileReader();
       reader.onload = async () => {
@@ -111,9 +111,10 @@ export default function useSearchForm() {
   }, [clipLength, clipStart, duration]);
 
   const fetchResults = (embeddingPayload) => {
-    const formData  = new FormData();
+    const formData = new FormData();
     formData.append('embed', embeddingPayload);
     formData.append('limit', RESULTS_MAX);
+    formData.append('metric_type', 'L2');
 
     return fetch(`${SEARCH_API}/search/`, {
       method: 'POST',
@@ -209,7 +210,7 @@ export default function useSearchForm() {
         setClipStart();
         setClipLength();
       }
-    } else { 
+    } else {
       setDuration();
     }
   }, [audioUrl, file, router, setClipLength, setClipStart]);
