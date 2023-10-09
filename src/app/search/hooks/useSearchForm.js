@@ -138,7 +138,8 @@ export default function useSearchForm() {
   /**
    * Submit the form
    */
-  const handleFormSubmit = useCallback(async () => {
+  const handleFormSubmit = useCallback(async (e) => {
+    e.preventDefault();
     setIsSubmitting(true);
     setResults([]);
 
