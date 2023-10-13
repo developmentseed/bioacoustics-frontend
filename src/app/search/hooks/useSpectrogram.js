@@ -32,6 +32,7 @@ export default function useSpectrogramNavigation(file, waveformId, spectrogramId
     var wavesurfer = WaveSurfer.create({
       container: `#${CSS.escape(waveformId)}`,
       scrollParent: true,
+      minPxPerSec: 1,
       plugins: [
         SpectrogramPlugin.create({
             wavesurfer: wavesurfer,
