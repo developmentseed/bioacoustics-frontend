@@ -63,21 +63,21 @@ export default function Home() {
             textTransform="uppercase"
             color="primary.500"
             size="4xl"
-            fontSize={['2.5rem', '5rem', '6rem']}
+            fontSize={['2.5rem', '4rem', '5rem']}
             ml={-0.5}
             letterSpacing="4px"
             position="relative"
           >
-            Eco
+            A2O
             <Heading
               as="span"
               size="4xl"
-              fontSize={['2.5rem', '5rem', '6rem']}
+              fontSize={['2.5rem', '4rem', '5rem']}
               color="primary.200"
               fontWeight="bold"
               letterSpacing="4px"
             >
-              Echo
+              Search
             </Heading>
             <Box
               position="absolute"
