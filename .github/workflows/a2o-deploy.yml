@@ -43,4 +43,3 @@ jobs:
         path: 'out'
         destination: 'bioacoustics-a2o-production-frontend'
         parent: false
-        predefinedAcl: publicRead
