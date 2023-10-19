@@ -32,6 +32,9 @@ jobs:
       name: 'Install dependencies'
       run: yarn install
 
+    - name: 'Replace SEARCH_API value'
+      run: sed -i "s|bioacoustics.ds.io|search.acousticobservatory.org|g" src/settings.js
+
     - id: 'build-production'
       name: 'Build Staging'
       run: yarn build
