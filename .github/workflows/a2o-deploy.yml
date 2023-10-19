@@ -33,7 +33,7 @@ jobs:
       run: yarn install
 
     - name: 'Replace SEARCH_API value'
-      run: sed -i "s|bioacoustics.ds.io|search.acousticobservatory.org|g" src/settings.js
+      run: find src/ -type f -name "*.js" -exec sed -i 's|bioacoustics.ds.io|search.acousticobservatory.org|g' {} +
 
     - id: 'build-production'
       name: 'Build Staging'
