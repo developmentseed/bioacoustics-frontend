@@ -9,6 +9,7 @@ import {
   Button,
 } from '@chakra-ui/react';
 import NextLink from 'next/link';
+import Image from 'next/image';
 
 const ripple = keyframes`
   0% {
@@ -98,6 +99,13 @@ export default function Home() {
             >
               Search
             </Button>
+            <Box display="flex" alignItems="center" mt="10" gap="5">
+              <Image src="/aao.svg" width="136" height="64" alt="Australian Acoustic Observatory" />
+              <Image src="/google.svg" width="136" height="46" alt="Google" />
+            </Box>
+            <Box mt="5">
+              <Image src="/developmentseed.svg" width="136" height="46" alt="Development Seed" />
+            </Box>
           </Container>
         </Flex>
       </Container>
