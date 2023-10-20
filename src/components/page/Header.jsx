@@ -25,9 +25,9 @@ export default function Header() {
             transition: 'all 0.24s ease',
           }}
         >
-          Eco
+          A2O
           <Text as="span" color="primary.200" fontWeight="bold">
-            Echo
+            Search
           </Text>
         </Text>
         <Box as="nav">

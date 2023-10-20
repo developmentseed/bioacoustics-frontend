@@ -9,6 +9,7 @@ import {
   Button,
 } from '@chakra-ui/react';
 import NextLink from 'next/link';
+import Image from 'next/image';
 
 const ripple = keyframes`
   0% {
@@ -63,21 +64,21 @@ export default function Home() {
             textTransform="uppercase"
             color="primary.500"
             size="4xl"
-            fontSize={['2.5rem', '5rem', '6rem']}
+            fontSize={['2.5rem', '4rem', '5rem']}
             ml={-0.5}
             letterSpacing="4px"
             position="relative"
           >
-            Eco
+            A2O
             <Heading
               as="span"
               size="4xl"
-              fontSize={['2.5rem', '5rem', '6rem']}
+              fontSize={['2.5rem', '4rem', '5rem']}
               color="primary.200"
               fontWeight="bold"
               letterSpacing="4px"
             >
-              Echo
+              Search
             </Heading>
             <Box
               position="absolute"
@@ -98,6 +99,13 @@ export default function Home() {
             >
               Search
             </Button>
+            <Box display="flex" alignItems="center" mt="10" gap="5">
+              <Image src="/aao.svg" width="136" height="64" alt="Australian Acoustic Observatory" />
+              <Image src="/google.svg" width="136" height="46" alt="Google" />
+            </Box>
+            <Box mt="5">
+              <Image src="/developmentseed.svg" width="136" height="46" alt="Development Seed" />
+            </Box>
           </Container>
         </Flex>
       </Container>
