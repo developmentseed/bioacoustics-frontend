@@ -57,6 +57,7 @@ export default function Home() {
         display="flex"
         flexDir="column"
         justifyContent="center"
+        pt={[0, 0, '10rem']}
       >
         <Flex flexDirection={['column', 'column', null, 'row']}>
           <Heading
@@ -91,7 +92,7 @@ export default function Home() {
             />
           </Heading>
           <Container ml={[0, 0, 0, '6rem']} pl={[0, 1]} p={[0, 2]}>
-            <Text mb={6} fontSize="lg">Run audio similarity search on the Australian Acoustic Observatory media archive. ECOECHO uses Machine Learning models developed at Google to find similar audio recordings across space and time. It is intended to augment and enable bioacoustics research.</Text>
+            <Text mb={6} fontSize="lg">Run audio similarity search on the Australian Acoustic Observatory media archive. A2O Search uses Machine Learning models developed at Google to find similar audio recordings across space and time. It is intended to augment and enable bioacoustics research.</Text>
             <Button
               as={NextLink}
               variant="primary"
