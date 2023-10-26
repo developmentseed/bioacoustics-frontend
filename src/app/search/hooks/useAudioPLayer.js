@@ -18,8 +18,11 @@ export default function useAudioPlayer(audioUrl, clipStart, clipLength) {
 
   useEffect(() => {
     const el = document.createElement('audio');
-    el.setAttribute('src', audioUrl);
+    const sourceElement = document.createElement('source');
+    sourceElement.src = audioUrl;
+    sourceElement.type = 'audio/wav';
     el.setAttribute('preload', 'metadata');
+    el.appendChild(sourceElement);
 
     const handleLoadedMedia = () => setDuration(el.duration);
     const handlePlayend = () => {
