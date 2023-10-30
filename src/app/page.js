@@ -103,6 +103,7 @@ export default function Home() {
             <Box display="flex" alignItems="center" mt="10" gap="5">
               <Image src="/aao.svg" width="136" height="64" alt="Australian Acoustic Observatory" />
               <Image src="/google.svg" width="136" height="46" alt="Google" />
+              <Image src="/qut.svg" width="64" height="64" alt="Queensland University of Technology" />
             </Box>
             <Box mt="5">
               <Image src="/developmentseed.svg" width="136" height="46" alt="Development Seed" />
