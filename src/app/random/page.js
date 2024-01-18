@@ -1,3 +1,5 @@
+'use client';
+import { useEffect } from 'react';
 import { redirect } from 'next/navigation';
 
 const recordings = [
@@ -9,6 +11,8 @@ const recordings = [
 ];
 
 export default function Random() {
-  const index = Math.floor(Math.random() * recordings.length);
-  redirect(`/search/?q=${encodeURIComponent(recordings[index])}`);
+  useEffect(() => {
+    const index = Math.floor(Math.random() * recordings.length);
+    redirect(`/search/?q=${encodeURIComponent(recordings[index])}`);
+  }, []);
 }
