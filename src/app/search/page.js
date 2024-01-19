@@ -1,6 +1,6 @@
 'use client';
 import dynamic from 'next/dynamic';
-import { Box, Button, Container, Heading, Text } from '@chakra-ui/react';
+import { Alert, AlertIcon, AlertDescription, Box, Button, Container, Heading, Text } from '@chakra-ui/react';
 
 import { Loading } from '@/components';
 import { InpageHeader } from '@/components/page';
@@ -8,6 +8,7 @@ import { MAX_AUDIO_CLIP_LENGTH } from '@/settings';
 
 import AudioSelectForm from './AudioSelectForm';
 import useSearchForm from './hooks/useSearchForm';
+import useApiCheck from './hooks/useApiCheck';
 import AudioResetForm from './AudioResetForm';
 
 import { SitesProvider } from './context/sites';
@@ -33,8 +34,9 @@ export default function Upload() {
     handleFileSelect,
     error
   } = useSearchForm();
+  const { isChecking, hasError } = useApiCheck();
 
-  if (isInitializing) {
+  if (isInitializing || isChecking) {
     return <Loading size="md" />;
   }
 
@@ -46,30 +48,39 @@ export default function Upload() {
             <Heading as="h1" size={['md', 'lg']} mb="2">
               Audio Similarity Search
             </Heading>
-            {file && <AudioResetForm setFile={handleFileSelect} error={error} />}
-            {!file && <Text fontSize="sm" mb="2">Upload audio to search for similar sounds</Text>}
-            <form>
-              {!file ? (
-                <AudioSelectForm handleFileSelect={handleFileSelect} error={error} />
-              ) : (
-                <AudioClipper file={file} clipStart={clipStart} clipLength={clipLength} setClip={setClip} />
-              )}
+            { hasError ? (
+              <Alert status="error" my="10">
+                <AlertIcon />
+                <AlertDescription>The Search API is current not available. Please try again later</AlertDescription>
+              </Alert>
+            ) : (
+              <>
+                {file && <AudioResetForm setFile={handleFileSelect} error={error} />}
+                {!file && <Text fontSize="sm" mb="2">Upload audio to search for similar sounds</Text>}
+                <form>
+                  {!file ? (
+                    <AudioSelectForm handleFileSelect={handleFileSelect} error={error} />
+                  ) : (
+                    <AudioClipper file={file} clipStart={clipStart} clipLength={clipLength} setClip={setClip} />
+                  )}
 
-              {file && (duration <= MAX_AUDIO_CLIP_LENGTH || clipStart) && (
-                <Box textAlign="right" mt="2" display="flex" flexDirection="column" alignItems={['stretch', 'end']}>
-                  <Button
-                    variant="primary"
-                    type="submit"
-                    {...submitButtonProps}
-                  >
-                    Search
-                  </Button>
-                </Box>
-              )}
-            </form>
+                  {file && (duration <= MAX_AUDIO_CLIP_LENGTH || clipStart) && (
+                    <Box textAlign="right" mt="2" display="flex" flexDirection="column" alignItems={['stretch', 'end']}>
+                      <Button
+                        variant="primary"
+                        type="submit"
+                        {...submitButtonProps}
+                      >
+                        Search
+                      </Button>
+                    </Box>
+                  )}
+                </form>
+              </>
+            )}
           </Container>
         </InpageHeader>
-        <Results results={results} isLoading={isSubmitting} file={file} />
+        { !hasError && <Results results={results} isLoading={isSubmitting} file={file} />}
       </Box>
     </SitesProvider>
   );
